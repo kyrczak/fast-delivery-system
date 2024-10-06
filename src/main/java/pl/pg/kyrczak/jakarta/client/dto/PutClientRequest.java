@@ -4,6 +4,8 @@ import jakarta.ejb.Local;
 import lombok.*;
 
 import java.time.LocalDate;
+import java.util.List;
+import java.util.UUID;
 
 @Setter
 @Getter
@@ -19,4 +21,5 @@ public class PutClientRequest {
     private LocalDate registrationDate;
     private String password;
     private String email;
+    private List<UUID> parcels;
 }
