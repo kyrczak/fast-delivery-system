@@ -1,8 +1,8 @@
-package pl.pg.kyrczak.jakarta.parcel.dto;
-
+package pl.pg.kyrczak.jakarta.warehouse.dto;
 
 import lombok.*;
 
+import java.util.List;
 import java.util.UUID;
 
 @Getter
@@ -12,8 +12,7 @@ import java.util.UUID;
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @ToString
 @EqualsAndHashCode
-public class GetParcelResponse {
-
+public class GetWarehousesResponse {
     @Getter
     @Setter
     @Builder
@@ -25,7 +24,5 @@ public class GetParcelResponse {
         private UUID uuid;
         private String name;
     }
-    private UUID uuid;
-    private Float weight;
-    private Warehouse warehouse;
+    private List<Warehouse> warehouses;
 }
