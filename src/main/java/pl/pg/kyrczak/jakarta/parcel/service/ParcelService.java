@@ -6,6 +6,8 @@ import pl.pg.kyrczak.jakarta.parcel.entity.ParcelStatus;
 import pl.pg.kyrczak.jakarta.parcel.repository.api.ParcelRepository;
 import pl.pg.kyrczak.jakarta.warehouse.repository.api.WarehouseRepository;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
@@ -62,7 +64,14 @@ public class ParcelService {
                 .map(parcelRepository::findAllByClient);
     }
 
-
-    //TODO - Implement portrait methods
-
+    public void updateImage(UUID uuid, InputStream is) {
+        parcelRepository.find(uuid).ifPresent(parcel -> {
+            try {
+                parcel.setImage(is.readAllBytes());
+                parcelRepository.update(parcel);
+            } catch (IOException ex) {
+                throw new IllegalStateException(ex);
+            }
+        });
+    }
 }
