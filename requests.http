@@ -1,0 +1,11 @@
+# Get all parcels.
+
+GET http://localhost:9080/fast-delivery/api/parcels/
+
+###
+
+# Get all warehouses.
+
+GET http://localhost:9080/fast-delivery/api/warehouses/
+
+

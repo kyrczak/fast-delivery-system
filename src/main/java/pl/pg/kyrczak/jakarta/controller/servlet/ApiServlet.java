@@ -163,7 +163,7 @@ public class ApiServlet extends HttpServlet {
             if (path.matches(Patterns.PARCEL.pattern())) {
                 UUID uuid = extractUuid(Patterns.PARCEL, path);
                 parcelController.putParcel(uuid, jsonb.fromJson(request.getReader(), PutParcelRequest.class));
-                response.addHeader("Location", createUrl(request, Paths.API, "characters", uuid.toString()));
+                response.addHeader("Location", createUrl(request, Paths.API, "parcels", uuid.toString()));
                 return;
             } else if (path.matches(Patterns.PARCEL_IMAGE.pattern())) {
                 UUID uuid = extractUuid(Patterns.PARCEL_IMAGE, path);
