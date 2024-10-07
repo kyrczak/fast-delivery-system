@@ -18,16 +18,16 @@ public class CreateControllers implements ServletContextListener {
 
     @Override
     public void contextInitialized(ServletContextEvent event) {
-        ParcelService characterService = (ParcelService) event.getServletContext().getAttribute("parcelService");
-        WarehouseService professionService = (WarehouseService) event.getServletContext().getAttribute("warehouseService");
+        ParcelService parcelService = (ParcelService) event.getServletContext().getAttribute("parcelService");
+        WarehouseService warehouseService = (WarehouseService) event.getServletContext().getAttribute("warehouseService");
 
         event.getServletContext().setAttribute("parcelController", new ParcelSimpleController(
-                characterService,
+                parcelService,
                 new DtoFunctionFactory()
         ));
 
         event.getServletContext().setAttribute("warehouseController", new WarehouseSimpleController(
-                professionService,
+                warehouseService,
                 new DtoFunctionFactory()
         ));
     }
