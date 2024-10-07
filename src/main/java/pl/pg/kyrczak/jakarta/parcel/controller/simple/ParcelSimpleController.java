@@ -9,9 +9,9 @@ import pl.pg.kyrczak.jakarta.parcel.dto.GetParcelsResponse;
 import pl.pg.kyrczak.jakarta.parcel.dto.PatchParcelRequest;
 import pl.pg.kyrczak.jakarta.parcel.dto.PutParcelRequest;
 import pl.pg.kyrczak.jakarta.parcel.service.ParcelService;
-import pl.pg.kyrczak.jakarta.parcel.entity.Parcel;
 
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.UUID;
 
@@ -81,18 +81,42 @@ public class ParcelSimpleController implements ParcelController {
 
     @Override
     public byte[] getParcelImage(UUID uuid) {
-        return service.find(uuid)
-                .map(Parcel::getImage)
-                .orElseThrow(NotFoundException::new);
+        try {
+            return service.downloadImage(uuid);
+        } catch (IOException ex) {
+            throw new NotFoundException();
+        }
     }
 
     @Override
     public void putParcelImage(UUID uuid, InputStream image) {
-        service.find(uuid).ifPresentOrElse(
-                entity -> service.updateImage(uuid,image),
-                () -> {
-                    throw new NotFoundException();
-                }
-        );
+        try {
+            service.uploadImage(uuid, image);
+        } catch (IOException e) {
+            throw new BadRequestException();
+        } catch (IllegalStateException ex) {
+            throw new BadRequestException();
+        }
     }
+
+    @Override
+    public void deleteParcelImage(UUID uuid) {
+        try {
+            service.deleteImage(uuid);
+        } catch (IOException e) {
+            throw new NotFoundException();
+        }
+    }
+
+    @Override
+    public void patchParcelImage(UUID uuid, InputStream image) {
+        try {
+            service.overwriteImage(uuid, image);
+        } catch (IOException e) {
+            throw new NotFoundException();
+        } catch (IllegalStateException ex) {
+            throw new BadRequestException();
+        }
+    }
+
 }

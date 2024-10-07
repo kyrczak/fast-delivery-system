@@ -16,7 +16,53 @@ GET http://localhost:9080/fast-delivery/api/parcels/1c023543-5bd1-4b02-9941-27aa
 
 ###
 
-# Update parcel image
+# Insert parcel image when exists
 
-PATCH
+PUT http://localhost:9080/fast-delivery/api/parcels/1c023543-5bd1-4b02-9941-27aab5b2ecdb/image
+Content-Type: multipart/form-data; boundary=boundary
 
+--boundary
+Content-Disposition: form-data; name="image"; filename="delikatne.png"
+
+< src/main/resources/images/delikatne.png
+--boundary--
+
+###
+
+# Delete parcel image
+
+DELETE http://localhost:9080/fast-delivery/api/parcels/1c023543-5bd1-4b02-9941-27aab5b2ecdb/image
+
+###
+
+# Patch parcel image
+
+PATCH http://localhost:9080/fast-delivery/api/parcels/1c023543-5bd1-4b02-9941-27aab5b2ecdb/image
+Content-Type: multipart/form-data; boundary=boundary
+
+--boundary
+Content-Disposition: form-data; name="image"; filename="delikatne.png"
+
+< src/main/resources/images/delikatne.png
+--boundary--
+
+###
+
+# Patch parcel image nr. 2
+
+PATCH http://localhost:9080/fast-delivery/api/parcels/1c023543-5bd1-4b02-9941-27aab5b2ecdb/image
+Content-Type: multipart/form-data; boundary=boundary
+
+--boundary
+Content-Disposition: form-data; name="image"; filename="paczka5.png"
+
+< src/main/resources/images/paczka5.png
+--boundary--
+
+###
+
+# Get non-existent parcel's image
+
+GET http://localhost:9080/fast-delivery/api/parcels/1c023543-5bd2-4b02-9941-27aab5b2ecdb/image
+
+###

@@ -104,7 +104,6 @@ public class InitializedData implements ServletContextListener{
                 .client(patryk)
                 .deliveryDate(LocalDate.of(2024,10,9))
                 .warehouse(dockGdynia)
-                .image(getResourceAsByteArray("/images/paczka1.png"))
                 .build();
         dockGdynia.getParcels().add(paczka1);
         Parcel paczka2 = Parcel.builder()
@@ -113,7 +112,6 @@ public class InitializedData implements ServletContextListener{
                 .status(ParcelStatus.IN_DELIVERY)
                 .client(patryk)
                 .warehouse(dockGdansk)
-                .image(getResourceAsByteArray("/images/paczka2.png"))
                 .build();
         dockGdansk.getParcels().add(paczka2);
         Parcel paczka3 = Parcel.builder()
@@ -122,7 +120,6 @@ public class InitializedData implements ServletContextListener{
                 .status(ParcelStatus.DELIVERED)
                 .client(jarek)
                 .warehouse(dockGdansk)
-                .image(getResourceAsByteArray("/images/paczka3.png"))
                 .build();
         dockGdansk.getParcels().add(paczka3);
         Parcel paczka4 = Parcel.builder()
@@ -131,7 +128,6 @@ public class InitializedData implements ServletContextListener{
                 .status(ParcelStatus.IN_DELIVERY)
                 .client(maria)
                 .warehouse(aviationGdansk)
-                .image(getResourceAsByteArray("/images/paczka4.png"))
                 .build();
         aviationGdansk.getParcels().add(paczka4);
         Parcel paczka5 = Parcel.builder()
@@ -140,7 +136,6 @@ public class InitializedData implements ServletContextListener{
                 .status(ParcelStatus.IN_WAREHOUSE)
                 .client(jarek)
                 .warehouse(aviationGdansk)
-                .image(getResourceAsByteArray("/images/paczka5.png"))
                 .build();
         aviationGdansk.getParcels().add(paczka5);
 

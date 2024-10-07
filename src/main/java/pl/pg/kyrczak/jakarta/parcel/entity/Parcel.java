@@ -22,8 +22,4 @@ public class Parcel implements Serializable {
     private LocalDate deliveryDate;
     private Warehouse warehouse;
     private Client client;
-
-    @ToString.Exclude
-    @EqualsAndHashCode.Exclude
-    private byte[] image;
 }

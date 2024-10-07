@@ -8,6 +8,10 @@ import pl.pg.kyrczak.jakarta.warehouse.repository.api.WarehouseRepository;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.NoSuchFileException;
+import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
@@ -18,12 +22,16 @@ public class ParcelService {
     private final ClientRepository clientRepository;
     private final WarehouseRepository warehouseRepository;
 
+    private final Path imageDirectory;
+
     public ParcelService(ParcelRepository parcelRepository,
                          ClientRepository clientRepository,
-                         WarehouseRepository warehouseRepository) {
+                         WarehouseRepository warehouseRepository,
+                         Path imageDirectory) {
         this.parcelRepository = parcelRepository;
         this.clientRepository = clientRepository;
         this.warehouseRepository = warehouseRepository;
+        this.imageDirectory = imageDirectory;
     }
 
     public Optional<Parcel> find(UUID uuid) {
@@ -64,14 +72,29 @@ public class ParcelService {
                 .map(parcelRepository::findAllByClient);
     }
 
-    public void updateImage(UUID uuid, InputStream is) {
-        parcelRepository.find(uuid).ifPresent(parcel -> {
-            try {
-                parcel.setImage(is.readAllBytes());
-                parcelRepository.update(parcel);
-            } catch (IOException ex) {
-                throw new IllegalStateException(ex);
-            }
-        });
+    public void uploadImage(UUID uuid, InputStream inputStream) throws IOException{
+        Path parcelImagePath = imageDirectory.resolve(uuid + ".png");
+        if (Files.exists(parcelImagePath)) {
+            throw new IllegalStateException();
+        }
+        Files.copy(inputStream, parcelImagePath);
+    }
+
+    public void overwriteImage(UUID uuid, InputStream imageStream) throws IOException {
+        Path parcelImagePath = imageDirectory.resolve(uuid + ".png");
+        Files.copy(imageStream, parcelImagePath, StandardCopyOption.REPLACE_EXISTING);
+    }
+
+    public byte[] downloadImage(UUID uuid) throws IOException {
+        Path parcelImagePath = imageDirectory.resolve(uuid + ".png");
+        if (!Files.exists(parcelImagePath)) {
+            throw new NoSuchFileException("Avatar not found");
+        }
+        return Files.readAllBytes(parcelImagePath);
+    }
+
+    public void deleteImage(UUID uuid) throws IOException {
+        Path parcelImagePath = imageDirectory.resolve(uuid + ".png");
+        Files.deleteIfExists(parcelImagePath);
     }
 }

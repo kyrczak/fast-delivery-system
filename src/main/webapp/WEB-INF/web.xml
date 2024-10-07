@@ -4,6 +4,11 @@
          xsi:schemaLocation="https://jakarta.ee/xml/ns/jakartaee https://jakarta.ee/xml/ns/jakartaee/web-app_6_0.xsd"
          version="6.0"
          metadata-complete="false">
+    <context-param>
+        <param-name>imageDirectory</param-name>
+        <param-value>D:\Z_dysku_D\Programowanie\jakartaEE\src\main\resources\parcelImages</param-value> <!-- For development -->
+    </context-param>
+
 
     <listener>
         <listener-class>pl.pg.kyrczak.jakarta.configuration.listener.CreateDataSource</listener-class>

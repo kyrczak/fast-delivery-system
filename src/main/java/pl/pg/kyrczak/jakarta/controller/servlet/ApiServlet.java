@@ -167,7 +167,7 @@ public class ApiServlet extends HttpServlet {
                 return;
             } else if (path.matches(Patterns.PARCEL_IMAGE.pattern())) {
                 UUID uuid = extractUuid(Patterns.PARCEL_IMAGE, path);
-                parcelController.putParcelImage(uuid, request.getPart("portrait").getInputStream());
+                parcelController.putParcelImage(uuid, request.getPart("image").getInputStream());
                 return;
             }
         }
@@ -183,6 +183,10 @@ public class ApiServlet extends HttpServlet {
             if (path.matches(Patterns.PARCEL.pattern())) {
                 UUID uuid = extractUuid(Patterns.PARCEL, path);
                 parcelController.deleteParcel(uuid);
+                return;
+            } else if (path.matches(Patterns.PARCEL_IMAGE.pattern())) {
+                UUID uuid = extractUuid(Patterns.PARCEL_IMAGE, path);
+                parcelController.deleteParcelImage(uuid);
                 return;
             }
         }
@@ -205,6 +209,10 @@ public class ApiServlet extends HttpServlet {
             if (path.matches(Patterns.PARCEL.pattern())) {
                 UUID uuid = extractUuid(Patterns.PARCEL, path);
                 parcelController.patchParcel(uuid, jsonb.fromJson(request.getReader(), PatchParcelRequest.class));
+                return;
+            } else if (path.matches(Patterns.PARCEL_IMAGE.pattern())) {
+                UUID uuid = extractUuid(Patterns.PARCEL_IMAGE, path);
+                parcelController.patchParcelImage(uuid, request.getPart("image").getInputStream());
                 return;
             }
         }

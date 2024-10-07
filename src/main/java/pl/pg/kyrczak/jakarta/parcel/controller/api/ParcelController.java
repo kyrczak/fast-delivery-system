@@ -6,6 +6,7 @@ import pl.pg.kyrczak.jakarta.parcel.dto.PatchParcelRequest;
 import pl.pg.kyrczak.jakarta.parcel.dto.PutParcelRequest;
 
 import java.io.InputStream;
+import java.nio.file.Path;
 import java.util.UUID;
 
 public interface ParcelController {
@@ -19,4 +20,8 @@ public interface ParcelController {
     void deleteParcel(UUID uuid);
     byte[] getParcelImage(UUID uuid);
     void putParcelImage(UUID uuid, InputStream image);
+
+    void deleteParcelImage(UUID uuid);
+
+    void patchParcelImage(UUID uuid, InputStream image);
 }
