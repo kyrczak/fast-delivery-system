@@ -6,7 +6,7 @@
          metadata-complete="false">
     <context-param>
         <param-name>imageDirectory</param-name>
-        <param-value>D:\Z_dysku_D\Programowanie\jakartaEE\src\main\resources\parcelImages</param-value> <!-- For development -->
+        <param-value>images</param-value> <!-- For development -->
     </context-param>
 
 
