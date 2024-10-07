@@ -14,6 +14,7 @@ import pl.pg.kyrczak.jakarta.warehouse.service.WarehouseService;
 
 import java.io.InputStream;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.UUID;
 
 @WebListener
@@ -79,18 +80,21 @@ public class InitializedData implements ServletContextListener{
                 .name("Lotnisko Trojmiejskie")
                 .location("Gdańsk")
                 .establishedDate(LocalDate.of(2000,5,13))
+                .parcels(new ArrayList<>())
                 .build();
         Warehouse dockGdansk = Warehouse.builder()
                 .uuid(UUID.fromString("baf6561e-f028-49ff-8b59-de9132b4e3dd"))
                 .name("Port w Gdansku")
                 .location("Gdańsk")
                 .establishedDate(LocalDate.of(1969,3,3))
+                .parcels(new ArrayList<>())
                 .build();
         Warehouse dockGdynia = Warehouse.builder()
                 .uuid(UUID.fromString("32faaa8e-dde2-4355-8b8c-9dd252fbc3b2"))
                 .name("Port w Gdyni")
                 .location("Gdynia")
                 .establishedDate(LocalDate.of(1972,7,19))
+                .parcels(new ArrayList<>())
                 .build();
 
         Parcel paczka1 = Parcel.builder()
@@ -100,7 +104,7 @@ public class InitializedData implements ServletContextListener{
                 .client(patryk)
                 .deliveryDate(LocalDate.of(2024,10,9))
                 .warehouse(dockGdynia)
-                .image(getResourceAsByteArray("../images/paczka1.png"))
+                .image(getResourceAsByteArray("/images/paczka1.png"))
                 .build();
         dockGdynia.getParcels().add(paczka1);
         Parcel paczka2 = Parcel.builder()
@@ -109,7 +113,7 @@ public class InitializedData implements ServletContextListener{
                 .status(ParcelStatus.IN_DELIVERY)
                 .client(patryk)
                 .warehouse(dockGdansk)
-                .image(getResourceAsByteArray("../images/paczka2.png"))
+                .image(getResourceAsByteArray("/images/paczka2.png"))
                 .build();
         dockGdansk.getParcels().add(paczka2);
         Parcel paczka3 = Parcel.builder()
@@ -118,7 +122,7 @@ public class InitializedData implements ServletContextListener{
                 .status(ParcelStatus.DELIVERED)
                 .client(jarek)
                 .warehouse(dockGdansk)
-                .image(getResourceAsByteArray("../images/paczka3.png"))
+                .image(getResourceAsByteArray("/images/paczka3.png"))
                 .build();
         dockGdansk.getParcels().add(paczka3);
         Parcel paczka4 = Parcel.builder()
@@ -127,7 +131,7 @@ public class InitializedData implements ServletContextListener{
                 .status(ParcelStatus.IN_DELIVERY)
                 .client(maria)
                 .warehouse(aviationGdansk)
-                .image(getResourceAsByteArray("../images/paczka4.png"))
+                .image(getResourceAsByteArray("/images/paczka4.png"))
                 .build();
         aviationGdansk.getParcels().add(paczka4);
         Parcel paczka5 = Parcel.builder()
@@ -136,7 +140,7 @@ public class InitializedData implements ServletContextListener{
                 .status(ParcelStatus.IN_WAREHOUSE)
                 .client(jarek)
                 .warehouse(aviationGdansk)
-                .image(getResourceAsByteArray("../images/paczka5.png"))
+                .image(getResourceAsByteArray("/images/paczka5.png"))
                 .build();
         aviationGdansk.getParcels().add(paczka5);
 

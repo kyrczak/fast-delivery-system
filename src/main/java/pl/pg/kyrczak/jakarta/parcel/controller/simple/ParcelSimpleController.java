@@ -1,8 +1,8 @@
 package pl.pg.kyrczak.jakarta.parcel.controller.simple;
 
-import jakarta.ws.rs.BadRequestException;
-import jakarta.ws.rs.NotFoundException;
 import pl.pg.kyrczak.jakarta.component.DtoFunctionFactory;
+import pl.pg.kyrczak.jakarta.controller.servlet.exception.BadRequestException;
+import pl.pg.kyrczak.jakarta.controller.servlet.exception.NotFoundException;
 import pl.pg.kyrczak.jakarta.parcel.controller.api.ParcelController;
 import pl.pg.kyrczak.jakarta.parcel.dto.GetParcelResponse;
 import pl.pg.kyrczak.jakarta.parcel.dto.GetParcelsResponse;
@@ -10,6 +10,7 @@ import pl.pg.kyrczak.jakarta.parcel.dto.PatchParcelRequest;
 import pl.pg.kyrczak.jakarta.parcel.dto.PutParcelRequest;
 import pl.pg.kyrczak.jakarta.parcel.service.ParcelService;
 import pl.pg.kyrczak.jakarta.parcel.entity.Parcel;
+
 
 import java.io.InputStream;
 import java.util.UUID;

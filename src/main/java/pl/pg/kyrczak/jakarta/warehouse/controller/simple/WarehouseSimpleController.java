@@ -1,8 +1,8 @@
 package pl.pg.kyrczak.jakarta.warehouse.controller.simple;
 
-import jakarta.ws.rs.BadRequestException;
-import jakarta.ws.rs.NotFoundException;
 import pl.pg.kyrczak.jakarta.component.DtoFunctionFactory;
+import pl.pg.kyrczak.jakarta.controller.servlet.exception.BadRequestException;
+import pl.pg.kyrczak.jakarta.controller.servlet.exception.NotFoundException;
 import pl.pg.kyrczak.jakarta.warehouse.controller.api.WarehouseController;
 import pl.pg.kyrczak.jakarta.warehouse.dto.GetWarehouseResponse;
 import pl.pg.kyrczak.jakarta.warehouse.dto.GetWarehousesResponse;

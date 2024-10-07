@@ -20,5 +20,8 @@ public class Warehouse implements Serializable {
     private String name;
     private String location;
     private LocalDate establishedDate;
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
     private List<Parcel> parcels;
+
 }
