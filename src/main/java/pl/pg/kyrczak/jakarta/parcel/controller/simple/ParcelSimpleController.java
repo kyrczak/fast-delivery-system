@@ -94,8 +94,6 @@ public class ParcelSimpleController implements ParcelController {
             service.uploadImage(uuid, image);
         } catch (IOException e) {
             throw new BadRequestException();
-        } catch (IllegalStateException ex) {
-            throw new BadRequestException();
         }
     }
 

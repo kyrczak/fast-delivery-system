@@ -9,6 +9,16 @@ GET http://localhost:9080/fast-delivery/api/parcels/
 GET http://localhost:9080/fast-delivery/api/warehouses/
 
 ###
+# Get parcel
+
+GET http://localhost:9080/fast-delivery/api/parcels/1c023543-5bd1-4b02-9941-27aab5b2ecdb
+
+###
+# Get non-existent parcel
+
+GET http://localhost:9080/fast-delivery/api/parcels/1c023543-5bd2-4b02-9941-27aab5b2ecdb
+
+###
 
 # Get parcel image
 
