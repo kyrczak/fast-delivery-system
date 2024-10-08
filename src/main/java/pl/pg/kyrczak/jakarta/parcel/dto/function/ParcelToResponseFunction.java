@@ -11,6 +11,7 @@ public class ParcelToResponseFunction implements Function<Parcel, GetParcelRespo
         return GetParcelResponse.builder()
                 .uuid(parcel.getUuid())
                 .weight(parcel.getWeight())
+                .deliveryDate(parcel.getDeliveryDate())
                 .warehouse(GetParcelResponse.Warehouse.builder()
                         .uuid(parcel.getWarehouse().getUuid())
                         .name(parcel.getWarehouse().getName())

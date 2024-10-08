@@ -3,6 +3,8 @@ package pl.pg.kyrczak.jakarta.configuration.listener;
 import jakarta.servlet.ServletContextEvent;
 import jakarta.servlet.ServletContextListener;
 import jakarta.servlet.annotation.WebListener;
+import pl.pg.kyrczak.jakarta.client.controller.simple.ClientSimpleController;
+import pl.pg.kyrczak.jakarta.client.service.ClientService;
 import pl.pg.kyrczak.jakarta.component.DtoFunctionFactory;
 import pl.pg.kyrczak.jakarta.parcel.controller.simple.ParcelSimpleController;
 import pl.pg.kyrczak.jakarta.parcel.service.ParcelService;
@@ -20,7 +22,7 @@ public class CreateControllers implements ServletContextListener {
     public void contextInitialized(ServletContextEvent event) {
         ParcelService parcelService = (ParcelService) event.getServletContext().getAttribute("parcelService");
         WarehouseService warehouseService = (WarehouseService) event.getServletContext().getAttribute("warehouseService");
-
+        ClientService clientService = (ClientService) event.getServletContext().getAttribute("clientService");
         event.getServletContext().setAttribute("parcelController", new ParcelSimpleController(
                 parcelService,
                 new DtoFunctionFactory()
@@ -28,6 +30,11 @@ public class CreateControllers implements ServletContextListener {
 
         event.getServletContext().setAttribute("warehouseController", new WarehouseSimpleController(
                 warehouseService,
+                new DtoFunctionFactory()
+        ));
+
+        event.getServletContext().setAttribute("clientController", new ClientSimpleController(
+                clientService,
                 new DtoFunctionFactory()
         ));
     }

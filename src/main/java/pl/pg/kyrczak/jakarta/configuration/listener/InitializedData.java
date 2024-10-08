@@ -49,6 +49,7 @@ public class InitializedData implements ServletContextListener{
                 .registrationDate(LocalDate.of(2022,12,20))
                 .email("patrykk@student.pg")
                 .password("useruser")
+                .parcels(new ArrayList<>())
                 .build();
 
         Client jarek = Client.builder()
@@ -59,6 +60,7 @@ public class InitializedData implements ServletContextListener{
                 .registrationDate(LocalDate.of(2023,3,5))
                 .email("jareks@student.pg")
                 .password("12345678")
+                .parcels(new ArrayList<>())
                 .build();
 
         Client maria = Client.builder()
@@ -69,11 +71,8 @@ public class InitializedData implements ServletContextListener{
                 .registrationDate(LocalDate.of(2024,9,3))
                 .email("mariao@student.pg")
                 .password("marioluigi")
+                .parcels(new ArrayList<>())
                 .build();
-
-        clientService.create(patryk);
-        clientService.create(jarek);
-        clientService.create(maria);
 
         Warehouse aviationGdansk = Warehouse.builder()
                 .uuid(UUID.fromString("08cb187c-6c30-47bd-9931-2a8a7b907fec"))
@@ -106,38 +105,52 @@ public class InitializedData implements ServletContextListener{
                 .warehouse(dockGdynia)
                 .build();
         dockGdynia.getParcels().add(paczka1);
+        patryk.getParcels().add(paczka1);
         Parcel paczka2 = Parcel.builder()
                 .uuid(UUID.fromString("9e9a4970-fcb0-455c-bdc2-da55ffec7366"))
                 .weight(4.2F)
                 .status(ParcelStatus.IN_DELIVERY)
                 .client(patryk)
+                .deliveryDate(LocalDate.of(2024,10,3))
                 .warehouse(dockGdansk)
                 .build();
         dockGdansk.getParcels().add(paczka2);
+        patryk.getParcels().add(paczka2);
         Parcel paczka3 = Parcel.builder()
                 .uuid(UUID.fromString("76e28a62-a12b-4ec6-9b92-d89b37df3d15"))
                 .weight(1.2F)
                 .status(ParcelStatus.DELIVERED)
                 .client(jarek)
+                .deliveryDate(LocalDate.of(2024,10,5))
                 .warehouse(dockGdansk)
                 .build();
         dockGdansk.getParcels().add(paczka3);
+        jarek.getParcels().add(paczka3);
         Parcel paczka4 = Parcel.builder()
                 .uuid(UUID.fromString("a3449c87-ac60-46b0-8341-9cacab383475"))
                 .weight(20F)
                 .status(ParcelStatus.IN_DELIVERY)
                 .client(maria)
+                .deliveryDate(LocalDate.of(2024,10,23))
                 .warehouse(aviationGdansk)
                 .build();
         aviationGdansk.getParcels().add(paczka4);
+        maria.getParcels().add(paczka4);
         Parcel paczka5 = Parcel.builder()
                 .uuid(UUID.fromString("1c023543-5bd1-4b02-9941-27aab5b2ecdb"))
                 .weight(34F)
                 .status(ParcelStatus.IN_WAREHOUSE)
                 .client(jarek)
+                .deliveryDate(LocalDate.of(2024,10,12))
                 .warehouse(aviationGdansk)
                 .build();
         aviationGdansk.getParcels().add(paczka5);
+        jarek.getParcels().add(paczka5);
+
+        clientService.create(patryk);
+        clientService.create(jarek);
+        clientService.create(maria);
+
 
         warehouseService.create(aviationGdansk);
         warehouseService.create(dockGdansk);

@@ -24,5 +24,7 @@ public class Client implements Serializable {
     private String surname;
     private LocalDate registrationDate;
     private String email;
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
     private List<Parcel> parcels;
 }

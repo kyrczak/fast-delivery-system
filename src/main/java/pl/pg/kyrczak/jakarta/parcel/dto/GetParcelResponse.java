@@ -3,6 +3,7 @@ package pl.pg.kyrczak.jakarta.parcel.dto;
 
 import lombok.*;
 
+import java.time.LocalDate;
 import java.util.UUID;
 
 @Getter
@@ -28,4 +29,5 @@ public class GetParcelResponse {
     private UUID uuid;
     private Float weight;
     private Warehouse warehouse;
+    private LocalDate deliveryDate;
 }

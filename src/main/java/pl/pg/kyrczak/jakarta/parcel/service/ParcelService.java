@@ -1,6 +1,7 @@
 package pl.pg.kyrczak.jakarta.parcel.service;
 
 import pl.pg.kyrczak.jakarta.client.repository.api.ClientRepository;
+import pl.pg.kyrczak.jakarta.controller.servlet.exception.NotFoundException;
 import pl.pg.kyrczak.jakarta.parcel.entity.Parcel;
 import pl.pg.kyrczak.jakarta.parcel.entity.ParcelStatus;
 import pl.pg.kyrczak.jakarta.parcel.repository.api.ParcelRepository;
@@ -81,7 +82,13 @@ public class ParcelService {
     }
 
     public void overwriteImage(UUID uuid, InputStream imageStream) throws IOException {
-        Path parcelImagePath = imageDirectory.resolve(uuid + ".png");
+        Parcel parcel = parcelRepository.find(uuid).orElseThrow(
+                NotFoundException::new
+        );
+        Path parcelImagePath = imageDirectory.resolve(parcel.getUuid() + ".png");
+        if (!Files.exists(parcelImagePath)) {
+            throw new IllegalStateException();
+        }
         Files.copy(imageStream, parcelImagePath, StandardCopyOption.REPLACE_EXISTING);
     }
 

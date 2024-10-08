@@ -8,6 +8,9 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import pl.pg.kyrczak.jakarta.client.controller.api.ClientController;
+import pl.pg.kyrczak.jakarta.client.dto.PatchClientRequest;
+import pl.pg.kyrczak.jakarta.client.dto.PutClientRequest;
 import pl.pg.kyrczak.jakarta.parcel.controller.api.ParcelController;
 import pl.pg.kyrczak.jakarta.parcel.dto.PatchParcelRequest;
 import pl.pg.kyrczak.jakarta.parcel.dto.PutParcelRequest;
@@ -37,6 +40,8 @@ public class ApiServlet extends HttpServlet {
      * Controller for managing collections professions' representations.
      */
     private WarehouseController warehouseController;
+
+    private ClientController clientController;
 
     /**
      * Definition of paths supported by this servlet. Separate inner class provides composition for static fields.
@@ -90,6 +95,10 @@ public class ApiServlet extends HttpServlet {
          */
         public static final Pattern CLIENT_PARCELS = Pattern.compile("/clients/(%s)/parcels/?".formatted(UUID.pattern()));
 
+        public static final Pattern CLIENT = Pattern.compile("/clients/(%s)".formatted(UUID.pattern()));
+
+        public static final Pattern CLIENTS = Pattern.compile("/clients/?");
+
     }
 
     /**
@@ -113,6 +122,7 @@ public class ApiServlet extends HttpServlet {
         super.init();
         parcelController = (ParcelController) getServletContext().getAttribute("parcelController");
         warehouseController = (WarehouseController) getServletContext().getAttribute("warehouseController");
+        clientController = (ClientController) getServletContext().getAttribute("clientController");
     }
 
     @SuppressWarnings("RedundantThrows")
@@ -151,6 +161,15 @@ public class ApiServlet extends HttpServlet {
                 response.setContentLength(portrait.length);
                 response.getOutputStream().write(portrait);
                 return;
+            } else if (path.matches(Patterns.CLIENTS.pattern())) {
+                response.setContentType("application/json");
+                response.getWriter().write(jsonb.toJson(clientController.getClients()));
+                return;
+            } else if (path.matches(Patterns.CLIENT.pattern())) {
+                response.setContentType("application/json");
+                UUID uuid = extractUuid(Patterns.CLIENT, path);
+                response.getWriter().write(jsonb.toJson(clientController.getClient(uuid)));
+                return;
             }
         }
         response.sendError(HttpServletResponse.SC_BAD_REQUEST);
@@ -168,6 +187,11 @@ public class ApiServlet extends HttpServlet {
             } else if (path.matches(Patterns.PARCEL_IMAGE.pattern())) {
                 UUID uuid = extractUuid(Patterns.PARCEL_IMAGE, path);
                 parcelController.putParcelImage(uuid, request.getPart("image").getInputStream());
+                return;
+            } else if (path.matches(Patterns.CLIENT.pattern())) {
+                UUID uuid = extractUuid(Patterns.PARCEL, path);
+                clientController.putClient(uuid, jsonb.fromJson(request.getReader(), PutClientRequest.class));
+                response.addHeader("Location", createUrl(request, Paths.API, "clients", uuid.toString()));
                 return;
             }
         }
@@ -187,6 +211,10 @@ public class ApiServlet extends HttpServlet {
             } else if (path.matches(Patterns.PARCEL_IMAGE.pattern())) {
                 UUID uuid = extractUuid(Patterns.PARCEL_IMAGE, path);
                 parcelController.deleteParcelImage(uuid);
+                return;
+            } else if (path.matches(Patterns.CLIENT.pattern())) {
+                UUID uuid = extractUuid(Patterns.CLIENT, path);
+                clientController.deleteClient(uuid);
                 return;
             }
         }
@@ -213,6 +241,10 @@ public class ApiServlet extends HttpServlet {
             } else if (path.matches(Patterns.PARCEL_IMAGE.pattern())) {
                 UUID uuid = extractUuid(Patterns.PARCEL_IMAGE, path);
                 parcelController.patchParcelImage(uuid, request.getPart("image").getInputStream());
+                return;
+            } else if (path.matches(Patterns.CLIENT.pattern())) {
+                UUID uuid = extractUuid(Patterns.PARCEL, path);
+                clientController.patchClient(uuid,jsonb.fromJson(request.getReader(), PatchClientRequest.class));
                 return;
             }
         }
