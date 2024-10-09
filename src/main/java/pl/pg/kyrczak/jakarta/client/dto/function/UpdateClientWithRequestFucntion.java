@@ -16,6 +16,7 @@ public class UpdateClientWithRequestFucntion implements BiFunction<Client, Patch
                 .surname(request.getSurname())
                 .email(request.getEmail())
                 .password(entity.getPassword())
+                .parcels(entity.getParcels())
                 .build();
     }
 }

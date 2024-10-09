@@ -15,6 +15,12 @@ public class ClientToResponseFunction implements Function<Client, GetClientRespo
                 .registrationDate(client.getRegistrationDate())
                 .surname(client.getSurname())
                 .email(client.getEmail())
+                .parcels(client.getParcels().stream()
+                        .map(parcel -> GetClientResponse.Parcel.builder()
+                                .uuid(parcel.getUuid())
+                                .build())
+                        .toList())
                 .build();
+
     }
 }

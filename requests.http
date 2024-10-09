@@ -1,0 +1,108 @@
+# Get all parcels.
+
+GET http://localhost:9080/fast-delivery/api/parcels/
+
+###
+
+# Get all warehouses.
+
+GET http://localhost:9080/fast-delivery/api/warehouses/
+
+###
+# Get parcel
+
+GET http://localhost:9080/fast-delivery/api/parcels/1c023543-5bd1-4b02-9941-27aab5b2ecdb
+
+###
+# Get non-existent parcel
+
+GET http://localhost:9080/fast-delivery/api/parcels/1c023543-5bd2-4b02-9941-27aab5b2ecdb
+
+###
+
+# Get parcel image
+
+GET http://localhost:9080/fast-delivery/api/parcels/1c023543-5bd1-4b02-9941-27aab5b2ecdb/image
+
+###
+
+# Insert parcel image when exists
+
+PUT http://localhost:9080/fast-delivery/api/parcels/1c023543-5bd1-4b02-9941-27aab5b2ecdb/image
+Content-Type: multipart/form-data; boundary=boundary
+
+--boundary
+Content-Disposition: form-data; name="image"; filename="delikatne.png"
+
+< src/main/resources/images/delikatne.png
+--boundary--
+
+###
+
+# Delete parcel image
+
+DELETE http://localhost:9080/fast-delivery/api/parcels/1c023543-5bd1-4b02-9941-27aab5b2ecdb/image
+
+###
+
+# Patch parcel image
+
+PATCH http://localhost:9080/fast-delivery/api/parcels/1c023543-5bd1-4b02-9941-27aab5b2ecdb/image
+Content-Type: multipart/form-data; boundary=boundary
+
+--boundary
+Content-Disposition: form-data; name="image"; filename="delikatne.png"
+
+< src/main/resources/images/delikatne.png
+--boundary--
+
+###
+
+# Patch parcel image nr. 2
+
+PATCH http://localhost:9080/fast-delivery/api/parcels/1c023543-5bd1-4b02-9941-27aab5b2ecdb/image
+Content-Type: multipart/form-data; boundary=boundary
+
+--boundary
+Content-Disposition: form-data; name="image"; filename="paczka5.png"
+
+< src/main/resources/images/paczka5.png
+--boundary--
+
+###
+
+# Patch non-existent parcel image 
+
+PATCH http://localhost:9080/fast-delivery/api/parcels/1c013543-5bd1-4b02-9941-27aab5b2ecdb/image
+Content-Type: multipart/form-data; boundary=boundary
+
+--boundary
+Content-Disposition: form-data; name="image"; filename="paczka5.png"
+
+< src/main/resources/images/paczka5.png
+--boundary--
+
+###
+
+# Get non-existent parcel's image
+
+GET http://localhost:9080/fast-delivery/api/parcels/1c023543-5bd2-4b02-9941-27aab5b2ecdb/image
+
+###
+
+# Get user
+
+GET http://localhost:9080/fast-delivery/api/clients/12f2776c-f823-4aab-8eb3-0e4fd5ae32f9
+
+###
+
+# Get nonexistent user
+
+GET http://localhost:9080/fast-delivery/api/clients/12f2776c-f823-4aab-8eb3-0e4fd5ae32f8
+
+###
+# Get users
+
+GET http://localhost:9080/fast-delivery/api/clients
+
+###

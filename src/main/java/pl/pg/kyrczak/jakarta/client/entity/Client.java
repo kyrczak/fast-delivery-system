@@ -2,10 +2,11 @@ package pl.pg.kyrczak.jakarta.client.entity;
 
 import lombok.*;
 import lombok.experimental.SuperBuilder;
+import pl.pg.kyrczak.jakarta.parcel.entity.Parcel;
 
 import java.io.Serializable;
 import java.time.LocalDate;
-import java.util.Date;
+import java.util.List;
 import java.util.UUID;
 @Getter
 @Setter
@@ -23,4 +24,7 @@ public class Client implements Serializable {
     private String surname;
     private LocalDate registrationDate;
     private String email;
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
+    private List<Parcel> parcels;
 }

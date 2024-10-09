@@ -4,6 +4,7 @@ import pl.pg.kyrczak.jakarta.client.entity.Client;
 import pl.pg.kyrczak.jakarta.client.repository.api.ClientRepository;
 import pl.pg.kyrczak.jakarta.crypto.component.Pbkdf2PasswordHash;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -16,6 +17,9 @@ public class ClientService {
         this.passwordHash = passwordHash;
     }
 
+    public List<Client> findAll() {
+        return repository.findAll();
+    }
     public Optional<Client> find(UUID uuid) {
         return repository.find(uuid);
     }
@@ -33,6 +37,14 @@ public class ClientService {
         return find(login)
                 .map(client -> passwordHash.verify(password.toCharArray(), client.getPassword()))
                 .orElse(false);
+    }
+
+    public void update(Client client) {
+        repository.update(client);
+    }
+
+    public void delete(UUID uuid) {
+        repository.delete(repository.find(uuid).orElseThrow());
     }
 
 }
