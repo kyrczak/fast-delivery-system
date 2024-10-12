@@ -8,19 +8,4 @@
         <param-name>imageDirectory</param-name>
         <param-value>images</param-value> <!-- For development -->
     </context-param>
-
-
-    <listener>
-        <listener-class>pl.pg.kyrczak.jakarta.configuration.listener.CreateDataSource</listener-class>
-    </listener>
-
-    <listener>
-        <listener-class>pl.pg.kyrczak.jakarta.configuration.listener.CreateServices</listener-class>
-    </listener>
-
-    <listener>
-        <listener-class>pl.pg.kyrczak.jakarta.configuration.listener.CreateControllers</listener-class>
-    </listener>
-
-
 </web-app>

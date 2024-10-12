@@ -1,5 +1,7 @@
 package pl.pg.kyrczak.jakarta.parcel.repository.memory;
 
+import jakarta.enterprise.context.RequestScoped;
+import jakarta.inject.Inject;
 import pl.pg.kyrczak.jakarta.client.entity.Client;
 import pl.pg.kyrczak.jakarta.datastore.component.DataStore;
 import pl.pg.kyrczak.jakarta.parcel.entity.Parcel;
@@ -13,10 +15,12 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+@RequestScoped
 public class ParcelInMemoryRepository implements ParcelRepository {
 
     private final DataStore store;
 
+    @Inject
     public ParcelInMemoryRepository(DataStore store) {
         this.store = store;
     }

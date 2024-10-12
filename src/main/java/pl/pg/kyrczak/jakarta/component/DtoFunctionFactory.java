@@ -1,5 +1,6 @@
 package pl.pg.kyrczak.jakarta.component;
 
+import jakarta.enterprise.context.ApplicationScoped;
 import pl.pg.kyrczak.jakarta.client.dto.function.*;
 import pl.pg.kyrczak.jakarta.parcel.dto.function.ParcelToResponseFunction;
 import pl.pg.kyrczak.jakarta.parcel.dto.function.ParcelsToResponseFunction;
@@ -10,6 +11,7 @@ import pl.pg.kyrczak.jakarta.warehouse.dto.function.UpdateWarehouseWithRequestFu
 import pl.pg.kyrczak.jakarta.warehouse.dto.function.WarehouseToResponseFunction;
 import pl.pg.kyrczak.jakarta.warehouse.dto.function.WarehousesToResponseFunction;
 
+@ApplicationScoped
 public class DtoFunctionFactory {
     public ParcelToResponseFunction parcelToResponseFunction() {
         return new ParcelToResponseFunction();

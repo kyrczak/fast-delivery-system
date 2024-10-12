@@ -1,5 +1,7 @@
 package pl.pg.kyrczak.jakarta.parcel.controller.simple;
 
+import jakarta.enterprise.context.RequestScoped;
+import jakarta.inject.Inject;
 import pl.pg.kyrczak.jakarta.component.DtoFunctionFactory;
 import pl.pg.kyrczak.jakarta.controller.servlet.exception.BadRequestException;
 import pl.pg.kyrczak.jakarta.controller.servlet.exception.NotFoundException;
@@ -15,11 +17,13 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.UUID;
 
+@RequestScoped
 public class ParcelSimpleController implements ParcelController {
 
     private final ParcelService service;
     private final DtoFunctionFactory factory;
 
+    @Inject
     public ParcelSimpleController(ParcelService service, DtoFunctionFactory factory) {
         this.service = service;
         this.factory = factory;

@@ -1,5 +1,7 @@
 package pl.pg.kyrczak.jakarta.warehouse.repository.memory;
 
+import jakarta.enterprise.context.RequestScoped;
+import jakarta.inject.Inject;
 import pl.pg.kyrczak.jakarta.datastore.component.DataStore;
 import pl.pg.kyrczak.jakarta.warehouse.entity.Warehouse;
 import pl.pg.kyrczak.jakarta.warehouse.repository.api.WarehouseRepository;
@@ -8,10 +10,12 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+@RequestScoped
 public class WarehouseInMemoryRepository implements WarehouseRepository {
 
     private final DataStore store;
 
+    @Inject
     public WarehouseInMemoryRepository(DataStore store) {
         this.store = store;
     }

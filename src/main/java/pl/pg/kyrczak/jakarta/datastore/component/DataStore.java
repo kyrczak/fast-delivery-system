@@ -1,5 +1,8 @@
 package pl.pg.kyrczak.jakarta.datastore.component;
 
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
+import lombok.NoArgsConstructor;
 import lombok.extern.java.Log;
 import pl.pg.kyrczak.jakarta.client.entity.Client;
 import pl.pg.kyrczak.jakarta.parcel.entity.Parcel;
@@ -13,12 +16,15 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Log
+@ApplicationScoped
+@NoArgsConstructor(force = true)
 public class DataStore {
     private final Set<Warehouse> warehouses = new HashSet<>();
     private final Set<Parcel> parcels = new HashSet<>();
     private final Set<Client> clients = new HashSet<>();
     private final CloningUtility cloningUtility;
 
+    @Inject
     public DataStore(CloningUtility cloningUtility) {
         this.cloningUtility = cloningUtility;
     }

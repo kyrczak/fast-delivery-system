@@ -1,5 +1,7 @@
 package pl.pg.kyrczak.jakarta.client.controller.simple;
 
+import jakarta.enterprise.context.RequestScoped;
+import jakarta.inject.Inject;
 import pl.pg.kyrczak.jakarta.client.controller.api.ClientController;
 import pl.pg.kyrczak.jakarta.client.dto.GetClientResponse;
 import pl.pg.kyrczak.jakarta.client.dto.GetClientsResponse;
@@ -12,11 +14,13 @@ import pl.pg.kyrczak.jakarta.controller.servlet.exception.NotFoundException;
 
 import java.util.UUID;
 
+@RequestScoped
 public class ClientSimpleController implements ClientController {
 
     private final ClientService service;
     private final DtoFunctionFactory factory;
 
+    @Inject
     public ClientSimpleController(ClientService service, DtoFunctionFactory factory) {
         this.service = service;
         this.factory = factory;

@@ -1,5 +1,6 @@
 package pl.pg.kyrczak.jakarta.crypto.component;
 
+import jakarta.enterprise.context.Dependent;
 import lombok.SneakyThrows;
 
 import javax.crypto.SecretKeyFactory;
@@ -9,6 +10,7 @@ import java.security.SecureRandom;
 import java.security.spec.KeySpec;
 import java.util.Base64;
 
+@Dependent
 public class Pbkdf2PasswordHash {
     private static final String ALGORITHM = "PBKDF2WithHmacSHA256";
 

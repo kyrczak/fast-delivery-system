@@ -1,9 +1,13 @@
 package pl.pg.kyrczak.jakarta.parcel.service;
 
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
+import lombok.NoArgsConstructor;
 import pl.pg.kyrczak.jakarta.client.repository.api.ClientRepository;
 import pl.pg.kyrczak.jakarta.controller.servlet.exception.NotFoundException;
 import pl.pg.kyrczak.jakarta.parcel.entity.Parcel;
 import pl.pg.kyrczak.jakarta.parcel.entity.ParcelStatus;
+import pl.pg.kyrczak.jakarta.parcel.producer.api.ImageDirectory;
 import pl.pg.kyrczak.jakarta.parcel.repository.api.ParcelRepository;
 import pl.pg.kyrczak.jakarta.warehouse.repository.api.WarehouseRepository;
 
@@ -18,6 +22,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+@ApplicationScoped
+@NoArgsConstructor(force = true)
 public class ParcelService {
     private final ParcelRepository parcelRepository;
     private final ClientRepository clientRepository;
@@ -25,10 +31,11 @@ public class ParcelService {
 
     private final Path imageDirectory;
 
+    @Inject
     public ParcelService(ParcelRepository parcelRepository,
                          ClientRepository clientRepository,
                          WarehouseRepository warehouseRepository,
-                         Path imageDirectory) {
+                         @ImageDirectory Path imageDirectory) {
         this.parcelRepository = parcelRepository;
         this.clientRepository = clientRepository;
         this.warehouseRepository = warehouseRepository;

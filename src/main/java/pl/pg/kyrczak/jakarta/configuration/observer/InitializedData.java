@@ -1,5 +1,10 @@
-package pl.pg.kyrczak.jakarta.configuration.listener;
+package pl.pg.kyrczak.jakarta.configuration.observer;
 
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.enterprise.context.Initialized;
+import jakarta.enterprise.context.control.RequestContextController;
+import jakarta.enterprise.event.Observes;
+import jakarta.inject.Inject;
 import jakarta.servlet.ServletContextEvent;
 import jakarta.servlet.ServletContextListener;
 import jakarta.servlet.annotation.WebListener;
@@ -17,30 +22,42 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.UUID;
 
-@WebListener
-public class InitializedData implements ServletContextListener{
-    private ParcelService parcelService;
+@ApplicationScoped
+public class InitializedData {
+    private final ParcelService parcelService;
 
     /**
      * User service.
      */
-    private ClientService clientService;
+    private final ClientService clientService;
 
     /**
      * Profession service.
      */
-    private WarehouseService warehouseService;
+    private final WarehouseService warehouseService;
 
-    @Override
-    public void contextInitialized(ServletContextEvent event) {
-        parcelService = (ParcelService) event.getServletContext().getAttribute("parcelService");
-        clientService = (ClientService) event.getServletContext().getAttribute("clientService");
-        warehouseService = (WarehouseService) event.getServletContext().getAttribute("warehouseService");
+    private final RequestContextController requestContextController;
+
+    @Inject
+    public InitializedData(
+            ParcelService parcelService,
+            ClientService clientService,
+            WarehouseService warehouseService,
+            RequestContextController requestContextController
+    ) {
+        this.parcelService = parcelService;
+        this.clientService = clientService;
+        this.warehouseService = warehouseService;
+        this.requestContextController = requestContextController;
+    }
+    public void contextInitialized(@Observes @Initialized(ApplicationScoped.class) Object init) {
         init();
     }
 
     @SneakyThrows
     private void init() {
+        requestContextController.activate();
+
         Client patryk = Client.builder()
                 .uuid(UUID.fromString("12f2776c-f823-4aab-8eb3-0e4fd5ae32f9"))
                 .login("patrykk")
@@ -161,6 +178,8 @@ public class InitializedData implements ServletContextListener{
         parcelService.create(paczka3);
         parcelService.create(paczka4);
         parcelService.create(paczka5);
+
+        requestContextController.deactivate();
 
     }
     @SneakyThrows

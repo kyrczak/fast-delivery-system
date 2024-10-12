@@ -1,5 +1,7 @@
 package pl.pg.kyrczak.jakarta.warehouse.controller.simple;
 
+import jakarta.enterprise.context.RequestScoped;
+import jakarta.inject.Inject;
 import pl.pg.kyrczak.jakarta.component.DtoFunctionFactory;
 import pl.pg.kyrczak.jakarta.controller.servlet.exception.BadRequestException;
 import pl.pg.kyrczak.jakarta.controller.servlet.exception.NotFoundException;
@@ -12,10 +14,12 @@ import pl.pg.kyrczak.jakarta.warehouse.service.WarehouseService;
 
 import java.util.UUID;
 
+@RequestScoped
 public class WarehouseSimpleController implements WarehouseController {
     private final WarehouseService service;
     private final DtoFunctionFactory factory;
 
+    @Inject
     public WarehouseSimpleController(WarehouseService service, DtoFunctionFactory factory) {
         this.service = service;
         this.factory = factory;

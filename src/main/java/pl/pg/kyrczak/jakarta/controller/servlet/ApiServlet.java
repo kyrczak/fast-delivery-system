@@ -1,5 +1,6 @@
 package pl.pg.kyrczak.jakarta.controller.servlet;
 
+import jakarta.inject.Inject;
 import jakarta.json.bind.Jsonb;
 import jakarta.json.bind.JsonbBuilder;
 import jakarta.servlet.ServletException;
@@ -34,14 +35,14 @@ public class ApiServlet extends HttpServlet {
     /**
      * Controller for managing collections characters' representations.
      */
-    private ParcelController parcelController;
+    private final ParcelController parcelController;
 
     /**
      * Controller for managing collections professions' representations.
      */
-    private WarehouseController warehouseController;
+    private final WarehouseController warehouseController;
 
-    private ClientController clientController;
+    private final ClientController clientController;
 
     /**
      * Definition of paths supported by this servlet. Separate inner class provides composition for static fields.
@@ -108,6 +109,15 @@ public class ApiServlet extends HttpServlet {
      */
     private final Jsonb jsonb = JsonbBuilder.create();
 
+    @Inject
+    public ApiServlet(ParcelController parcelController,
+                      WarehouseController warehouseController,
+                      ClientController clientController) {
+        this.parcelController = parcelController;
+        this.warehouseController = warehouseController;
+        this.clientController = clientController;
+    }
+
     @Override
     protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         if (request.getMethod().equals("PATCH")) {
@@ -115,14 +125,6 @@ public class ApiServlet extends HttpServlet {
         } else {
             super.service(request, response);
         }
-    }
-
-    @Override
-    public void init() throws ServletException {
-        super.init();
-        parcelController = (ParcelController) getServletContext().getAttribute("parcelController");
-        warehouseController = (WarehouseController) getServletContext().getAttribute("warehouseController");
-        clientController = (ClientController) getServletContext().getAttribute("clientController");
     }
 
     @SuppressWarnings("RedundantThrows")

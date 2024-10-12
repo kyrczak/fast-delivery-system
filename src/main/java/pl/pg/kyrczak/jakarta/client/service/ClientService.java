@@ -1,5 +1,8 @@
 package pl.pg.kyrczak.jakarta.client.service;
 
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
+import lombok.NoArgsConstructor;
 import pl.pg.kyrczak.jakarta.client.entity.Client;
 import pl.pg.kyrczak.jakarta.client.repository.api.ClientRepository;
 import pl.pg.kyrczak.jakarta.crypto.component.Pbkdf2PasswordHash;
@@ -8,10 +11,13 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+@ApplicationScoped
+@NoArgsConstructor(force = true)
 public class ClientService {
     private final ClientRepository repository;
     private final Pbkdf2PasswordHash passwordHash;
 
+    @Inject
     public ClientService(ClientRepository repository, Pbkdf2PasswordHash passwordHash) {
         this.repository = repository;
         this.passwordHash = passwordHash;
