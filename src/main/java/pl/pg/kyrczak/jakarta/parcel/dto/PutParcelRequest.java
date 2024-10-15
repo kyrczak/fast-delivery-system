@@ -19,4 +19,5 @@ public class PutParcelRequest {
     private String status;
     private LocalDate deliveryDate;
     private UUID warehouse;
+    private UUID client;
 }

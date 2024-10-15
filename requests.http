@@ -106,3 +106,67 @@ GET http://localhost:9080/fast-delivery/api/clients/12f2776c-f823-4aab-8eb3-0e4f
 GET http://localhost:9080/fast-delivery/api/clients
 
 ###
+
+# Insert parcel
+
+PUT http://localhost:9080/fast-delivery/api/parcels/38cae1cc-049c-41fd-b129-d7edfcf7f1fa
+Content-Type: application/json
+
+{
+  "weight": 20.3,
+  "status": "IN_DELIVERY",
+  "deliveryDate": "2024-12-03",
+  "warehouse": "baf6561e-f028-49ff-8b59-de9132b4e3dd",
+  "client": "12f2776c-f823-4aab-8eb3-0e4fd5ae32f9"
+}
+
+###
+# Get parcel
+
+GET http://localhost:9080/fast-delivery/api/parcels/38cae1cc-049c-41fd-b129-d7edfcf7f1fa
+
+###
+
+# Put warehouse
+
+PUT http://localhost:9080/fast-delivery/api/warehouses/3bd328e1-cb1b-4bc1-a10d-d734791d65b9
+Content-Type: application/json
+
+{
+  "name": "Lotnisko w Warszawie",
+  "location": "Warszawa",
+  "establishedDate": "1994-02-16",
+  "parcels": []
+}
+
+###
+
+# Get warehouse
+
+GET http://localhost:9080/fast-delivery/api/warehouses/3bd328e1-cb1b-4bc1-a10d-d734791d65b9
+
+###
+
+# Pathc parcel
+
+PATCH http://localhost:9080/fast-delivery/api/parcels/38cae1cc-049c-41fd-b129-d7edfcf7f1fa
+Content-Type: application/json
+
+{
+  "status": "DELIVERED",
+  "deliveryDate": "2024-12-01"
+}
+
+###
+
+# Patch warehouse
+
+PATCH http://localhost:9080/fast-delivery/api/warehouses/3bd328e1-cb1b-4bc1-a10d-d734791d65b9
+Content-Type: application/json
+
+{
+  "name": "Lotnisko Chopina w Warszawie",
+  "location": "Żwirki i Wigury 1, 02-143 Warszawa"
+}
+
+###

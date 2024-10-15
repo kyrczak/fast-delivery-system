@@ -16,6 +16,8 @@ import pl.pg.kyrczak.jakarta.parcel.controller.api.ParcelController;
 import pl.pg.kyrczak.jakarta.parcel.dto.PatchParcelRequest;
 import pl.pg.kyrczak.jakarta.parcel.dto.PutParcelRequest;
 import pl.pg.kyrczak.jakarta.warehouse.controller.api.WarehouseController;
+import pl.pg.kyrczak.jakarta.warehouse.dto.PatchWarehouseRequest;
+import pl.pg.kyrczak.jakarta.warehouse.dto.PutWarehouseRequest;
 
 import java.io.IOException;
 import java.util.UUID;
@@ -86,6 +88,7 @@ public class ApiServlet extends HttpServlet {
          */
         public static final Pattern WAREHOUSES = Pattern.compile("/warehouses/?");
 
+        public static final Pattern WAREHOUSE = Pattern.compile("/warehouses/(%s)".formatted(UUID.pattern()));
         /**
          * All characters of single profession.
          */
@@ -146,6 +149,11 @@ public class ApiServlet extends HttpServlet {
                 response.setContentType("application/json");
                 response.getWriter().write(jsonb.toJson(warehouseController.getWarehouses()));
                 return;
+            } else if (path.matches(Patterns.WAREHOUSE.pattern())) {
+                response.setContentType("application/json");
+                UUID uuid = extractUuid(Patterns.WAREHOUSE, path);
+                response.getWriter().write(jsonb.toJson(warehouseController.getWarehouse(uuid)));
+                return;
             } else if (path.matches(Patterns.WAREHOUSE_PARCELS.pattern())) {
                 response.setContentType("application/json");
                 UUID uuid = extractUuid(Patterns.WAREHOUSE_PARCELS, path);
@@ -191,9 +199,14 @@ public class ApiServlet extends HttpServlet {
                 parcelController.putParcelImage(uuid, request.getPart("image").getInputStream());
                 return;
             } else if (path.matches(Patterns.CLIENT.pattern())) {
-                UUID uuid = extractUuid(Patterns.PARCEL, path);
+                UUID uuid = extractUuid(Patterns.CLIENT, path);
                 clientController.putClient(uuid, jsonb.fromJson(request.getReader(), PutClientRequest.class));
                 response.addHeader("Location", createUrl(request, Paths.API, "clients", uuid.toString()));
+                return;
+            } else if (path.matches(Patterns.WAREHOUSE.pattern())) {
+                UUID uuid = extractUuid(Patterns.WAREHOUSE, path);
+                warehouseController.putWarehouse(uuid,jsonb.fromJson(request.getReader(), PutWarehouseRequest.class));
+                response.addHeader("Location", createUrl(request, Paths.API, "warehouses", uuid.toString()));
                 return;
             }
         }
@@ -217,6 +230,10 @@ public class ApiServlet extends HttpServlet {
             } else if (path.matches(Patterns.CLIENT.pattern())) {
                 UUID uuid = extractUuid(Patterns.CLIENT, path);
                 clientController.deleteClient(uuid);
+                return;
+            } else if (path.matches(Patterns.WAREHOUSE.pattern())) {
+                UUID uuid = extractUuid(Patterns.WAREHOUSE, path);
+                warehouseController.deleteWarehouse(uuid);
                 return;
             }
         }
@@ -245,8 +262,12 @@ public class ApiServlet extends HttpServlet {
                 parcelController.patchParcelImage(uuid, request.getPart("image").getInputStream());
                 return;
             } else if (path.matches(Patterns.CLIENT.pattern())) {
-                UUID uuid = extractUuid(Patterns.PARCEL, path);
+                UUID uuid = extractUuid(Patterns.CLIENT, path);
                 clientController.patchClient(uuid,jsonb.fromJson(request.getReader(), PatchClientRequest.class));
+                return;
+            } else if (path.matches(Patterns.WAREHOUSE.pattern())) {
+                UUID uuid = extractUuid(Patterns.WAREHOUSE, path);
+                warehouseController.patchWarehouse(uuid,jsonb.fromJson(request.getReader(), PatchWarehouseRequest.class));
                 return;
             }
         }
