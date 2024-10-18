@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="jakarta.faces.html"
+                xmlns:ui="jakarta.faces.facelets"
+                xmlns:f="jakarta.faces.core"
+                xmlns:jsf="jakarta.faces"
+                template="/WEB-INF/template/main.xhtml">
+
+    <f:metadata>
+        <f:viewAction action="#{parcelCreate.init()}"/>
+    </f:metadata>
+
+    <ui:define name="content">
+        <article>
+            <header><h2>Create parcel - basic information</h2></header>
+            <h:form styleClass="container" onreset="onReset()" enctype="multipart/form-data">
+                <div class="row">
+                    <div class="col-2 p-2 text-center">
+                        <h:commandButton styleClass="btn" value="Previous" immediate="true"
+                                         action="#{parcelCreate.goToWarehouseAction()}"/>
+                    </div>
+                    <div class="col-2 p-2 text-center">
+                        <h:commandButton styleClass="btn" value="Next"
+                                         action="#{parcelCreate.goToConfirmAction()}"/>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-4 p-2">
+                        <div>
+                            <h:panelGroup rendered="#{parcelCreate.parcel.image == null}">
+                                <h:outputLabel for="image" value="image:" styleClass="form-label"/>
+                                <h:inputFile id="image" styleClass="form-control"
+                                             value="#{parcelCreate.parcel.image}"/>
+                            </h:panelGroup>
+
+                            <h:panelGroup rendered="#{parcelCreate.parcel.image != null}">
+                                <h:outputLabel for="imageFile2" value="image:" styleClass="form-label"/>
+                                <div class="input-group">
+                                    <h:inputText id="imageFile2" styleClass="form-control" disabled="true"
+                                                 readonly="true"
+                                                 value="#{parcelCreate.parcel.image.submittedFileName}"/>
+                                    <h:commandButton styleClass="btn  btn-outline-secondary" value="Reset"
+                                                     action="#{parcelCreate.resetImageAction()}"/>
+                                </div>
+                                <h:graphicImage alt="parcel image" styleClass="w-100"
+                                                value="#{parcelCreate.parcelImageUrl}"/>
+                            </h:panelGroup>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-2 p-2 text-center">
+                        <h:button styleClass="btn btn-primary" value="Create" disabled="true"/>
+                    </div>
+                    <div class="col-2 p-2 text-center">
+                        <h:commandButton styleClass="btn btn-secondary" value="Cancel"
+                                         action="#{parcelCreate.cancelAction()}"/>
+                    </div>
+                </div>
+            </h:form>
+        </article>
+    </ui:define>
+
+</ui:composition>

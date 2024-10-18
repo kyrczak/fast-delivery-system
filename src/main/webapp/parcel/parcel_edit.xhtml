@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="jakarta.faces.html"
+                xmlns:ui="jakarta.faces.facelets"
+                xmlns:f="jakarta.faces.core"
+                template="/WEB-INF/template/main.xhtml">
+
+    <f:metadata>
+        <f:viewParam name="id" value="#{parcelEdit.uuid}" required="true"/>
+        <f:viewAction action="#{parcelEdit.init()}"/>
+    </f:metadata>
+
+    <ui:define name="content">
+        <article>
+            <header><h2>Edit parcel info</h2></header>
+            <h:form styleClass="container" onreset="onReset()" enctype="multipart/form-data">
+                <div class="row">
+                    <div class="col-4 p-2">
+                        <div class="form-outline">
+                            <h:inputText id="status" value="#{parcelEdit.parcel.status}" styleClass="form-control"/>
+                            <h:outputLabel for="status" value="status:" styleClass="form-label"/>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-4 p-2">
+                        <div class="form-outline">
+                            <h:inputText id="deliveryDate" value="#{parcelEdit.parcel.deliveryDate}" styleClass="form-control"/>
+                            <h:outputLabel for="deliveryDate" value="deliveryDate:" styleClass="form-label"/>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-4 p-2">
+                        <div class="form-outline">
+                            <h:inputFile id="image" value="#{parcelEdit.parcel.image}"
+                                         styleClass="form-control active"/>
+                            <h:outputLabel for="image" value="image:" styleClass="form-label"/>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-2 p-2 text-center">
+                        <h:commandButton styleClass="btn btn-primary" value="Update"
+                                         action="#{parcelEdit.saveAction()}"/>
+                    </div>
+                    <div class="col-2 p-2 text-center">
+                        <h:commandButton styleClass="btn btn-secondary" type="reset" value="Reset"/>
+                    </div>
+                </div>
+            </h:form>
+        </article>
+    </ui:define>
+
+</ui:composition>

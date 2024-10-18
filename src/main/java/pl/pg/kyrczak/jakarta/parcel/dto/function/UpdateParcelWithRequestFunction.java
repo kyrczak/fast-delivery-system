@@ -11,7 +11,7 @@ public class UpdateParcelWithRequestFunction implements BiFunction<Parcel, Patch
     public Parcel apply(Parcel parcel, PatchParcelRequest request) {
         return Parcel.builder()
                 .uuid(parcel.getUuid())
-                .weight(parcel.getWeight())
+                .weight(request.getWeight())
                 .warehouse(parcel.getWarehouse())
                 .status(ParcelStatus.valueOf(request.getStatus()))
                 .deliveryDate(request.getDeliveryDate())
