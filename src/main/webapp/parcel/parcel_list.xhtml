@@ -13,11 +13,6 @@
 
             <h:dataTable value="#{parcelList.parcels.parcels}" var="parcel"
                          styleClass="table align-middle mb-0 bg-white" headerClass="bg-light">
-                <h:column>
-                    <f:facet name="header">Portrait</f:facet>
-                    <h:graphicImage styleClass="portrait rounded-circle" alt="parcel's image"
-                                    value="/api/parcels/#{parcel.uuid}/image"/>
-                </h:column>
 
                 <h:column>
                     <f:facet name="header">UUID</f:facet>

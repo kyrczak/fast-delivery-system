@@ -38,9 +38,11 @@ public class ParcelEdit implements Serializable {
 
     public void init() throws IOException {
         Optional<Parcel> parcel = service.find(uuid);
+        System.out.println("Initializing ParcelEdit with UUID: " + uuid);
         if (parcel.isPresent()) {
             this.parcel = factory.parcelToEditModelFunction().apply(parcel.get());
         } else {
+            System.out.println("Parcel not found for UUID: " + uuid);
             FacesContext.getCurrentInstance().getExternalContext().responseSendError(
                     HttpServletResponse.SC_NOT_FOUND,
                     "Parcel not found");
@@ -50,6 +52,6 @@ public class ParcelEdit implements Serializable {
     public String saveAction() {
         service.update(factory.updateParcel().apply(service.find(uuid).orElseThrow(), parcel));
         String viewId = FacesContext.getCurrentInstance().getViewRoot().getViewId();
-        return viewId+"?faces-redirect=true&includeViewParams=true";
+        return viewId + "?faces-redirect=true&includeViewParams=true";
     }
 }
