@@ -170,3 +170,16 @@ Content-Type: application/json
 }
 
 ###
+
+# Delete warehouse
+
+DELETE http://localhost:9080/fast-delivery/api/warehouses/baf6561e-f028-49ff-8b59-de9132b4e3dd
+
+###
+
+# Get warehouse
+
+GET http://localhost:9080/fast-delivery/api/warehouses/baf6561e-f028-49ff-8b59-de9132b4e3dd
+
+###
+

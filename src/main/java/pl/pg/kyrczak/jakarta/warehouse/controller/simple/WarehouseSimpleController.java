@@ -5,6 +5,7 @@ import jakarta.inject.Inject;
 import pl.pg.kyrczak.jakarta.component.DtoFunctionFactory;
 import pl.pg.kyrczak.jakarta.controller.servlet.exception.BadRequestException;
 import pl.pg.kyrczak.jakarta.controller.servlet.exception.NotFoundException;
+import pl.pg.kyrczak.jakarta.parcel.service.ParcelService;
 import pl.pg.kyrczak.jakarta.warehouse.controller.api.WarehouseController;
 import pl.pg.kyrczak.jakarta.warehouse.dto.GetWarehouseResponse;
 import pl.pg.kyrczak.jakarta.warehouse.dto.GetWarehousesResponse;
@@ -18,11 +19,13 @@ import java.util.UUID;
 public class WarehouseSimpleController implements WarehouseController {
     private final WarehouseService service;
     private final DtoFunctionFactory factory;
+    private final ParcelService parcelService;
 
     @Inject
-    public WarehouseSimpleController(WarehouseService service, DtoFunctionFactory factory) {
+    public WarehouseSimpleController(WarehouseService service, ParcelService parcelService, DtoFunctionFactory factory) {
         this.service = service;
         this.factory = factory;
+        this.parcelService = parcelService;
     }
     @Override
     public GetWarehousesResponse getWarehouses() {
@@ -58,7 +61,12 @@ public class WarehouseSimpleController implements WarehouseController {
     @Override
     public void deleteWarehouse(UUID uuid) {
         service.find(uuid).ifPresentOrElse(
-                entity -> service.delete(uuid),
+                entity -> parcelService.findAllByWarehouse(uuid).ifPresentOrElse(
+                        parcels -> parcels.forEach(parcel -> parcelService.delete(parcel.getUuid())),
+                        () -> {
+                            throw new NotFoundException();
+                        }
+                ),
                 () -> {
                     throw new NotFoundException();
                 }
