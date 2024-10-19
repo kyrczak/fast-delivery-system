@@ -19,6 +19,7 @@ import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -59,7 +60,20 @@ public class ParcelService {
     }
 
     public void create(Parcel parcel) {
-        parcelRepository.create(parcel);
+        UUID warehouseUuid = parcel.getWarehouse().getUuid();
+
+        warehouseRepository.find(warehouseUuid).ifPresentOrElse(
+                warehouse -> {
+                    parcel.setWarehouse(warehouse);
+                    parcelRepository.create(parcel);
+
+                    warehouse.getParcels().add(parcel);
+                    warehouseRepository.update(warehouse);
+                },
+                () -> {
+                    throw new NotFoundException("Warehouse not found for UUID: " + warehouseUuid);
+                }
+        );
     }
 
     public void update(Parcel parcel) {
@@ -67,7 +81,22 @@ public class ParcelService {
     }
 
     public void delete(UUID uuid) {
-        parcelRepository.delete(parcelRepository.find(uuid).orElseThrow());
+        parcelRepository.find(uuid).ifPresentOrElse(
+                parcel -> {
+                    warehouseRepository.find(parcel.getWarehouse().getUuid()).ifPresentOrElse(
+                            warehouse -> {
+                                warehouse.getParcels().remove(parcel);
+                                warehouseRepository.update(warehouse);
+                            },
+                            () -> {
+
+                            });
+                    parcelRepository.delete(parcel);
+                },
+                () -> {
+                    throw new NoSuchElementException();
+                }
+        );
     }
 
     public Optional<List<Parcel>> findAllByWarehouse(UUID uuid) {

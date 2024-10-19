@@ -9,6 +9,18 @@ GET http://localhost:9080/fast-delivery/api/parcels/
 GET http://localhost:9080/fast-delivery/api/warehouses/
 
 ###
+# Get a warehouse.
+
+GET http://localhost:9080/fast-delivery/api/warehouses/32faaa8e-dde2-4355-8b8c-9dd252fbc3b2
+
+###
+
+# Get a warehouse.
+
+GET http://localhost:9080/fast-delivery/api/warehouses/baf6561e-f028-49ff-8b59-de9132b4e3dd
+
+###
+
 # Get parcel
 
 GET http://localhost:9080/fast-delivery/api/parcels/1c023543-5bd1-4b02-9941-27aab5b2ecdb

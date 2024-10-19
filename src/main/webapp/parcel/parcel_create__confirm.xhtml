@@ -62,11 +62,12 @@
                         </div>
                     </div>
 
+                    <!-->
                     <div class="col-3">
-                        <h:graphicImage alt="parcel image"
-                                        rendered="#{parcelCreate.parcel.image != null}"
-                                        value="#{parcelCreate.parcelImageUrl}"/>
+                        <h:graphicImage value="#{parcelCreate.getParcelImageUrl()}"
+                                        alt="Parcel Image" styleClass="img-thumbnail"/>
                     </div>
+                    <!-->
                 </div>
 
                 <div class="row">

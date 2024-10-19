@@ -121,7 +121,6 @@ public class InitializedData {
                 .deliveryDate(LocalDate.of(2024,10,9))
                 .warehouse(dockGdynia)
                 .build();
-        dockGdynia.getParcels().add(paczka1);
         patryk.getParcels().add(paczka1);
         Parcel paczka2 = Parcel.builder()
                 .uuid(UUID.fromString("9e9a4970-fcb0-455c-bdc2-da55ffec7366"))
@@ -131,7 +130,6 @@ public class InitializedData {
                 .deliveryDate(LocalDate.of(2024,10,3))
                 .warehouse(dockGdansk)
                 .build();
-        dockGdansk.getParcels().add(paczka2);
         patryk.getParcels().add(paczka2);
         Parcel paczka3 = Parcel.builder()
                 .uuid(UUID.fromString("76e28a62-a12b-4ec6-9b92-d89b37df3d15"))
@@ -141,7 +139,6 @@ public class InitializedData {
                 .deliveryDate(LocalDate.of(2024,10,5))
                 .warehouse(dockGdansk)
                 .build();
-        dockGdansk.getParcels().add(paczka3);
         jarek.getParcels().add(paczka3);
         Parcel paczka4 = Parcel.builder()
                 .uuid(UUID.fromString("a3449c87-ac60-46b0-8341-9cacab383475"))
@@ -151,7 +148,6 @@ public class InitializedData {
                 .deliveryDate(LocalDate.of(2024,10,23))
                 .warehouse(aviationGdansk)
                 .build();
-        aviationGdansk.getParcels().add(paczka4);
         maria.getParcels().add(paczka4);
         Parcel paczka5 = Parcel.builder()
                 .uuid(UUID.fromString("1c023543-5bd1-4b02-9941-27aab5b2ecdb"))
@@ -161,7 +157,6 @@ public class InitializedData {
                 .deliveryDate(LocalDate.of(2024,10,12))
                 .warehouse(aviationGdansk)
                 .build();
-        aviationGdansk.getParcels().add(paczka5);
         jarek.getParcels().add(paczka5);
 
         clientService.create(patryk);

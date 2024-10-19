@@ -63,16 +63,14 @@ public class ParcelCreate implements Serializable {
         }
     }
 
+    public List<ParcelStatus> getStatusOptions() {
+        return List.of(ParcelStatus.values());
+    }
     public String goToWarehouseAction() {
         return "/parcel/parcel_create__warehouse.xhtml?faces-redirect=true";
     }
     public String goToImageAction() {
         return "/parcel/parcel_create__image.xhtml?faces-redirect=true";
-    }
-
-    public String resetImageAction() {
-        parcel.setImage(null);
-        return goToImageAction();
     }
 
     public Object goToBasicAction() {
@@ -85,17 +83,13 @@ public class ParcelCreate implements Serializable {
     }
 
     public String goToConfirmAction() {
-        return "/character/character_create__confirm.xhtml?faces-redirect=true";
+        return "/parcel/parcel_create__confirm.xhtml?faces-redirect=true";
     }
 
     public String saveAction() {
         parcelService.create(factory.modelToParcelFunction().apply(parcel));
         conversation.end();
         return "/parcel/parcel_list.xhtml?faces-redirect=true";
-    }
-
-    public String getConversationId() {
-        return "/view/api/v1/parcels/new/image?cid=%s".formatted(getConversationId());
     }
 
 }

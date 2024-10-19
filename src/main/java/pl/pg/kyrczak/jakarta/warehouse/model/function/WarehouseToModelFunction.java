@@ -19,7 +19,7 @@ public class WarehouseToModelFunction implements Function<Warehouse, WarehouseMo
                         .map(
                                 parcel -> WarehouseModel.Parcel.builder()
                                         .uuid(parcel.getUuid())
-                                        .status(String.valueOf(parcel.getStatus()))
+                                        .deliveryDate(parcel.getDeliveryDate())
                                         .build()
                         ).collect(Collectors.toList())
                 ).build();

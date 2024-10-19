@@ -1,9 +1,7 @@
 package pl.pg.kyrczak.jakarta.warehouse.model;
 
 import lombok.*;
-import pl.pg.kyrczak.jakarta.parcel.model.ParcelModel;
 
-import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
 
@@ -14,8 +12,7 @@ import java.util.UUID;
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @ToString
 @EqualsAndHashCode
-public class WarehouseModel {
-
+public class WarehousesModel {
     @Getter
     @Setter
     @Builder
@@ -23,18 +20,11 @@ public class WarehouseModel {
     @AllArgsConstructor(access = AccessLevel.PRIVATE)
     @ToString
     @EqualsAndHashCode
-    public static class Parcel {
+    public static class Warehouse {
         private UUID uuid;
-        private LocalDate deliveryDate;
+        private String name;
     }
 
-    private UUID uuid;
-    private String name;
-    private String location;
-    private LocalDate establishedDate;
-
     @Singular
-    @EqualsAndHashCode.Exclude
-    private List<Parcel> parcels;
-
+    private List<Warehouse> warehouses;
 }

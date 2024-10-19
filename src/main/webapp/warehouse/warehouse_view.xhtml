@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="jakarta.faces.html"
+                xmlns:ui="jakarta.faces.facelets"
+                xmlns:f="jakarta.faces.core"
+                template="/WEB-INF/template/main.xhtml">
+
+    <f:metadata>
+        <f:viewParam name="uuid" value="#{warehouseView.uuid}" required="true"/>
+        <f:viewAction action="#{warehouseView.init()}"/>
+    </f:metadata>
+
+    <ui:define name="content">
+        <article>
+            <header><h2><h:outputText value="#{warehouseView.warehouse.name}"/></h2></header>
+            <div class="container">
+                <div class="row">
+                    <div class="col-4">
+                        <div class="row mb-2">
+                            <div class="col-6">
+                                UUID
+                            </div>
+                            <div class="col-6">
+                                <h:outputText value="#{warehouseView.warehouse.uuid}"/>
+                            </div>
+                        </div>
+
+                        <div class="row mb-2">
+                            <div class="col-6">
+                                Established date
+                            </div>
+                            <div class="col-6">
+                                <h:outputText value="#{warehouseView.warehouse.establishedDate}"/>
+                            </div>
+                        </div>
+
+                        <div class="row mb-2">
+                            <div class="col-6">
+                                Location
+                            </div>
+                            <div class="col-6">
+                                <h:outputText value="#{warehouseView.warehouse.location}"/>
+                            </div>
+                        </div>
+                    </div>
+
+                    <h:dataTable value="#{warehouseView.warehouse.parcels}" var="parcel"
+                                 styleClass="table align-middle mb-0 bg-white" headerClass="bg-light">
+
+                        <h:column>
+                            <f:facet name="header">UUID</f:facet>
+                            <h:outputText value="#{parcel.uuid}"/>
+                        </h:column>
+
+                        <h:column>
+                            <f:facet name="header">View</f:facet>
+                            <h:link outcome="/parcel/parcel_view.xhtml" value="View">
+                                <f:param name="uuid" value="#{parcel.uuid}"/>
+                            </h:link>
+                        </h:column>
+
+                        <h:column>
+                            <f:facet name="header">Edit</f:facet>
+                            <h:link outcome="/parcel/parcel_edit.xhtml" value="Edit">
+                                <f:param name="uuid" value="#{parcel.uuid}"/>
+                            </h:link>
+                        </h:column>
+
+                        <h:column>
+                            <f:facet name="header">Delete</f:facet>
+                            <h:form>
+                                <h:commandButton styleClass="btn" value="Delete"
+                                                 action="#{warehouseView.deleteParcelAction(parcel)}"/>
+                            </h:form>
+                        </h:column>
+
+                    </h:dataTable>
+                </div>
+            </div>
+        </article>
+    </ui:define>
+
+</ui:composition>

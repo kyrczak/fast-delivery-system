@@ -1,0 +1,23 @@
+.form-control, .form-select {
+    border: 2px solid #0d6efd;  /* Bootstrap primary blue */
+    border-radius: 0.375rem;
+    background-color: #f8f9fa; /* Light gray background */
+    color: #212529;  /* Dark text for readability */
+}
+
+.form-control {
+    border: 2px solid #0d6efd;  /* Bootstrap primary blue */
+    border-radius: 0.375rem;
+    background-color: #b7b7b7; /* Light gray background */
+    color: #212529;  /* Dark text for readability */
+}
+
+.form-control:focus, .form-select:focus {
+    border-color: #6610f2;  /* Focused purple border */
+    box-shadow: 0 0 0 0.2rem rgba(102, 16, 242, 0.25);
+    outline: none;
+}
+
+label {
+    color: #495057;  /* Darker label text */
+}
