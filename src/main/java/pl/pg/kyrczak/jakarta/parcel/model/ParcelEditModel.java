@@ -16,5 +16,5 @@ public class ParcelEditModel {
     private String status;
     private Float weight;
     private LocalDate deliveryDate;
-    private Part image;
+    //private Part image;
 }
