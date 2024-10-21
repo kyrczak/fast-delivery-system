@@ -5,6 +5,7 @@ import jakarta.faces.view.ViewScoped;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.Part;
 import lombok.Getter;
 import lombok.Setter;
 import pl.pg.kyrczak.jakarta.component.ModelFunctionFactory;
@@ -13,6 +14,7 @@ import pl.pg.kyrczak.jakarta.parcel.model.ParcelEditModel;
 import pl.pg.kyrczak.jakarta.parcel.service.ParcelService;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.Serializable;
 import java.util.Optional;
 import java.util.UUID;
@@ -51,6 +53,14 @@ public class ParcelEdit implements Serializable {
 
     public String saveAction() {
         service.update(factory.updateParcel().apply(service.find(uuid).orElseThrow(), parcel));
+        Part image = parcel.getImage();
+        if (image != null) {
+            try (InputStream inputStream = image.getInputStream()) {
+                service.uploadImage(uuid, inputStream);
+            } catch (IOException e) {
+                return null; // Stay on the page if there's an error
+            }
+        }
         String viewId = FacesContext.getCurrentInstance().getViewRoot().getViewId();
         return viewId + "?faces-redirect=true&includeViewParams=true";
     }

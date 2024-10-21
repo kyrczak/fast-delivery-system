@@ -60,14 +60,15 @@
                                 <h:outputText value="#{parcelCreate.parcel.weight}"/>
                             </div>
                         </div>
+                        <div class="row mb-2">
+                            <div class="col-6">
+                                Image path
+                            </div>
+                            <div class="col-6">
+                                <h:outputText value="#{parcelCreate.parcel.image.name}"/>
+                            </div>
+                        </div>
                     </div>
-
-                    <!-->
-                    <div class="col-3">
-                        <h:graphicImage value="#{parcelCreate.getParcelImageUrl()}"
-                                        alt="Parcel Image" styleClass="img-thumbnail"/>
-                    </div>
-                    <!-->
                 </div>
 
                 <div class="row">

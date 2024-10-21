@@ -28,5 +28,6 @@ public class ParcelCreateModel {
     private LocalDate deliveryDate;
     private Float weight;
     private Part image;
+    private String imagePath;
     private WarehouseModel warehouse;
 }

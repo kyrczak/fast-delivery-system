@@ -6,18 +6,28 @@
     <ui:define name="content">
         <article>
             <header><h2>Create parcel - Image upload</h2></header>
-            <h:form enctype="multipart/form-data" styleClass="container">
+            <h:form styleClass="container" onreset="onReset()" enctype="multipart/form-data">
+                <div class="row">
+                    <div class="col-2 p-2 text-center">
+                        <h:commandButton styleClass="btn" value="Previous" immediate="true"
+                                         action="#{parcelCreate.goToBasicAction()}"/>
+                    </div>
+                    <div class="col-2 p-2 text-center">
+                        <h:commandButton styleClass="btn" value="Next"
+                                         action="#{parcelCreate.goToConfirmAction()}"/>
+                    </div>
+                </div>
 
                 <div class="row mb-3">
                     <div class="col-6">
-                        <h:panelGroup rendered="#{parcelCreate.parcel.imagePath == null}">
+                        <h:panelGroup rendered="#{parcelCreate.parcel.image == null}">
                             <h:outputLabel for="image" value="Upload Image:" styleClass="form-label"/>
-                            <h:inputFile id="image" value="#{parcelCreate.uploadedImage}" styleClass="form-control"/>
+                            <h:inputFile id="image" value="#{parcelCreate.parcel.image}" styleClass="form-control"/>
                         </h:panelGroup>
 
-                        <h:panelGroup rendered="#{parcelCreate.parcel.imagePath != null}">
+                        <h:panelGroup rendered="#{parcelCreate.parcel.image != null}">
                             <h:outputLabel for="imageFile" value="Uploaded Image:" styleClass="form-label"/>
-                            <h:inputText id="imageFile" value="#{parcelCreate.parcel.imagePath}"
+                            <h:inputText id="imageFile" value="#{parcelCreate.parcel.image.name}"
                                          readonly="true" styleClass="form-control"/>
                             <h:commandButton value="Reset Image" action="#{parcelCreate.resetImageAction()}" />
                         </h:panelGroup>
@@ -25,11 +35,12 @@
                 </div>
 
                 <div class="row">
-                    <div class="col-2">
-                        <h:commandButton value="Save Image" action="#{parcelCreate.saveImageAction()}" />
+                    <div class="col-2 p-2 text-center">
+                        <h:button styleClass="btn btn-primary" value="Create" disabled="true"/>
                     </div>
-                    <div class="col-2">
-                        <h:commandButton value="Cancel" action="#{parcelCreate.cancelAction()}" />
+                    <div class="col-2 p-2 text-center">
+                        <h:commandButton styleClass="btn btn-secondary" value="Cancel"
+                                         action="#{parcelCreate.cancelAction()}" immediate="true"/>
                     </div>
                 </div>
 
