@@ -29,46 +29,48 @@ public interface ParcelController {
     GetParcelsResponse getClientParcels(@PathParam("uuid") UUID uuid);
 
     @GET
-    @Path("/parcels/{uuid}")
+    @Path("/warehouses/{warehouse_uuid}/parcels/{uuid}")
     @Produces(MediaType.APPLICATION_JSON)
-    GetParcelResponse getParcel(@PathParam("uuid") UUID uuid);
+    GetParcelResponse getParcel(@PathParam("uuid") UUID uuid,  @PathParam("warehouse_uuid") UUID warehouse_uuid);
 
     @PUT
-    @Path("/parcels/{uuid}")
+    @Path("/warehouses/{warehouse_uuid}/parcels/{uuid}")
     @Consumes(MediaType.APPLICATION_JSON)
-    void putParcel(@PathParam("uuid") UUID uuid, PutParcelRequest request);
+    void putParcel(@PathParam("uuid") UUID uuid, @PathParam("warehouse_uuid") UUID warehouse_uuid, PutParcelRequest request);
 
     @PATCH
-    @Path("/parcels/{uuid}")
+    @Path("/warehouses/{warehouse_uuid}/parcels/{uuid}")
     @Consumes(MediaType.APPLICATION_JSON)
-    void patchParcel(@PathParam("uuid") UUID uuid, PatchParcelRequest request);
+    void patchParcel(@PathParam("uuid") UUID uuid, @PathParam("warehouse_uuid") UUID warehouse_uuid, PatchParcelRequest request);
 
     @DELETE
-    @Path("/parcels/{uuid}")
-    void deleteParcel(@PathParam("uuid") UUID uuid);
+    @Path("/warehouses/{warehouse_uuid}/parcels/{uuid}")
+    void deleteParcel(@PathParam("uuid") UUID uuid, @PathParam("warehouse_uuid") UUID warehouse_uuid);
 
     @GET
-    @Path("/parcels/{uuid}/image")
+    @Path("/warehouses/{warehouse_uuid}/parcels/{uuid}/image")
     @Produces("image/png")
-    byte[] getParcelImage(@PathParam("uuid") UUID uuid);
+    byte[] getParcelImage(@PathParam("uuid") UUID uuid, @PathParam("warehouse_uuid") UUID warehouse_uuid);
 
     @PUT
-    @Path("/parcels/{uuid}/image")
+    @Path("/warehouses/{warehouse_uuid}/parcels/{uuid}/image")
     @Consumes(MediaType.MULTIPART_FORM_DATA)
     void putParcelImage(
             @PathParam("uuid") UUID uuid,
+            @PathParam("warehouse_uuid") UUID warehouse_uuid,
             @SuppressWarnings("RestParamTypeInspection") @FormParam("image") InputStream image
     );
 
     @DELETE
-    @Path("/parcels/{uuid}/image")
-    void deleteParcelImage(@PathParam("uuid") UUID uuid);
+    @Path("/warehouses/{warehouse_uuid}/parcels/{uuid}/image")
+    void deleteParcelImage(@PathParam("uuid") UUID uuid, @PathParam("warehouse_uuid") UUID warehouse_uuid);
 
     @PATCH
-    @Path("/parcels/{uuid}/image")
+    @Path("/warehouses/{warehouse_uuid}/parcels/{uuid}/image")
     @Consumes(MediaType.MULTIPART_FORM_DATA)
     void patchParcelImage(
             @PathParam("uuid") UUID uuid,
+            @PathParam("warehouse_uuid") UUID warehouse_uuid,
             @SuppressWarnings("RestParamTypeInspection") @FormParam("image") InputStream image
     );
 }

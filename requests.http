@@ -15,6 +15,30 @@ GET http://localhost:9080/fast-delivery/api/warehouses/32faaa8e-dde2-4355-8b8c-9
 
 ###
 
+# Get a parcel from warehouse.
+
+GET http://localhost:9080/fast-delivery/api/warehouses/32faaa8e-dde2-4355-8b8c-9dd252fbc3b2/parcels/cc5dae57-9f0f-4d75-827f-879acd1a5c62
+
+###
+# Add a parcel with specified warehouse
+PUT http://localhost:9080/fast-delivery/api/warehouses/32faaa8e-dde2-4355-8b8c-9dd252fbc3b2/parcels/785aee22-e374-4607-8636-7715359477ff
+Content-Type: application/json
+
+{
+  "weight": 20.3,
+  "status": "IN_DELIVERY",
+  "deliveryDate": "2024-12-03",
+  "client": "12f2776c-f823-4aab-8eb3-0e4fd5ae32f9"
+}
+
+###
+
+# Remove a parcel from a warehouse
+DELETE http://localhost:9080/fast-delivery/api/warehouses/32faaa8e-dde2-4355-8b8c-9dd252fbc3b2/parcels/785aee22-e374-4607-8636-7715359477ff
+###
+# Get newly added parcel from a warehouse
+GET http://localhost:9080/fast-delivery/api/warehouses/32faaa8e-dde2-4355-8b8c-9dd252fbc3b2/parcels/785aee22-e374-4607-8636-7715359477ff
+###
 # Get a warehouse.
 
 GET http://localhost:9080/fast-delivery/api/warehouses/baf6561e-f028-49ff-8b59-de9132b4e3dd

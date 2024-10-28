@@ -2,9 +2,9 @@ package pl.pg.kyrczak.jakarta.parcel.service;
 
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
+import jakarta.ws.rs.NotFoundException;
 import lombok.NoArgsConstructor;
 import pl.pg.kyrczak.jakarta.client.repository.api.ClientRepository;
-import pl.pg.kyrczak.jakarta.controller.servlet.exception.NotFoundException;
 import pl.pg.kyrczak.jakarta.parcel.entity.Parcel;
 import pl.pg.kyrczak.jakarta.parcel.entity.ParcelStatus;
 import pl.pg.kyrczak.jakarta.parcel.producer.api.ImageDirectory;

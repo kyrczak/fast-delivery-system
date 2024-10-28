@@ -17,6 +17,7 @@ import pl.pg.kyrczak.jakarta.parcel.dto.PutParcelRequest;
 import pl.pg.kyrczak.jakarta.parcel.service.ParcelService;
 import jakarta.ws.rs.BadRequestException;
 import jakarta.ws.rs.NotFoundException;
+import pl.pg.kyrczak.jakarta.warehouse.service.WarehouseService;
 
 
 import java.io.IOException;
@@ -27,6 +28,7 @@ import java.util.UUID;
 public class ParcelRestController implements ParcelController {
 
     private final ParcelService service;
+    private final WarehouseService warehouseService;
     private final DtoFunctionFactory factory;
 
     private final UriInfo uriInfo;
@@ -40,11 +42,13 @@ public class ParcelRestController implements ParcelController {
     @Inject
     public ParcelRestController(ParcelService service,
                                 DtoFunctionFactory factory,
-                                @SuppressWarnings("CdiInjectionPointsInspection") UriInfo uriInfo
+                                @SuppressWarnings("CdiInjectionPointsInspection") UriInfo uriInfo,
+                                WarehouseService warehouseService
     ) {
         this.service = service;
         this.factory = factory;
         this.uriInfo = uriInfo;
+        this.warehouseService = warehouseService;
     }
     @Override
     public GetParcelsResponse getParcels() {
@@ -66,20 +70,21 @@ public class ParcelRestController implements ParcelController {
     }
 
     @Override
-    public GetParcelResponse getParcel(UUID uuid) {
-        return service.find(uuid)
-                .map(factory.parcelToResponseFunction())
+    public GetParcelResponse getParcel(UUID uuid, UUID warehouse_uuid) {
+        return warehouseService.find(warehouse_uuid)
+                .flatMap(warehouse -> service.find(uuid).map(factory.parcelToResponseFunction()))
                 .orElseThrow(NotFoundException::new);
     }
 
     @Override
     @SneakyThrows
-    public void putParcel(UUID uuid, PutParcelRequest request) {
+    public void putParcel(UUID uuid, UUID warehouse_uuid, PutParcelRequest request) {
         try {
+            request.setWarehouse(warehouse_uuid);
             service.create(factory.requestToParcelFunction().apply(uuid,request));
             response.setHeader("Location", uriInfo.getBaseUriBuilder()
                     .path(ParcelController.class, "getParcel")
-                    .build(uuid)
+                    .build(uuid, warehouse_uuid)
                     .toString());
             throw new WebApplicationException(Response.Status.CREATED);
         } catch (IllegalArgumentException ex) {
@@ -88,7 +93,7 @@ public class ParcelRestController implements ParcelController {
     }
 
     @Override
-    public void patchParcel(UUID uuid, PatchParcelRequest request) {
+    public void patchParcel(UUID uuid, UUID warehouse_uuid, PatchParcelRequest request) {
         service.find(uuid).ifPresentOrElse(
                 entity -> service.update(factory.updateParcelWithRequestFunction().apply(entity,request)),
                 () -> {
@@ -98,7 +103,7 @@ public class ParcelRestController implements ParcelController {
     }
 
     @Override
-    public void deleteParcel(UUID uuid) {
+    public void deleteParcel(UUID uuid, UUID warehouse_uuid) {
         service.find(uuid).ifPresentOrElse(
                 entity -> service.delete(uuid),
                 () -> {
@@ -108,7 +113,7 @@ public class ParcelRestController implements ParcelController {
     }
 
     @Override
-    public byte[] getParcelImage(UUID uuid) {
+    public byte[] getParcelImage(UUID uuid, UUID warehouse_uuid) {
         try {
             return service.downloadImage(uuid);
         } catch (IOException ex) {
@@ -117,7 +122,7 @@ public class ParcelRestController implements ParcelController {
     }
 
     @Override
-    public void putParcelImage(UUID uuid, InputStream image) {
+    public void putParcelImage(UUID uuid, UUID warehouse_uuid, InputStream image) {
         try {
             service.uploadImage(uuid, image);
         } catch (IOException e) {
@@ -128,7 +133,7 @@ public class ParcelRestController implements ParcelController {
     }
 
     @Override
-    public void deleteParcelImage(UUID uuid) {
+    public void deleteParcelImage(UUID uuid, UUID warehouse_uuid) {
         try {
             service.deleteImage(uuid);
         } catch (IOException e) {
@@ -137,7 +142,7 @@ public class ParcelRestController implements ParcelController {
     }
 
     @Override
-    public void patchParcelImage(UUID uuid, InputStream image) {
+    public void patchParcelImage(UUID uuid,UUID warehouse_uuid,InputStream image) {
         try {
             service.overwriteImage(uuid, image);
         } catch (IOException e) {
