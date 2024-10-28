@@ -1,32 +1,50 @@
-package pl.pg.kyrczak.jakarta.parcel.controller.simple;
+package pl.pg.kyrczak.jakarta.parcel.controller.rest;
 
-import jakarta.enterprise.context.RequestScoped;
 import jakarta.inject.Inject;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.ws.rs.Path;
+import jakarta.ws.rs.WebApplicationException;
+import jakarta.ws.rs.core.Context;
+import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.core.UriInfo;
+import lombok.SneakyThrows;
 import pl.pg.kyrczak.jakarta.component.DtoFunctionFactory;
-import pl.pg.kyrczak.jakarta.controller.servlet.exception.BadRequestException;
-import pl.pg.kyrczak.jakarta.controller.servlet.exception.NotFoundException;
 import pl.pg.kyrczak.jakarta.parcel.controller.api.ParcelController;
 import pl.pg.kyrczak.jakarta.parcel.dto.GetParcelResponse;
 import pl.pg.kyrczak.jakarta.parcel.dto.GetParcelsResponse;
 import pl.pg.kyrczak.jakarta.parcel.dto.PatchParcelRequest;
 import pl.pg.kyrczak.jakarta.parcel.dto.PutParcelRequest;
 import pl.pg.kyrczak.jakarta.parcel.service.ParcelService;
+import jakarta.ws.rs.BadRequestException;
+import jakarta.ws.rs.NotFoundException;
 
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.UUID;
 
-@RequestScoped
-public class ParcelSimpleController implements ParcelController {
+@Path("")
+public class ParcelRestController implements ParcelController {
 
     private final ParcelService service;
     private final DtoFunctionFactory factory;
 
+    private final UriInfo uriInfo;
+
+    private HttpServletResponse response;
+
+    @Context
+    public void setResponse(HttpServletResponse response) {
+        this.response = response;
+    }
     @Inject
-    public ParcelSimpleController(ParcelService service, DtoFunctionFactory factory) {
+    public ParcelRestController(ParcelService service,
+                                DtoFunctionFactory factory,
+                                @SuppressWarnings("CdiInjectionPointsInspection") UriInfo uriInfo
+    ) {
         this.service = service;
         this.factory = factory;
+        this.uriInfo = uriInfo;
     }
     @Override
     public GetParcelsResponse getParcels() {
@@ -55,9 +73,15 @@ public class ParcelSimpleController implements ParcelController {
     }
 
     @Override
+    @SneakyThrows
     public void putParcel(UUID uuid, PutParcelRequest request) {
         try {
             service.create(factory.requestToParcelFunction().apply(uuid,request));
+            response.setHeader("Location", uriInfo.getBaseUriBuilder()
+                    .path(ParcelController.class, "getParcel")
+                    .build(uuid)
+                    .toString());
+            throw new WebApplicationException(Response.Status.CREATED);
         } catch (IllegalArgumentException ex) {
             throw new BadRequestException(ex);
         }
