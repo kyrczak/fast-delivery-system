@@ -2,7 +2,9 @@ package pl.pg.kyrczak.jakarta.warehouse.service;
 
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
+import jakarta.transaction.Transactional;
 import lombok.NoArgsConstructor;
+import lombok.extern.java.Log;
 import pl.pg.kyrczak.jakarta.warehouse.entity.Warehouse;
 import pl.pg.kyrczak.jakarta.warehouse.repository.api.WarehouseRepository;
 
@@ -12,6 +14,7 @@ import java.util.UUID;
 
 @ApplicationScoped
 @NoArgsConstructor(force = true)
+@Log
 public class WarehouseService {
     private final WarehouseRepository warehouseRepository;
 
@@ -28,13 +31,17 @@ public class WarehouseService {
         return warehouseRepository.findAll();
     }
 
+    @Transactional
     public void create(Warehouse warehouse) {
         warehouseRepository.create(warehouse);
     }
+
+    @Transactional
     public void update(Warehouse warehouse) {
         warehouseRepository.update(warehouse);
     }
 
+    @Transactional
     public void delete(UUID uuid) {
         warehouseRepository.delete(warehouseRepository.find(uuid).orElseThrow());
     }

@@ -2,6 +2,8 @@ package pl.pg.kyrczak.jakarta.warehouse.controller.rest;
 
 import jakarta.enterprise.context.RequestScoped;
 import jakarta.inject.Inject;
+import jakarta.transaction.TransactionalException;
+import lombok.extern.java.Log;
 import pl.pg.kyrczak.jakarta.component.DtoFunctionFactory;
 import pl.pg.kyrczak.jakarta.parcel.service.ParcelService;
 import pl.pg.kyrczak.jakarta.warehouse.controller.api.WarehouseController;
@@ -21,8 +23,10 @@ import jakarta.ws.rs.core.UriInfo;
 import lombok.SneakyThrows;
 
 import java.util.UUID;
+import java.util.logging.Level;
 
 @Path("")
+@Log
 public class WarehouseRestController implements WarehouseController {
     private final WarehouseService service;
     private final DtoFunctionFactory factory;
@@ -69,9 +73,14 @@ public class WarehouseRestController implements WarehouseController {
                     .build(uuid)
                     .toString());
             throw new WebApplicationException(Response.Status.CREATED);
-        } catch (IllegalArgumentException ex) {
-            throw new BadRequestException(ex);
+        } catch (TransactionalException ex) {
+            if (ex.getCause() instanceof IllegalArgumentException) {
+                log.log(Level.WARNING, ex.getMessage(), ex);
+                throw new BadRequestException(ex);
+            }
+            throw ex;
         }
+
     }
 
     @Override

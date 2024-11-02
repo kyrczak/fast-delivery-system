@@ -1,5 +1,6 @@
 package pl.pg.kyrczak.jakarta.client.entity;
 
+import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 import pl.pg.kyrczak.jakarta.parcel.entity.Parcel;
@@ -15,16 +16,28 @@ import java.util.UUID;
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @ToString
 @EqualsAndHashCode
+@Entity
+@Table(name = "clients")
 public class Client implements Serializable {
+    @Id
     private UUID uuid;
     private String login;
     @ToString.Exclude
     private String password;
     private String name;
     private String surname;
+    @Column(name="registration_date")
     private LocalDate registrationDate;
+    @Column(nullable = false, unique = true)
     private String email;
+
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
+    @OneToMany(mappedBy = "client", cascade = CascadeType.REMOVE)
     private List<Parcel> parcels;
+
+    @CollectionTable(name = "client_roles", joinColumns = @JoinColumn(name = "id"))
+    @Column(name = "role")
+    @ElementCollection(fetch = FetchType.EAGER)
+    private List<String> roles;
 }

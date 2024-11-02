@@ -2,6 +2,7 @@ package pl.pg.kyrczak.jakarta.client.service;
 
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
+import jakarta.transaction.Transactional;
 import lombok.NoArgsConstructor;
 import pl.pg.kyrczak.jakarta.client.entity.Client;
 import pl.pg.kyrczak.jakarta.client.repository.api.ClientRepository;
@@ -34,6 +35,7 @@ public class ClientService {
         return repository.findByLogin(login);
     }
 
+    @Transactional
     public void create(Client client) {
         client.setPassword(passwordHash.generate(client.getPassword().toCharArray()));
         repository.create(client);
@@ -45,10 +47,12 @@ public class ClientService {
                 .orElse(false);
     }
 
+    @Transactional
     public void update(Client client) {
         repository.update(client);
     }
 
+    @Transactional
     public void delete(UUID uuid) {
         repository.delete(repository.find(uuid).orElseThrow());
     }

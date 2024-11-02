@@ -2,12 +2,14 @@ package pl.pg.kyrczak.jakarta.parcel.controller.rest;
 
 import jakarta.inject.Inject;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.transaction.TransactionalException;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.UriInfo;
 import lombok.SneakyThrows;
+import lombok.extern.java.Log;
 import pl.pg.kyrczak.jakarta.component.DtoFunctionFactory;
 import pl.pg.kyrczak.jakarta.parcel.controller.api.ParcelController;
 import pl.pg.kyrczak.jakarta.parcel.dto.GetParcelResponse;
@@ -23,8 +25,10 @@ import pl.pg.kyrczak.jakarta.warehouse.service.WarehouseService;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.UUID;
+import java.util.logging.Level;
 
 @Path("")
+@Log
 public class ParcelRestController implements ParcelController {
 
     private final ParcelService service;
@@ -87,9 +91,14 @@ public class ParcelRestController implements ParcelController {
                     .build(uuid, warehouse_uuid)
                     .toString());
             throw new WebApplicationException(Response.Status.CREATED);
-        } catch (IllegalArgumentException ex) {
-            throw new BadRequestException(ex);
+        } catch (TransactionalException ex) {
+            if (ex.getCause() instanceof IllegalArgumentException) {
+                log.log(Level.WARNING, ex.getMessage(), ex);
+                throw new BadRequestException(ex);
+            }
+            throw ex;
         }
+
     }
 
     @Override

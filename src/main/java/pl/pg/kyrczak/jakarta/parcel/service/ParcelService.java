@@ -2,6 +2,7 @@ package pl.pg.kyrczak.jakarta.parcel.service;
 
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
+import jakarta.transaction.Transactional;
 import jakarta.ws.rs.NotFoundException;
 import lombok.NoArgsConstructor;
 import pl.pg.kyrczak.jakarta.client.repository.api.ClientRepository;
@@ -59,44 +60,29 @@ public class ParcelService {
         return parcelRepository.findAllByStatus(status);
     }
 
+    @Transactional
     public void create(Parcel parcel) {
-        UUID warehouseUuid = parcel.getWarehouse().getUuid();
-
-        warehouseRepository.find(warehouseUuid).ifPresentOrElse(
-                warehouse -> {
-                    parcel.setWarehouse(warehouse);
-                    parcelRepository.create(parcel);
-
-                    warehouse.getParcels().add(parcel);
-                    warehouseRepository.update(warehouse);
-                },
-                () -> {
-                    throw new NotFoundException("Warehouse not found for UUID: " + warehouseUuid);
-                }
-        );
+        if(parcelRepository.find(parcel.getUuid()).isPresent()) {
+            throw new IllegalArgumentException("Parcel already exists.");
+        }
+        if(warehouseRepository.find(parcel.getWarehouse().getUuid()).isEmpty()) {
+            throw new IllegalArgumentException("Warehouse does not exist.");
+        }
+        parcelRepository.create(parcel);
+        warehouseRepository.find(parcel.getWarehouse().getUuid())
+                .ifPresent(warehouse -> warehouse.getParcels().add(parcel));
+        clientRepository.find(parcel.getClient().getUuid())
+                .ifPresent(client -> client.getParcels().add(parcel));
     }
 
+    @Transactional
     public void update(Parcel parcel) {
         parcelRepository.update(parcel);
     }
 
+    @Transactional
     public void delete(UUID uuid) {
-        parcelRepository.find(uuid).ifPresentOrElse(
-                parcel -> {
-                    warehouseRepository.find(parcel.getWarehouse().getUuid()).ifPresentOrElse(
-                            warehouse -> {
-                                warehouse.getParcels().remove(parcel);
-                                warehouseRepository.update(warehouse);
-                            },
-                            () -> {
-
-                            });
-                    parcelRepository.delete(parcel);
-                },
-                () -> {
-                    throw new NoSuchElementException();
-                }
-        );
+        parcelRepository.delete(parcelRepository.find(uuid).orElseThrow());
     }
 
     public Optional<List<Parcel>> findAllByWarehouse(UUID uuid) {
@@ -110,6 +96,9 @@ public class ParcelService {
     }
 
     public void uploadImage(UUID uuid, InputStream inputStream) throws IOException{
+        parcelRepository.find(uuid).orElseThrow(
+                NotFoundException::new
+        );
         Path parcelImagePath = imageDirectory.resolve(uuid + ".png");
         if (Files.exists(parcelImagePath)) {
             throw new IllegalStateException();
@@ -131,7 +120,7 @@ public class ParcelService {
     public byte[] downloadImage(UUID uuid) throws IOException {
         Path parcelImagePath = imageDirectory.resolve(uuid + ".png");
         if (!Files.exists(parcelImagePath)) {
-            throw new NoSuchFileException("Avatar not found");
+            throw new NoSuchFileException("Image not found");
         }
         return Files.readAllBytes(parcelImagePath);
     }

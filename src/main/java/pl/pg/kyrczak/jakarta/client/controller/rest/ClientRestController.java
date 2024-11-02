@@ -3,12 +3,14 @@ package pl.pg.kyrczak.jakarta.client.controller.rest;
 import jakarta.enterprise.context.RequestScoped;
 import jakarta.inject.Inject;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.transaction.TransactionalException;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.UriInfo;
 import lombok.SneakyThrows;
+import lombok.extern.java.Log;
 import pl.pg.kyrczak.jakarta.client.controller.api.ClientController;
 import pl.pg.kyrczak.jakarta.client.dto.GetClientResponse;
 import pl.pg.kyrczak.jakarta.client.dto.GetClientsResponse;
@@ -20,8 +22,10 @@ import jakarta.ws.rs.BadRequestException;
 import jakarta.ws.rs.NotFoundException;
 
 import java.util.UUID;
+import java.util.logging.Level;
 
 @Path("")
+@Log
 public class ClientRestController implements ClientController {
 
     private final ClientService service;
@@ -65,9 +69,14 @@ public class ClientRestController implements ClientController {
                     .build(uuid)
                     .toString());
             throw new WebApplicationException(Response.Status.CREATED);
-        } catch (IllegalArgumentException ex) {
-            throw new BadRequestException(ex);
+        } catch (TransactionalException ex) {
+            if (ex.getCause() instanceof IllegalArgumentException) {
+                log.log(Level.WARNING, ex.getMessage(), ex);
+                throw new BadRequestException(ex);
+            }
+            throw ex;
         }
+
     }
 
     @Override
