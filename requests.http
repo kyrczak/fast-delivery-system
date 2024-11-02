@@ -1,26 +1,38 @@
-# Get all parcels.
+### Get all parcels.
 
 GET http://localhost:9080/fast-delivery/api/parcels/
 
-###
 
-# Get all warehouses.
+
+### Get all warehouses.
 
 GET http://localhost:9080/fast-delivery/api/warehouses/
 
-###
-# Get a warehouse.
+
+### Get a warehouse.
 
 GET http://localhost:9080/fast-delivery/api/warehouses/32faaa8e-dde2-4355-8b8c-9dd252fbc3b2
 
-###
 
-# Get a parcel from warehouse.
+
+### Get a warehouse.
+
+GET http://localhost:9080/fast-delivery/api/warehouses/baf6561e-f028-49ff-8b59-de9132b4e3dd
+
+
+
+### Remove a warehouse
+DELETE http://localhost:9080/fast-delivery/api/warehouses/baf6561e-f028-49ff-8b59-de9132b4e3dd
+
+
+
+### Get a parcel from warehouse.
 
 GET http://localhost:9080/fast-delivery/api/warehouses/32faaa8e-dde2-4355-8b8c-9dd252fbc3b2/parcels/cc5dae57-9f0f-4d75-827f-879acd1a5c62
 
-###
-# Add a parcel with specified warehouse
+
+
+### Add a parcel with specified warehouse
 PUT http://localhost:9080/fast-delivery/api/warehouses/32faaa8e-dde2-4355-8b8c-9dd252fbc3b2/parcels/785aee22-e374-4607-8636-7715359477ff
 Content-Type: application/json
 
@@ -31,38 +43,92 @@ Content-Type: application/json
   "client": "12f2776c-f823-4aab-8eb3-0e4fd5ae32f9"
 }
 
-###
+### Add a parcel with incorrect warehouse
+PUT http://localhost:9080/fast-delivery/api/warehouses/32faaa8e-dde2-4355-8b8c-9dd252fbc3b1/parcels/785aee22-e374-4607-8636-7715359477fa
+Content-Type: application/json
 
-# Remove a parcel from a warehouse
+{
+  "weight": 2.3,
+  "status": "IN_DELIVERY",
+  "deliveryDate": "2024-12-03",
+  "client": "12f2776c-f823-4aab-8eb3-0e4fd5ae32f9"
+}
+
+### Patch a parcel with specified warehouse
+
+PATCH http://localhost:9080/fast-delivery/api/warehouses/32faaa8e-dde2-4355-8b8c-9dd252fbc3b2/parcels/785aee22-e374-4607-8636-7715359477ff
+Content-Type: application/json
+
+{
+  "weight": 20.25,
+  "status": "DELIVERED",
+  "deliveryDate": "2024-12-13"
+}
+
+
+
+### Remove warehouse with parcesl
+
+DELETE http://localhost:9080/fast-delivery/api/warehouses/32faaa8e-dde2-4355-8b8c-9dd252fbc3b2
+
+
+
+### Remove a parcel from a warehouse
+
 DELETE http://localhost:9080/fast-delivery/api/warehouses/32faaa8e-dde2-4355-8b8c-9dd252fbc3b2/parcels/785aee22-e374-4607-8636-7715359477ff
-###
-# Get newly added parcel from a warehouse
+
+
+
+### Get newly added parcel from a warehouse
+
 GET http://localhost:9080/fast-delivery/api/warehouses/32faaa8e-dde2-4355-8b8c-9dd252fbc3b2/parcels/785aee22-e374-4607-8636-7715359477ff
-###
-# Get a warehouse.
+
+
+
+### Get a warehouse.
 
 GET http://localhost:9080/fast-delivery/api/warehouses/baf6561e-f028-49ff-8b59-de9132b4e3dd
 
-###
 
-# Get parcel
+### Get parcels from a warehouse
+
+GET http://localhost:9080/fast-delivery/api/warehouses/baf6561e-f028-49ff-8b59-de9132b4e3dd/parcels
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+### Get parcel
 
 GET http://localhost:9080/fast-delivery/api/parcels/1c023543-5bd1-4b02-9941-27aab5b2ecdb
 
-###
-# Get non-existent parcel
+
+### Get non-existent parcel
 
 GET http://localhost:9080/fast-delivery/api/parcels/1c023543-5bd2-4b02-9941-27aab5b2ecdb
 
-###
 
-# Get parcel image
+
+### Get parcel image
 
 GET http://localhost:9080/fast-delivery/api/parcels/1c023543-5bd1-4b02-9941-27aab5b2ecdb/image
 
-###
 
-# Insert parcel image when exists
+
+### Insert parcel image when exists
 
 PUT http://localhost:9080/fast-delivery/api/parcels/1c023543-5bd1-4b02-9941-27aab5b2ecdb/image
 Content-Type: multipart/form-data; boundary=boundary
@@ -73,15 +139,15 @@ Content-Disposition: form-data; name="image"; filename="delikatne.png"
 < src/main/resources/images/delikatne.png
 --boundary--
 
-###
 
-# Delete parcel image
+
+### Delete parcel image
 
 DELETE http://localhost:9080/fast-delivery/api/parcels/1c023543-5bd1-4b02-9941-27aab5b2ecdb/image
 
-###
 
-# Patch parcel image
+
+### Patch parcel image
 
 PATCH http://localhost:9080/fast-delivery/api/parcels/1c023543-5bd1-4b02-9941-27aab5b2ecdb/image
 Content-Type: multipart/form-data; boundary=boundary
@@ -92,9 +158,9 @@ Content-Disposition: form-data; name="image"; filename="delikatne.png"
 < src/main/resources/images/delikatne.png
 --boundary--
 
-###
 
-# Patch parcel image nr. 2
+
+### Patch parcel image nr. 2
 
 PATCH http://localhost:9080/fast-delivery/api/parcels/1c023543-5bd1-4b02-9941-27aab5b2ecdb/image
 Content-Type: multipart/form-data; boundary=boundary
@@ -105,9 +171,9 @@ Content-Disposition: form-data; name="image"; filename="paczka5.png"
 < src/main/resources/images/paczka5.png
 --boundary--
 
-###
 
-# Patch non-existent parcel image 
+
+### Patch non-existent parcel image 
 
 PATCH http://localhost:9080/fast-delivery/api/parcels/1c013543-5bd1-4b02-9941-27aab5b2ecdb/image
 Content-Type: multipart/form-data; boundary=boundary
@@ -118,32 +184,32 @@ Content-Disposition: form-data; name="image"; filename="paczka5.png"
 < src/main/resources/images/paczka5.png
 --boundary--
 
-###
 
-# Get non-existent parcel's image
+
+### Get non-existent parcel's image
 
 GET http://localhost:9080/fast-delivery/api/parcels/1c023543-5bd2-4b02-9941-27aab5b2ecdb/image
 
-###
 
-# Get user
+
+### Get user
 
 GET http://localhost:9080/fast-delivery/api/clients/12f2776c-f823-4aab-8eb3-0e4fd5ae32f9
 
-###
 
-# Get nonexistent user
+
+### Get nonexistent user
 
 GET http://localhost:9080/fast-delivery/api/clients/12f2776c-f823-4aab-8eb3-0e4fd5ae32f8
 
-###
-# Get users
+
+### Get users
 
 GET http://localhost:9080/fast-delivery/api/clients
 
-###
 
-# Insert parcel
+
+### Insert parcel
 
 PUT http://localhost:9080/fast-delivery/api/parcels/38cae1cc-049c-41fd-b129-d7edfcf7f1fa
 Content-Type: application/json
@@ -156,14 +222,14 @@ Content-Type: application/json
   "client": "12f2776c-f823-4aab-8eb3-0e4fd5ae32f9"
 }
 
-###
-# Get parcel
+
+### Get parcel
 
 GET http://localhost:9080/fast-delivery/api/parcels/38cae1cc-049c-41fd-b129-d7edfcf7f1fa
 
-###
 
-# Put warehouse
+
+### Put warehouse
 
 PUT http://localhost:9080/fast-delivery/api/warehouses/3bd328e1-cb1b-4bc1-a10d-d734791d65b9
 Content-Type: application/json
@@ -175,15 +241,15 @@ Content-Type: application/json
   "parcels": []
 }
 
-###
 
-# Get warehouse
+
+### Get warehouse
 
 GET http://localhost:9080/fast-delivery/api/warehouses/3bd328e1-cb1b-4bc1-a10d-d734791d65b9
 
-###
 
-# Pathc parcel
+
+### Pathc parcel
 
 PATCH http://localhost:9080/fast-delivery/api/parcels/38cae1cc-049c-41fd-b129-d7edfcf7f1fa
 Content-Type: application/json
@@ -193,9 +259,9 @@ Content-Type: application/json
   "deliveryDate": "2024-12-01"
 }
 
-###
 
-# Patch warehouse
+
+### Patch warehouse
 
 PATCH http://localhost:9080/fast-delivery/api/warehouses/3bd328e1-cb1b-4bc1-a10d-d734791d65b9
 Content-Type: application/json
@@ -205,17 +271,17 @@ Content-Type: application/json
   "location": "Żwirki i Wigury 1, 02-143 Warszawa"
 }
 
-###
 
-# Delete warehouse
+
+### Delete warehouse
 
 DELETE http://localhost:9080/fast-delivery/api/warehouses/baf6561e-f028-49ff-8b59-de9132b4e3dd
 
-###
 
-# Get warehouse
+
+### Get warehouse
 
 GET http://localhost:9080/fast-delivery/api/warehouses/baf6561e-f028-49ff-8b59-de9132b4e3dd
 
-###
+
 
