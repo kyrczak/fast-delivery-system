@@ -71,8 +71,9 @@ public class ParcelService {
         parcelRepository.create(parcel);
         warehouseRepository.find(parcel.getWarehouse().getUuid())
                 .ifPresent(warehouse -> warehouse.getParcels().add(parcel));
-        clientRepository.find(parcel.getClient().getUuid())
-                .ifPresent(client -> client.getParcels().add(parcel));
+//        clientRepository.find(parcel.getClient().getUuid())
+//                .ifPresent(client -> client.getParcels().add(parcel));
+
     }
 
     @Transactional

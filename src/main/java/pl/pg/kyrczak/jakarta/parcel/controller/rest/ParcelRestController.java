@@ -122,7 +122,7 @@ public class ParcelRestController implements ParcelController {
     }
 
     @Override
-    public byte[] getParcelImage(UUID uuid, UUID warehouse_uuid) {
+    public byte[] getParcelImage(UUID uuid) {
         try {
             return service.downloadImage(uuid);
         } catch (IOException ex) {

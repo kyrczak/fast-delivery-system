@@ -48,9 +48,9 @@ public interface ParcelController {
     void deleteParcel(@PathParam("uuid") UUID uuid, @PathParam("warehouse_uuid") UUID warehouse_uuid);
 
     @GET
-    @Path("/warehouses/{warehouse_uuid}/parcels/{uuid}/image")
+    @Path("/parcels/{uuid}/image")
     @Produces("image/png")
-    byte[] getParcelImage(@PathParam("uuid") UUID uuid, @PathParam("warehouse_uuid") UUID warehouse_uuid);
+    byte[] getParcelImage(@PathParam("uuid") UUID uuid);
 
     @PUT
     @Path("/warehouses/{warehouse_uuid}/parcels/{uuid}/image")
