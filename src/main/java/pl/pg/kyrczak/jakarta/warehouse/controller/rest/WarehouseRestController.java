@@ -73,12 +73,8 @@ public class WarehouseRestController implements WarehouseController {
                     .build(uuid)
                     .toString());
             throw new WebApplicationException(Response.Status.CREATED);
-        } catch (TransactionalException ex) {
-            if (ex.getCause() instanceof IllegalArgumentException) {
-                log.log(Level.WARNING, ex.getMessage(), ex);
-                throw new BadRequestException(ex);
-            }
-            throw ex;
+        } catch (IllegalArgumentException ex) {
+            throw new BadRequestException();
         }
 
     }

@@ -17,7 +17,6 @@
                     javax.sql.DataSource="org.h2.jdbcx.JdbcDataSource"
                     libraryRef="H2JDBCLib"/>
         <properties URL="jdbc:h2:mem:fast-delivery"/>
-        <!--        <properties URL="jdbc:h2:/tmp/fast-delivery;AUTO_SERVER=TRUE"/>-->
     </dataSource>
 
     <library id="H2JDBCLib">

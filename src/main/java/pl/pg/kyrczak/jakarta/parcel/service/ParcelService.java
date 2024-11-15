@@ -71,9 +71,6 @@ public class ParcelService {
         parcelRepository.create(parcel);
         warehouseRepository.find(parcel.getWarehouse().getUuid())
                 .ifPresent(warehouse -> warehouse.getParcels().add(parcel));
-//        clientRepository.find(parcel.getClient().getUuid())
-//                .ifPresent(client -> client.getParcels().add(parcel));
-
     }
 
     @Transactional
@@ -83,7 +80,11 @@ public class ParcelService {
 
     @Transactional
     public void delete(UUID uuid) {
+        parcelRepository.find(uuid).ifPresent(parcel -> warehouseRepository.find(
+                parcel.getWarehouse().getUuid()).ifPresent(
+                        warehouse -> warehouse.getParcels().remove(parcel)));
         parcelRepository.delete(parcelRepository.find(uuid).orElseThrow());
+
     }
 
     public Optional<List<Parcel>> findAllByWarehouse(UUID uuid) {

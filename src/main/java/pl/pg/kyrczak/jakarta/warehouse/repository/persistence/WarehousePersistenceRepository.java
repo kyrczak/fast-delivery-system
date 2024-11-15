@@ -36,6 +36,7 @@ public class WarehousePersistenceRepository implements WarehouseRepository {
 
     @Override
     public void delete(Warehouse entity) {
+        em.refresh(em.find(Warehouse.class, entity.getUuid()));
         em.remove(em.find(Warehouse.class, entity.getUuid()));
     }
 

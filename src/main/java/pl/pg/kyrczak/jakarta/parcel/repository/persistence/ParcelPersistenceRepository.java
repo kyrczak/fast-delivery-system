@@ -39,9 +39,7 @@ public class ParcelPersistenceRepository implements ParcelRepository {
 
     @Override
     public List<Parcel> findAllByWarehouse(Warehouse warehouse) {
-        return em.createQuery("select c from Parcel c where c.warehouse = :warehouse",Parcel.class)
-                .setParameter("warehouse",warehouse)
-                .getResultList();
+        return em.find(Warehouse.class,warehouse.getUuid()).getParcels();
     }
 
     @Override
@@ -64,6 +62,7 @@ public class ParcelPersistenceRepository implements ParcelRepository {
     @Override
     public void create(Parcel entity) {
         em.persist(entity);
+        em.refresh(em.find(Warehouse.class, entity.getWarehouse().getUuid()));
     }
 
     @Override
