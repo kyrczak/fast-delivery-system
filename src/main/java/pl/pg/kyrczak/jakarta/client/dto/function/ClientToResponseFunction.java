@@ -20,6 +20,7 @@ public class ClientToResponseFunction implements Function<Client, GetClientRespo
                                 .uuid(parcel.getUuid())
                                 .build())
                         .toList())
+                .roles(client.getRoles().stream().toList())
                 .build();
 
     }

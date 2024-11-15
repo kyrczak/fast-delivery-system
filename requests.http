@@ -247,6 +247,9 @@ GET http://localhost:9080/fast-delivery/api/parcels/1c023543-5bd2-4b02-9941-27aa
 GET http://localhost:9080/fast-delivery/api/clients/12f2776c-f823-4aab-8eb3-0e4fd5ae32f9
 
 
+### Get admin
+
+GET http://localhost:9080/fast-delivery/api/clients/efacc57e-e009-4771-a9a2-758407b58f24
 
 ### Get nonexistent user
 

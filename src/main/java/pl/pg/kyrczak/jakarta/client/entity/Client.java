@@ -33,7 +33,7 @@ public class Client implements Serializable {
 
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
-    @OneToMany(mappedBy = "client", cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "client", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Parcel> parcels;
 
     @CollectionTable(name = "client_roles", joinColumns = @JoinColumn(name = "id"))
