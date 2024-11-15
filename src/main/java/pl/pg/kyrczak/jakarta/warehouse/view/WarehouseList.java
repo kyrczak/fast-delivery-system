@@ -6,6 +6,7 @@ import jakarta.inject.Named;
 import jakarta.ws.rs.NotFoundException;
 import pl.pg.kyrczak.jakarta.component.ModelFunctionFactory;
 import pl.pg.kyrczak.jakarta.parcel.service.ParcelService;
+import pl.pg.kyrczak.jakarta.warehouse.model.WarehouseEditModel;
 import pl.pg.kyrczak.jakarta.warehouse.model.WarehousesModel;
 import pl.pg.kyrczak.jakarta.warehouse.service.WarehouseService;
 

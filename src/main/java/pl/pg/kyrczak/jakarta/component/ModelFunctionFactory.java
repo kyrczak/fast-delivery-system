@@ -2,8 +2,7 @@ package pl.pg.kyrczak.jakarta.component;
 
 import jakarta.enterprise.context.ApplicationScoped;
 import pl.pg.kyrczak.jakarta.parcel.model.function.*;
-import pl.pg.kyrczak.jakarta.warehouse.model.function.WarehouseToModelFunction;
-import pl.pg.kyrczak.jakarta.warehouse.model.function.WarehousesToModelFunction;
+import pl.pg.kyrczak.jakarta.warehouse.model.function.*;
 
 @ApplicationScoped
 public class ModelFunctionFactory {
@@ -33,4 +32,9 @@ public class ModelFunctionFactory {
     public WarehousesToModelFunction warehousesToModelFunction() {
         return new WarehousesToModelFunction();
     }
+
+    public ModelToWarehouseFunction modelToWarehouseFunction() {return new ModelToWarehouseFunction();}
+
+    public UpdateWarehouseWithModelFunction updateWarehouse() {return new UpdateWarehouseWithModelFunction();}
+    public WarehouseToEditModelFunction warehouseToEditModelFunction() { return new WarehouseToEditModelFunction();}
 }
