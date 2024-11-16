@@ -7,7 +7,7 @@
 
     <context-param>
         <param-name>imageDirectory</param-name>
-        <param-value>images</param-value> <!-- For development -->
+        <param-value>../../../../../../src/images</param-value> <!-- For development -->
     </context-param>
 
     <context-param>

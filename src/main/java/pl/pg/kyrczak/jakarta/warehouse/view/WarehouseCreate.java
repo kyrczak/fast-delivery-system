@@ -1,5 +1,6 @@
 package pl.pg.kyrczak.jakarta.warehouse.view;
 
+import jakarta.ejb.EJB;
 import jakarta.enterprise.context.Conversation;
 import jakarta.enterprise.context.ConversationScoped;
 import jakarta.inject.Inject;
@@ -20,7 +21,7 @@ import java.util.UUID;
 @Log
 @NoArgsConstructor(force = true)
 public class WarehouseCreate implements Serializable {
-    private final WarehouseService warehouseService;
+    private WarehouseService warehouseService;
     private final ModelFunctionFactory factory;
 
     @Getter
@@ -30,13 +31,16 @@ public class WarehouseCreate implements Serializable {
 
     @Inject
     public WarehouseCreate(
-            WarehouseService warehouseService,
             ModelFunctionFactory factory,
             Conversation conversation
     ) {
-        this.warehouseService = warehouseService;
         this.factory = factory;
         this.conversation = conversation;
+    }
+
+    @EJB
+    public void setWarehouseService(WarehouseService warehouseService) {
+        this.warehouseService = warehouseService;
     }
 
     public void init() {

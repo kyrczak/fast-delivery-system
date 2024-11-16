@@ -1,5 +1,6 @@
 package pl.pg.kyrczak.jakarta.warehouse.view;
 
+import jakarta.ejb.EJB;
 import jakarta.enterprise.context.RequestScoped;
 import jakarta.faces.context.FacesContext;
 import jakarta.faces.view.ViewScoped;
@@ -22,9 +23,9 @@ import java.util.UUID;
 @ViewScoped
 @Named
 public class WarehouseView implements Serializable {
-    private final WarehouseService service;
+    private WarehouseService service;
 
-    private final ParcelService parcelService;
+    private ParcelService parcelService;
     private final ModelFunctionFactory factory;
 
     @Getter
@@ -35,10 +36,18 @@ public class WarehouseView implements Serializable {
     private WarehouseModel warehouse;
 
     @Inject
-    public WarehouseView(WarehouseService service, ParcelService parcelService, ModelFunctionFactory factory) {
-        this.service = service;
-        this.parcelService = parcelService;
+    public WarehouseView(ModelFunctionFactory factory) {
         this.factory = factory;
+    }
+
+    @EJB
+    public void setService(WarehouseService service) {
+        this.service = service;
+    }
+
+    @EJB
+    public void setParcelService(ParcelService parcelService) {
+        this.parcelService = parcelService;
     }
 
     public void init() throws IOException {

@@ -1,13 +1,9 @@
-package pl.pg.kyrczak.jakarta.configuration.observer;
+package pl.pg.kyrczak.jakarta.configuration.singleton;
 
-import jakarta.enterprise.context.ApplicationScoped;
-import jakarta.enterprise.context.Initialized;
+import jakarta.annotation.PostConstruct;
+import jakarta.ejb.*;
 import jakarta.enterprise.context.control.RequestContextController;
-import jakarta.enterprise.event.Observes;
-import jakarta.inject.Inject;
-import jakarta.servlet.ServletContextEvent;
-import jakarta.servlet.ServletContextListener;
-import jakarta.servlet.annotation.WebListener;
+import lombok.NoArgsConstructor;
 import lombok.SneakyThrows;
 import pl.pg.kyrczak.jakarta.client.entity.Client;
 import pl.pg.kyrczak.jakarta.client.entity.ClientRoles;
@@ -18,47 +14,45 @@ import pl.pg.kyrczak.jakarta.parcel.service.ParcelService;
 import pl.pg.kyrczak.jakarta.warehouse.entity.Warehouse;
 import pl.pg.kyrczak.jakarta.warehouse.service.WarehouseService;
 
-import java.io.InputStream;
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-@ApplicationScoped
+@Singleton
+@Startup
+@TransactionAttribute(value = TransactionAttributeType.NOT_SUPPORTED)
+@NoArgsConstructor
 public class InitializedData {
-    private final ParcelService parcelService;
+    private ParcelService parcelService;
 
     /**
      * User service.
      */
-    private final ClientService clientService;
+    private ClientService clientService;
 
     /**
      * Profession service.
      */
-    private final WarehouseService warehouseService;
+    private WarehouseService warehouseService;
 
-    private final RequestContextController requestContextController;
+    @EJB
+    public void setParcelService(ParcelService service) {
+        this.parcelService = service;
+    }
 
-    @Inject
-    public InitializedData(
-            ParcelService parcelService,
-            ClientService clientService,
-            WarehouseService warehouseService,
-            RequestContextController requestContextController
-    ) {
-        this.parcelService = parcelService;
+    @EJB
+    public void setClientService(ClientService clientService) {
         this.clientService = clientService;
-        this.warehouseService = warehouseService;
-        this.requestContextController = requestContextController;
-    }
-    public void contextInitialized(@Observes @Initialized(ApplicationScoped.class) Object init) {
-        init();
     }
 
+    @EJB
+    public void setWarehouseService(WarehouseService warehouseService) {
+        this.warehouseService = warehouseService;
+    }
+
+    @PostConstruct
     @SneakyThrows
     private void init() {
-        requestContextController.activate();
         if(clientService.find("admin").isEmpty()) {
             Client admin = Client.builder()
                     .uuid(UUID.fromString("efacc57e-e009-4771-a9a2-758407b58f24"))
@@ -181,18 +175,5 @@ public class InitializedData {
             parcelService.create(paczka4);
             parcelService.create(paczka5);
         }
-        requestContextController.deactivate();
-
     }
-    @SneakyThrows
-    private byte[] getResourceAsByteArray(String name) {
-        try (InputStream is = this.getClass().getResourceAsStream(name)) {
-            if (is != null) {
-                return is.readAllBytes();
-            } else {
-                throw new IllegalStateException("Unable to get resource %s".formatted(name));
-            }
-        }
-    }
-
 }

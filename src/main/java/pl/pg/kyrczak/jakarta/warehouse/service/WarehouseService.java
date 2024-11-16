@@ -1,5 +1,7 @@
 package pl.pg.kyrczak.jakarta.warehouse.service;
 
+import jakarta.ejb.LocalBean;
+import jakarta.ejb.Stateless;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
@@ -12,7 +14,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-@ApplicationScoped
+@LocalBean
+@Stateless
 @NoArgsConstructor(force = true)
 @Log
 public class WarehouseService {
@@ -31,17 +34,14 @@ public class WarehouseService {
         return warehouseRepository.findAll();
     }
 
-    @Transactional
     public void create(Warehouse warehouse) {
         warehouseRepository.create(warehouse);
     }
 
-    @Transactional
     public void update(Warehouse warehouse) {
         warehouseRepository.update(warehouse);
     }
 
-    @Transactional
     public void delete(UUID uuid) {
         warehouseRepository.delete(warehouseRepository.find(uuid).orElseThrow());
     }

@@ -1,5 +1,6 @@
 package pl.pg.kyrczak.jakarta.parcel.view;
 
+import jakarta.ejb.EJB;
 import jakarta.enterprise.context.RequestScoped;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
@@ -10,14 +11,18 @@ import pl.pg.kyrczak.jakarta.parcel.service.ParcelService;
 @RequestScoped
 @Named
 public class ParcelList {
-    private final ParcelService service;
+    private ParcelService service;
     private ParcelsModel parcels;
     private final ModelFunctionFactory factory;
 
     @Inject
-    public ParcelList(ParcelService service, ModelFunctionFactory factory) {
-        this.service = service;
+    public ParcelList(ModelFunctionFactory factory) {
         this.factory = factory;
+    }
+
+    @EJB
+    public void setService(ParcelService service) {
+        this.service = service;
     }
 
     public ParcelsModel getParcels() {

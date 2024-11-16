@@ -22,12 +22,14 @@ public class Parcel implements Serializable {
     @Id
     private UUID uuid;
     private Float weight;
+    @Enumerated(EnumType.STRING)
     private ParcelStatus status;
     private LocalDate deliveryDate;
     @ManyToOne
     @JoinColumn(name = "warehouse")
     private Warehouse warehouse;
 
+    private String image;
     @ManyToOne
     @JoinColumn(name = "client")
     private Client client;

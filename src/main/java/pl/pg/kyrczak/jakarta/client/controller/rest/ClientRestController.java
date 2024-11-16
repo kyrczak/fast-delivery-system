@@ -1,5 +1,7 @@
 package pl.pg.kyrczak.jakarta.client.controller.rest;
 
+import jakarta.ejb.EJB;
+import jakarta.ejb.EJBException;
 import jakarta.enterprise.context.RequestScoped;
 import jakarta.inject.Inject;
 import jakarta.servlet.http.HttpServletResponse;
@@ -28,7 +30,7 @@ import java.util.logging.Level;
 @Log
 public class ClientRestController implements ClientController {
 
-    private final ClientService service;
+    private ClientService service;
     private final DtoFunctionFactory factory;
 
     private final UriInfo uriInfo;
@@ -41,12 +43,17 @@ public class ClientRestController implements ClientController {
     }
 
     @Inject
-    public ClientRestController(ClientService service, DtoFunctionFactory factory,
+    public ClientRestController(DtoFunctionFactory factory,
                                 @SuppressWarnings("CdiInjectionPointsInspection") UriInfo uriInfo) {
-        this.service = service;
         this.factory = factory;
         this.uriInfo = uriInfo;
     }
+
+    @EJB
+    public void setService(ClientService service) {
+        this.service = service;
+    }
+
     @Override
     public GetClientsResponse getClients() {
         return factory.clientsToResponseFunction().apply(service.findAll());
@@ -69,7 +76,7 @@ public class ClientRestController implements ClientController {
                     .build(uuid)
                     .toString());
             throw new WebApplicationException(Response.Status.CREATED);
-        } catch (TransactionalException ex) {
+        } catch (EJBException ex) {
             if (ex.getCause() instanceof IllegalArgumentException) {
                 log.log(Level.WARNING, ex.getMessage(), ex);
                 throw new BadRequestException(ex);

@@ -1,5 +1,7 @@
 package pl.pg.kyrczak.jakarta.client.service;
 
+import jakarta.ejb.LocalBean;
+import jakarta.ejb.Stateless;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
@@ -12,7 +14,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-@ApplicationScoped
+@LocalBean
+@Stateless
 @NoArgsConstructor(force = true)
 public class ClientService {
     private final ClientRepository repository;
@@ -35,8 +38,10 @@ public class ClientService {
         return repository.findByLogin(login);
     }
 
-    @Transactional
     public void create(Client client) {
+        if(repository.findByLogin(client.getLogin()).isPresent()) {
+            throw new IllegalArgumentException("User with this login already exists");
+        }
         client.setPassword(passwordHash.generate(client.getPassword().toCharArray()));
         repository.create(client);
     }
@@ -47,12 +52,10 @@ public class ClientService {
                 .orElse(false);
     }
 
-    @Transactional
     public void update(Client client) {
         repository.update(client);
     }
 
-    @Transactional
     public void delete(UUID uuid) {
         repository.delete(repository.find(uuid).orElseThrow());
     }

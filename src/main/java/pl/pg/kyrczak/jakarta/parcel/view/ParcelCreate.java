@@ -1,5 +1,6 @@
 package pl.pg.kyrczak.jakarta.parcel.view;
 
+import jakarta.ejb.EJB;
 import jakarta.enterprise.context.Conversation;
 import jakarta.enterprise.context.ConversationScoped;
 import jakarta.inject.Inject;
@@ -30,8 +31,8 @@ import java.util.stream.Collectors;
 @Log
 @NoArgsConstructor(force = true)
 public class ParcelCreate implements Serializable {
-    private final ParcelService parcelService;
-    private final WarehouseService warehouseService;
+    private ParcelService parcelService;
+    private WarehouseService warehouseService;
     private final ModelFunctionFactory factory;
 
     @Getter
@@ -44,15 +45,21 @@ public class ParcelCreate implements Serializable {
 
     @Inject
     public ParcelCreate(
-            ParcelService parcelService,
-            WarehouseService warehouseService,
             ModelFunctionFactory factory,
             Conversation conversation
     ) {
-        this.parcelService = parcelService;
-        this.warehouseService = warehouseService;
         this.factory = factory;
         this.conversation = conversation;
+    }
+
+    @EJB
+    public void setParcelService(ParcelService parcelService) {
+        this.parcelService = parcelService;
+    }
+
+    @EJB
+    public void setWarehouseService(WarehouseService warehouseService) {
+        this.warehouseService = warehouseService;
     }
 
     public void init() {

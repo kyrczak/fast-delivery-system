@@ -1,5 +1,6 @@
 package pl.pg.kyrczak.jakarta.warehouse.view;
 
+import jakarta.ejb.EJB;
 import jakarta.enterprise.context.RequestScoped;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
@@ -13,18 +14,24 @@ import pl.pg.kyrczak.jakarta.warehouse.service.WarehouseService;
 @RequestScoped
 @Named
 public class WarehouseList {
-    private final WarehouseService service;
-    private final ParcelService parcelService;
+    private WarehouseService service;
+    private ParcelService parcelService;
     private WarehousesModel warehouses;
     private final ModelFunctionFactory factory;
 
     @Inject
-    public WarehouseList(WarehouseService service,
-                         ModelFunctionFactory factory,
-                         ParcelService parcelService) {
-        this.service = service;
-        this.parcelService = parcelService;
+    public WarehouseList(ModelFunctionFactory factory) {
         this.factory = factory;
+    }
+
+    @EJB
+    public void setService(WarehouseService service) {
+        this.service = service;
+    }
+
+    @EJB
+    public void setParcelService(ParcelService parcelService) {
+        this.parcelService = parcelService;
     }
 
     public WarehousesModel getWarehouses() {

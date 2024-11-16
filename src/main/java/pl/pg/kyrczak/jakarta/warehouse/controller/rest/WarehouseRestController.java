@@ -1,5 +1,6 @@
 package pl.pg.kyrczak.jakarta.warehouse.controller.rest;
 
+import jakarta.ejb.EJB;
 import jakarta.enterprise.context.RequestScoped;
 import jakarta.inject.Inject;
 import jakarta.transaction.TransactionalException;
@@ -28,9 +29,9 @@ import java.util.logging.Level;
 @Path("")
 @Log
 public class WarehouseRestController implements WarehouseController {
-    private final WarehouseService service;
+    private WarehouseService service;
     private final DtoFunctionFactory factory;
-    private final ParcelService parcelService;
+    private ParcelService parcelService;
 
     private final UriInfo uriInfo;
 
@@ -41,16 +42,24 @@ public class WarehouseRestController implements WarehouseController {
         this.response = response;
     }
     @Inject
-    public WarehouseRestController(WarehouseService service,
-                                   ParcelService parcelService,
-                                   DtoFunctionFactory factory,
-                                   @SuppressWarnings("CdiInjectionPointsInspection") UriInfo uriInfo
+    public WarehouseRestController(
+            DtoFunctionFactory factory,
+            @SuppressWarnings("CdiInjectionPointsInspection") UriInfo uriInfo
     ) {
-        this.service = service;
         this.factory = factory;
-        this.parcelService = parcelService;
         this.uriInfo = uriInfo;
     }
+
+    @EJB
+    public void setService(WarehouseService service) {
+        this.service = service;
+    }
+
+    @EJB
+    public void setParcelService(ParcelService parcelService) {
+        this.parcelService = parcelService;
+    }
+
     @Override
     public GetWarehousesResponse getWarehouses() {
         return factory.warehousesToResponseFunction().apply(service.findAll());

@@ -1,5 +1,7 @@
 package pl.pg.kyrczak.jakarta.parcel.controller.rest;
 
+import jakarta.ejb.EJB;
+import jakarta.ejb.EJBException;
 import jakarta.inject.Inject;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.transaction.TransactionalException;
@@ -31,8 +33,8 @@ import java.util.logging.Level;
 @Log
 public class ParcelRestController implements ParcelController {
 
-    private final ParcelService service;
-    private final WarehouseService warehouseService;
+    private ParcelService service;
+    private WarehouseService warehouseService;
     private final DtoFunctionFactory factory;
 
     private final UriInfo uriInfo;
@@ -44,16 +46,23 @@ public class ParcelRestController implements ParcelController {
         this.response = response;
     }
     @Inject
-    public ParcelRestController(ParcelService service,
-                                DtoFunctionFactory factory,
-                                @SuppressWarnings("CdiInjectionPointsInspection") UriInfo uriInfo,
-                                WarehouseService warehouseService
+    public ParcelRestController(DtoFunctionFactory factory,
+                                @SuppressWarnings("CdiInjectionPointsInspection") UriInfo uriInfo
     ) {
-        this.service = service;
         this.factory = factory;
         this.uriInfo = uriInfo;
+    }
+
+    @EJB
+    public void setService(ParcelService service) {
+        this.service = service;
+    }
+
+    @EJB
+    public void setWarehouseService(WarehouseService warehouseService) {
         this.warehouseService = warehouseService;
     }
+
     @Override
     public GetParcelsResponse getParcels() {
         return factory.parcelsToResponseFunction().apply(service.findAll());
@@ -91,8 +100,12 @@ public class ParcelRestController implements ParcelController {
                     .build(uuid, warehouse_uuid)
                     .toString());
             throw new WebApplicationException(Response.Status.CREATED);
-        } catch (IllegalArgumentException ex) {
-            throw new BadRequestException();
+        } catch (EJBException ex) {
+            if (ex.getCause() instanceof IllegalArgumentException) {
+                log.log(Level.WARNING, ex.getMessage(), ex);
+                throw new BadRequestException(ex);
+            }
+            throw ex;
         }
     }
 
@@ -121,6 +134,7 @@ public class ParcelRestController implements ParcelController {
         try {
             return service.downloadImage(uuid);
         } catch (IOException ex) {
+
             throw new NotFoundException();
         }
     }
