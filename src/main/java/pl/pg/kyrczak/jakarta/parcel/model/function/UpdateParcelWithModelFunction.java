@@ -1,6 +1,7 @@
 package pl.pg.kyrczak.jakarta.parcel.model.function;
 
 import lombok.SneakyThrows;
+import pl.pg.kyrczak.jakarta.client.entity.Client;
 import pl.pg.kyrczak.jakarta.parcel.entity.Parcel;
 import pl.pg.kyrczak.jakarta.parcel.entity.ParcelStatus;
 import pl.pg.kyrczak.jakarta.parcel.model.ParcelEditModel;
@@ -18,6 +19,11 @@ public class UpdateParcelWithModelFunction implements BiFunction<Parcel, ParcelE
                 .status(ParcelStatus.valueOf(parcelEditModel.getStatus()))
                 .deliveryDate(parcelEditModel.getDeliveryDate())
                 .warehouse(parcel.getWarehouse())
+                .client(Client.builder()
+                        .uuid(parcelEditModel.getClient().getUuid())
+                        .build())
+                .image(parcel.getImage())
                 .build();
+
     }
 }

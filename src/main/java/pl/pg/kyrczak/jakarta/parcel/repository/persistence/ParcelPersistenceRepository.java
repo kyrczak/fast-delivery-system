@@ -3,6 +3,7 @@ package pl.pg.kyrczak.jakarta.parcel.repository.persistence;
 import jakarta.enterprise.context.Dependent;
 import jakarta.enterprise.context.RequestScoped;
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.NoResultException;
 import jakarta.persistence.PersistenceContext;
 import pl.pg.kyrczak.jakarta.client.entity.Client;
 import pl.pg.kyrczak.jakarta.parcel.entity.Parcel;
@@ -22,6 +23,19 @@ public class ParcelPersistenceRepository implements ParcelRepository {
     @PersistenceContext
     public void setEm(EntityManager em) {
         this.em = em;
+    }
+
+    @Override
+    public Optional<Parcel> findByUuidAndClient(UUID uuid, Client client) {
+        try {
+            return Optional.of(em.createQuery("select c from Parcel c where c.uuid = :uuid and c.client = :client",
+                    Parcel.class)
+                    .setParameter("client",client)
+                    .setParameter("uuid",uuid)
+                    .getSingleResult());
+        } catch (NoResultException ex) {
+            return Optional.empty();
+        }
     }
 
     @Override

@@ -98,7 +98,7 @@ public class ParcelCreate implements Serializable {
     }
 
     public String saveAction() {
-        parcelService.create(factory.modelToParcelFunction().apply(parcel));
+        parcelService.createForCallerPrincipal(factory.modelToParcelFunction().apply(parcel));
         Part image = parcel.getImage();
         if (image != null) {
             try (InputStream inputStream = image.getInputStream()) {

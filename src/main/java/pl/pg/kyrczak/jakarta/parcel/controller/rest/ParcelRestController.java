@@ -1,17 +1,19 @@
 package pl.pg.kyrczak.jakarta.parcel.controller.rest;
 
+import jakarta.annotation.security.RolesAllowed;
 import jakarta.ejb.EJB;
+import jakarta.ejb.EJBAccessException;
 import jakarta.ejb.EJBException;
 import jakarta.inject.Inject;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.transaction.TransactionalException;
-import jakarta.ws.rs.Path;
-import jakarta.ws.rs.WebApplicationException;
+import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.UriInfo;
 import lombok.SneakyThrows;
 import lombok.extern.java.Log;
+import pl.pg.kyrczak.jakarta.client.entity.ClientRoles;
 import pl.pg.kyrczak.jakarta.component.DtoFunctionFactory;
 import pl.pg.kyrczak.jakarta.parcel.controller.api.ParcelController;
 import pl.pg.kyrczak.jakarta.parcel.dto.GetParcelResponse;
@@ -19,8 +21,6 @@ import pl.pg.kyrczak.jakarta.parcel.dto.GetParcelsResponse;
 import pl.pg.kyrczak.jakarta.parcel.dto.PatchParcelRequest;
 import pl.pg.kyrczak.jakarta.parcel.dto.PutParcelRequest;
 import pl.pg.kyrczak.jakarta.parcel.service.ParcelService;
-import jakarta.ws.rs.BadRequestException;
-import jakarta.ws.rs.NotFoundException;
 import pl.pg.kyrczak.jakarta.warehouse.service.WarehouseService;
 
 
@@ -31,6 +31,7 @@ import java.util.logging.Level;
 
 @Path("")
 @Log
+@RolesAllowed(ClientRoles.USER)
 public class ParcelRestController implements ParcelController {
 
     private ParcelService service;
@@ -94,7 +95,8 @@ public class ParcelRestController implements ParcelController {
     public void putParcel(UUID uuid, UUID warehouse_uuid, PutParcelRequest request) {
         try {
             request.setWarehouse(warehouse_uuid);
-            service.create(factory.requestToParcelFunction().apply(uuid,request));
+            //service.create(factory.requestToParcelFunction().apply(uuid,request));
+            service.createForCallerPrincipal(factory.requestToParcelFunction().apply(uuid,request));
             response.setHeader("Location", uriInfo.getBaseUriBuilder()
                     .path(ParcelController.class, "getParcel")
                     .build(uuid, warehouse_uuid)
@@ -112,7 +114,14 @@ public class ParcelRestController implements ParcelController {
     @Override
     public void patchParcel(UUID uuid, UUID warehouse_uuid, PatchParcelRequest request) {
         service.find(uuid).ifPresentOrElse(
-                entity -> service.update(factory.updateParcelWithRequestFunction().apply(entity,request)),
+                entity -> {
+                    try {
+                        service.update(factory.updateParcelWithRequestFunction().apply(entity,request));
+                    } catch (EJBAccessException ex) {
+                        log.log(Level.WARNING, ex.getMessage(),ex);
+                        throw new ForbiddenException(ex.getMessage());
+                    }
+                },
                 () -> {
                     throw new NotFoundException();
                 }
@@ -122,7 +131,14 @@ public class ParcelRestController implements ParcelController {
     @Override
     public void deleteParcel(UUID uuid, UUID warehouse_uuid) {
         service.find(uuid).ifPresentOrElse(
-                entity -> service.delete(uuid),
+                entity -> {
+                  try {
+                      service.delete(uuid);
+                  } catch (EJBAccessException ex) {
+                      log.log(Level.WARNING, ex.getMessage(),ex);
+                      throw new ForbiddenException(ex.getMessage());
+                  }
+                },
                 () -> {
                     throw new NotFoundException();
                 }
@@ -141,13 +157,26 @@ public class ParcelRestController implements ParcelController {
 
     @Override
     public void putParcelImage(UUID uuid, UUID warehouse_uuid, InputStream image) {
-        try {
-            service.uploadImage(uuid, image);
-        } catch (IOException e) {
-            throw new BadRequestException();
-        } catch (IllegalStateException ex) {
-            throw new BadRequestException();
-        }
+        service.find(uuid).ifPresentOrElse(
+                entity -> {
+                    try {
+                        service.uploadImage(uuid,image);
+                    } catch (EJBAccessException ex) {
+                        log.log(Level.WARNING, ex.getMessage(), ex);
+                        throw new ForbiddenException(ex.getMessage());
+                    } catch (IOException e) {
+                        throw new NotFoundException(e);
+                    }
+                    response.setHeader("Location", uriInfo.getBaseUriBuilder()
+                            .path(ParcelController.class, "getParcelImage")
+                            .build(uuid)
+                            .toString());
+                    throw new WebApplicationException(Response.Status.CREATED);
+                },
+                () -> {
+                    throw new NotFoundException();
+                }
+        );
     }
 
     @Override

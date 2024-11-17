@@ -27,7 +27,7 @@ public class ParcelList {
 
     public ParcelsModel getParcels() {
         if (parcels == null) {
-            parcels = factory.parcelsToModelFunction().apply(service.findAll());
+            parcels = factory.parcelsToModelFunction().apply(service.findAllForCallerPrincipal());
         }
         return parcels;
     }

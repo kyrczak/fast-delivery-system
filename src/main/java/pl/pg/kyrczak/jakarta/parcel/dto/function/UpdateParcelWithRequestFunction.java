@@ -13,6 +13,7 @@ public class UpdateParcelWithRequestFunction implements BiFunction<Parcel, Patch
                 .uuid(parcel.getUuid())
                 .weight(request.getWeight())
                 .warehouse(parcel.getWarehouse())
+                .client(parcel.getClient())
                 .status(ParcelStatus.valueOf(request.getStatus()))
                 .deliveryDate(request.getDeliveryDate())
                 .build();

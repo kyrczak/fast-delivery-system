@@ -1,10 +1,15 @@
 package pl.pg.kyrczak.jakarta.configuration.singleton;
 
 import jakarta.annotation.PostConstruct;
+import jakarta.annotation.security.DeclareRoles;
+import jakarta.annotation.security.RunAs;
 import jakarta.ejb.*;
 import jakarta.enterprise.context.control.RequestContextController;
+import jakarta.inject.Inject;
+import jakarta.security.enterprise.SecurityContext;
 import lombok.NoArgsConstructor;
 import lombok.SneakyThrows;
+import lombok.extern.java.Log;
 import pl.pg.kyrczak.jakarta.client.entity.Client;
 import pl.pg.kyrczak.jakarta.client.entity.ClientRoles;
 import pl.pg.kyrczak.jakarta.client.service.ClientService;
@@ -22,6 +27,10 @@ import java.util.UUID;
 @Startup
 @TransactionAttribute(value = TransactionAttributeType.NOT_SUPPORTED)
 @NoArgsConstructor
+@DependsOn("InitializeAdminService")
+@DeclareRoles({ClientRoles.ADMIN,ClientRoles.USER})
+@RunAs(ClientRoles.ADMIN)
+@Log
 public class InitializedData {
     private ParcelService parcelService;
 
@@ -34,6 +43,9 @@ public class InitializedData {
      * Profession service.
      */
     private WarehouseService warehouseService;
+
+    @Inject
+    private SecurityContext securityContext;
 
     @EJB
     public void setParcelService(ParcelService service) {
@@ -98,6 +110,7 @@ public class InitializedData {
                     .password("marioluigi")
                     .roles(List.of(ClientRoles.USER))
                     .build();
+
             clientService.create(admin);
             clientService.create(patryk);
             clientService.create(jarek);

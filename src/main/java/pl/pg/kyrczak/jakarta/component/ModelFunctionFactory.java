@@ -1,6 +1,8 @@
 package pl.pg.kyrczak.jakarta.component;
 
 import jakarta.enterprise.context.ApplicationScoped;
+import pl.pg.kyrczak.jakarta.client.model.function.ClientToModelFunction;
+import pl.pg.kyrczak.jakarta.client.model.function.ClientsToModelFunction;
 import pl.pg.kyrczak.jakarta.parcel.model.function.*;
 import pl.pg.kyrczak.jakarta.warehouse.model.function.*;
 
@@ -15,7 +17,7 @@ public class ModelFunctionFactory {
     }
 
     public ParcelToEditModelFunction parcelToEditModelFunction() {
-        return new ParcelToEditModelFunction();
+        return new ParcelToEditModelFunction(clientToModel());
     }
 
     public ModelToParcelFunction modelToParcelFunction() {
@@ -37,4 +39,12 @@ public class ModelFunctionFactory {
 
     public UpdateWarehouseWithModelFunction updateWarehouse() {return new UpdateWarehouseWithModelFunction();}
     public WarehouseToEditModelFunction warehouseToEditModelFunction() { return new WarehouseToEditModelFunction();}
+
+    public ClientToModelFunction clientToModel() {
+        return new ClientToModelFunction();
+    }
+
+    public ClientsToModelFunction clientsToModel() {
+        return new ClientsToModelFunction();
+    }
 }

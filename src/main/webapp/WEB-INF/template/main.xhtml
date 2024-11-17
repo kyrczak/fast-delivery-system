@@ -25,6 +25,13 @@
             <header class="mb-4 mt-4">
                 <h1>Fast delivery</h1>
                 <h:graphicImage id="image_logo" name="package_logo.png" library="default" alt="Package logo"/>
+                <h:form styleClass="container d-flex  align-items-center justify-content-end"
+                        rendered="#{facesContext.externalContext.userPrincipal != null}">
+                    Logged: <h:outputText value="#{facesContext.externalContext.userPrincipal.name}"/>
+                    <h:commandButton styleClass="btn btn-link" value="Logout"
+                                     action="#{clientLogout.logoutAction()}"/>
+                </h:form>
+
             </header>
 
             <nav class="navbar navbar-expand-lg navbar-light bg-light sticky-top">
@@ -41,6 +48,13 @@
                             <h:link styleClass="nav-link"
                                     outcome="/warehouse/warehouse_list.xhtml">Warehouses</h:link>
                         </li>
+                        <h:panelGroup rendered="#{facesContext.externalContext.isUserInRole('admin')}">
+                            <li class="nav-item">
+                                <h:link styleClass="nav-link"
+                                        outcome="/client/client_list.xhtml">Clients</h:link>
+                            </li>
+                        </h:panelGroup>
+
                     </ul>
                 </div>
             </nav>

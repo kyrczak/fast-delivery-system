@@ -36,7 +36,7 @@ public class Client implements Serializable {
     @OneToMany(mappedBy = "client", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Parcel> parcels;
 
-    @CollectionTable(name = "client_roles", joinColumns = @JoinColumn(name = "id"))
+    @CollectionTable(name = "clients__roles", joinColumns = @JoinColumn(name = "id"))
     @Column(name = "role")
     @ElementCollection(fetch = FetchType.EAGER)
     private List<String> roles;

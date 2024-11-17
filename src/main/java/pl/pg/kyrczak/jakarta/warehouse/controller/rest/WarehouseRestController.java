@@ -1,10 +1,12 @@
 package pl.pg.kyrczak.jakarta.warehouse.controller.rest;
 
+import jakarta.annotation.security.RolesAllowed;
 import jakarta.ejb.EJB;
 import jakarta.enterprise.context.RequestScoped;
 import jakarta.inject.Inject;
 import jakarta.transaction.TransactionalException;
 import lombok.extern.java.Log;
+import pl.pg.kyrczak.jakarta.client.entity.ClientRoles;
 import pl.pg.kyrczak.jakarta.component.DtoFunctionFactory;
 import pl.pg.kyrczak.jakarta.parcel.service.ParcelService;
 import pl.pg.kyrczak.jakarta.warehouse.controller.api.WarehouseController;
@@ -72,6 +74,7 @@ public class WarehouseRestController implements WarehouseController {
                 .orElseThrow(NotFoundException::new);
     }
 
+    @RolesAllowed({ClientRoles.ADMIN})
     @Override
     @SneakyThrows
     public void putWarehouse(UUID uuid, PutWarehouseRequest request) {
@@ -88,6 +91,7 @@ public class WarehouseRestController implements WarehouseController {
 
     }
 
+    @RolesAllowed({ClientRoles.ADMIN})
     @Override
     public void patchWarehouse(UUID uuid, PatchWarehouseRequest request) {
         service.find(uuid).ifPresentOrElse(
@@ -98,6 +102,7 @@ public class WarehouseRestController implements WarehouseController {
         );
     }
 
+    @RolesAllowed({ClientRoles.ADMIN})
     @Override
     public void deleteWarehouse(UUID uuid) {
         service.find(uuid).ifPresentOrElse(

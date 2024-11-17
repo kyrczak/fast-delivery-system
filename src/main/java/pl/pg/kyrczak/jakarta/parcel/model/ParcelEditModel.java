@@ -2,6 +2,7 @@ package pl.pg.kyrczak.jakarta.parcel.model;
 
 import jakarta.servlet.http.Part;
 import lombok.*;
+import pl.pg.kyrczak.jakarta.client.model.ClientModel;
 
 import java.time.LocalDate;
 
@@ -17,4 +18,5 @@ public class ParcelEditModel {
     private Float weight;
     private LocalDate deliveryDate;
     private Part image;
+    private ClientModel client;
 }

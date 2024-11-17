@@ -1,12 +1,17 @@
 package pl.pg.kyrczak.jakarta.parcel.service;
 
+import jakarta.annotation.security.RolesAllowed;
+import jakarta.ejb.EJBAccessException;
 import jakarta.ejb.LocalBean;
 import jakarta.ejb.Stateless;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
 import jakarta.ws.rs.NotFoundException;
+import jakarta.security.enterprise.SecurityContext;
 import lombok.NoArgsConstructor;
+import pl.pg.kyrczak.jakarta.client.entity.Client;
+import pl.pg.kyrczak.jakarta.client.entity.ClientRoles;
 import pl.pg.kyrczak.jakarta.client.repository.api.ClientRepository;
 import pl.pg.kyrczak.jakarta.parcel.entity.Parcel;
 import pl.pg.kyrczak.jakarta.parcel.entity.ParcelStatus;
@@ -30,35 +35,72 @@ public class ParcelService {
     private final ParcelRepository parcelRepository;
     private final ClientRepository clientRepository;
     private final WarehouseRepository warehouseRepository;
-
+    private final SecurityContext securityContext;
     private final String imageDirectory;
 
     @Inject
     public ParcelService(ParcelRepository parcelRepository,
                          ClientRepository clientRepository,
-                         WarehouseRepository warehouseRepository) {
+                         WarehouseRepository warehouseRepository,
+                         @SuppressWarnings("CdiInjectionPointsInspection") SecurityContext securityContext) {
         this.parcelRepository = parcelRepository;
         this.clientRepository = clientRepository;
         this.warehouseRepository = warehouseRepository;
+        this.securityContext = securityContext;
         this.imageDirectory = "../../../../../../src/images";
     }
 
+    @RolesAllowed(ClientRoles.USER)
     public Optional<Parcel> find(UUID uuid) {
         return parcelRepository.find(uuid);
     }
 
+    @RolesAllowed(ClientRoles.USER)
+    public Optional<Parcel> find(Client client, UUID uuid) {
+        return parcelRepository.findByUuidAndClient(uuid, client);
+    }
+
+    @RolesAllowed(ClientRoles.USER)
+    public Optional<Parcel> findForCallerPrincipal(UUID id) {
+        if (securityContext.isCallerInRole(ClientRoles.ADMIN)) {
+            return find(id);
+        }
+        Client client = clientRepository.findByLogin(securityContext.getCallerPrincipal().getName())
+                .orElseThrow(IllegalStateException::new);
+        return find(client, id);
+    }
+
+    @RolesAllowed(ClientRoles.USER)
     public List<Parcel> findAll() {
         return parcelRepository.findAll();
     }
 
+    @RolesAllowed(ClientRoles.USER)
+    public List<Parcel> findAll(Client client) {
+        return parcelRepository.findAllByClient(client);
+    }
+    @RolesAllowed(ClientRoles.USER)
     public List<Parcel> findAll(LocalDate date) {
         return parcelRepository.findAllByDeliveryDate(date);
     }
 
+    @RolesAllowed(ClientRoles.USER)
     public List<Parcel> findAll(ParcelStatus status) {
         return parcelRepository.findAllByStatus(status);
     }
 
+    @RolesAllowed(ClientRoles.USER)
+    public List<Parcel> findAllForCallerPrincipal() {
+        if (securityContext.isCallerInRole(ClientRoles.ADMIN)) {
+            return findAll();
+        }
+        Client client = clientRepository.findByLogin(securityContext.getCallerPrincipal().getName())
+                .orElseThrow(IllegalStateException::new);
+        return findAll(client);
+    }
+
+
+    @RolesAllowed(ClientRoles.ADMIN)
     public void create(Parcel parcel) {
         if(parcelRepository.find(parcel.getUuid()).isPresent()) {
             throw new IllegalArgumentException("Parcel already exists.");
@@ -71,11 +113,25 @@ public class ParcelService {
                 .ifPresent(warehouse -> warehouse.getParcels().add(parcel));
     }
 
+    @RolesAllowed(ClientRoles.USER)
+    public void createForCallerPrincipal(Parcel parcel) {
+        Client client = clientRepository.findByLogin(securityContext.getCallerPrincipal().getName())
+                .orElseThrow(IllegalStateException::new);
+
+        parcel.setClient(client);
+        create(parcel);
+    }
+
+
+    @RolesAllowed(ClientRoles.USER)
     public void update(Parcel parcel) {
+        checkAdminRoleOrOwner(parcelRepository.find(parcel.getUuid()));
         parcelRepository.update(parcel);
     }
 
+    @RolesAllowed(ClientRoles.USER)
     public void delete(UUID uuid) {
+        checkAdminRoleOrOwner(parcelRepository.find(uuid));
         parcelRepository.find(uuid).ifPresent(parcel -> warehouseRepository.find(
                 parcel.getWarehouse().getUuid()).ifPresent(
                         warehouse -> warehouse.getParcels().remove(parcel)));
@@ -83,17 +139,21 @@ public class ParcelService {
 
     }
 
+    @RolesAllowed(ClientRoles.USER)
     public Optional<List<Parcel>> findAllByWarehouse(UUID uuid) {
         return warehouseRepository.find(uuid)
                 .map(parcelRepository::findAllByWarehouse);
     }
 
+    @RolesAllowed(ClientRoles.USER)
     public Optional<List<Parcel>> findAllByClient(UUID uuid) {
         return clientRepository.find(uuid)
                 .map(parcelRepository::findAllByClient);
     }
 
+    @RolesAllowed(ClientRoles.USER)
     public void uploadImage(UUID uuid, InputStream inputStream) throws IOException{
+        checkAdminRoleOrOwner(parcelRepository.find(uuid));
         parcelRepository.find(uuid).ifPresent(parcel -> {
             try {
                 String path = this.imageDirectory + File.separator + uuid.toString() + ".png";
@@ -112,7 +172,9 @@ public class ParcelService {
         });
     }
 
+    @RolesAllowed(ClientRoles.USER)
     public void overwriteImage(UUID uuid, InputStream imageStream) throws IOException {
+        checkAdminRoleOrOwner(parcelRepository.find(uuid));
         parcelRepository.find(uuid).ifPresent(parcel -> {
             try {
                 String path = this.imageDirectory + File.separator +uuid.toString() +".png";
@@ -131,7 +193,9 @@ public class ParcelService {
         });
     }
 
+    @RolesAllowed(ClientRoles.USER)
     public byte[] downloadImage(UUID uuid) throws IOException {
+        checkAdminRoleOrOwner(parcelRepository.find(uuid));
         return parcelRepository.find(uuid).map(parcel -> {
             try {
                 String image = parcel.getImage();
@@ -147,7 +211,9 @@ public class ParcelService {
         }).orElseThrow(() -> new NotFoundException(("Parcel does not exist")));
     }
 
+    @RolesAllowed(ClientRoles.USER)
     public void deleteImage(UUID uuid) throws IOException {
+        checkAdminRoleOrOwner(parcelRepository.find(uuid));
         parcelRepository.find(uuid).ifPresent(parcel -> {
             String path = this.imageDirectory + File.separator + parcel.getImage();
             if (parcel.getImage() != null) {
@@ -165,4 +231,17 @@ public class ParcelService {
             }
         });
     }
+
+    private void checkAdminRoleOrOwner(Optional<Parcel> parcel) throws EJBAccessException {
+        if (securityContext.isCallerInRole(ClientRoles.ADMIN)) {
+            return;
+        }
+        if (securityContext.isCallerInRole(ClientRoles.USER)
+                && parcel.isPresent()
+                && parcel.get().getClient().getLogin().equals(securityContext.getCallerPrincipal().getName())) {
+            return;
+        }
+        throw new EJBAccessException("Caller not authorized.");
+    }
+
 }

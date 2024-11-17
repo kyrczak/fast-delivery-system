@@ -44,7 +44,7 @@ public class ParcelEdit implements Serializable {
     }
 
     public void init() throws IOException {
-        Optional<Parcel> parcel = service.find(uuid);
+        Optional<Parcel> parcel = service.findForCallerPrincipal(uuid);
         System.out.println("Initializing ParcelEdit with UUID: " + uuid);
         if (parcel.isPresent()) {
             this.parcel = factory.parcelToEditModelFunction().apply(parcel.get());
