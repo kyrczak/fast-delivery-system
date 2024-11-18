@@ -66,7 +66,7 @@ public class ParcelRestController implements ParcelController {
 
     @Override
     public GetParcelsResponse getParcels() {
-        return factory.parcelsToResponseFunction().apply(service.findAll());
+        return factory.parcelsToResponseFunction().apply(service.findAllForCallerPrincipal());
     }
 
     @Override
@@ -86,7 +86,7 @@ public class ParcelRestController implements ParcelController {
     @Override
     public GetParcelResponse getParcel(UUID uuid, UUID warehouse_uuid) {
         return warehouseService.find(warehouse_uuid)
-                .flatMap(warehouse -> service.find(uuid).map(factory.parcelToResponseFunction()))
+                .flatMap(warehouse -> service.findForCallerPrincipal(uuid).map(factory.parcelToResponseFunction()))
                 .orElseThrow(NotFoundException::new);
     }
 

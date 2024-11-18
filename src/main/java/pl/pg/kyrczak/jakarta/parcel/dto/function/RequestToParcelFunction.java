@@ -19,9 +19,6 @@ public class RequestToParcelFunction implements BiFunction<UUID, PutParcelReques
                 .warehouse(Warehouse.builder()
                         .uuid(request.getWarehouse())
                         .build())
-                .client(Client.builder()
-                        .uuid(request.getClient())
-                        .build())
                 .status(ParcelStatus.valueOf(request.getStatus()))
                 .build();
     }
