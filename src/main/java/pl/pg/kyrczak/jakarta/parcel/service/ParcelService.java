@@ -107,6 +107,7 @@ public class ParcelService {
             throw new IllegalArgumentException("Warehouse does not exist.");
         }
         parcelRepository.create(parcel);
+
         warehouseRepository.find(parcel.getWarehouse().getUuid())
                 .ifPresent(warehouse -> warehouse.getParcels().add(parcel));
     }

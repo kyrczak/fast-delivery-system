@@ -91,6 +91,13 @@ Content-Type: application/json
 
 ###
 
+# Delete new client ADMIN CREDENTIALS
+// @no-cookie-jar
+DELETE http://localhost:9080/fast-delivery/api/clients/61a947c9-21a1-4e03-b04f-8c0fdfe78b31
+Authorization: Basic YWRtaW46YWRtaW5hZG1pbg==
+
+###
+
 # Get all users ADMIN CREDENTIALS
 // @no-cookie-jar
 GET http://localhost:9080/fast-delivery/api/clients
@@ -163,14 +170,14 @@ Authorization: Basic cGF0cnlrazp1c2VydXNlcg==
 
 # Get user's parcel USER CREDENTIALS
 // @no-cookie-jar
-GET http://localhost:9080/fast-delivery/api/warehouses/32faaa8e-dde2-4355-8b8c-9dd252fbc3b2/parcels/86db45e1-defa-40a1-9925-6c5b12ad2546
+GET http://localhost:9080/fast-delivery/api/warehouses/32faaa8e-dde2-4355-8b8c-9dd252fbc3b2/parcels
 Authorization: Basic cGF0cnlrazp1c2VydXNlcg==
 
 ###
 
 # Get another user's parcel USER CREDENTIALS
 // @no-cookie-jar
-GET http://localhost:9080/fast-delivery/api/warehouses/32faaa8e-dde2-4355-8b8c-9dd252fbc3b2/parcels/cd6f75b2-f4d8-4595-801a-e1ba5a67539b
+GET http://localhost:9080/fast-delivery/api/warehouses/32faaa8e-dde2-4355-8b8c-9dd252fbc3b2/parcels
 Authorization: Basic bWFyZWtrOnBhNDR3MHJk
 
 ###
