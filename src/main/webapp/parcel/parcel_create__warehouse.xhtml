@@ -11,15 +11,15 @@
 
     <ui:define name="content">
         <article>
-            <header><h2>Create parcel - basic information</h2></header>
+            <header><h2>#{messages['create.parcel']} - #{messages.warehouse}</h2></header>
             <h:form styleClass="container" onreset="onReset()" enctype="multipart/form-data">
                 <div class="row">
                     <div class="col-2 p-2 text-center">
-                        <h:commandButton styleClass="btn" value="Previous" immediate="true"
+                        <h:commandButton styleClass="btn" value="#{messages.previous}" immediate="true"
                                          action="#{parcelCreate.goToBasicAction()}"/>
                     </div>
                     <div class="col-2 p-2 text-center">
-                        <h:commandButton styleClass="btn" value="Next"
+                        <h:commandButton styleClass="btn" value="#{messages.next}"
                                          action="#{parcelCreate.goToImageAction()}"/>
                     </div>
                 </div>
@@ -27,7 +27,7 @@
                 <div class="row">
                     <div class="col-4 p-2">
                         <fieldset>
-                            <legend class="form-label fs-6">warehouse:</legend>
+                            <legend class="form-label fs-6">#{messages.warehouse}:</legend>
                             <!-- Instead of ui:repeat the h:selectOneRadio with f:selectItems can be used but then
                             Faces renders table or list and custom styling with CSS libraties can be troublesome. -->
                             <ui:repeat value="#{parcelCreate.warehouses}" var="warehouse">
@@ -47,10 +47,10 @@
 
                 <div class="row">
                     <div class="col-2 p-2 text-center">
-                        <h:button styleClass="btn btn-primary" value="Create" disabled="true"/>
+                        <h:button styleClass="btn btn-primary" value="#{messages.create}" disabled="true"/>
                     </div>
                     <div class="col-2 p-2 text-center">
-                        <h:commandButton styleClass="btn btn-secondary" value="Cancel"
+                        <h:commandButton styleClass="btn btn-secondary" value="#{messages.cancel}"
                                          action="#{parcelCreate.cancelAction()}" immediate="true"/>
                     </div>
                 </div>

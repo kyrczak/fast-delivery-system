@@ -11,7 +11,7 @@
 
     <ui:define name="content">
         <article>
-            <header><h2>Create warehouse - information</h2></header>
+            <header><h2>#{messages['create.warehouse']} - #{messages['create.basic']}</h2></header>
             <h:form styleClass="container" onreset="onReset()" enctype="multipart/form-data">
                 <div class="row">
                     <div class="col-4 p-2">
@@ -19,7 +19,7 @@
 
                             <h:inputText id="name" value="#{warehouseCreate.warehouse.name}"
                                          styleClass="form-control"/>
-                            <h:outputLabel for="name" value="Name:" styleClass="form-label"/>
+                            <h:outputLabel for="name" value="#{messages['warehouse.name']}:" styleClass="form-label"/>
                         </div>
                     </div>
                 </div>
@@ -29,7 +29,7 @@
 
                             <h:inputText id="location" value="#{warehouseCreate.warehouse.location}"
                                          styleClass="form-control"/>
-                            <h:outputLabel for="location" value="location:" styleClass="form-label"/>
+                            <h:outputLabel for="location" value="#{messages['warehouse.location']}:" styleClass="form-label"/>
                         </div>
                     </div>
                 </div>
@@ -40,19 +40,19 @@
                                          value="#{warehouseCreate.warehouse.establishedDate}"
                                          converter="localDateConverter" required="true"
                                          styleClass="form-control"/>
-                            <h:outputLabel for="establishedDate" value="Established date:" styleClass="form-label"/>
+                            <h:outputLabel for="establishedDate" value="#{messages['warehouse.establishedDate']}:" styleClass="form-label"/>
                         </div>
                     </div>
                 </div>
 
                 <div class="row">
                     <div class="col-2 p-2 text-center">
-                        <h:commandButton styleClass="btn btn-primary" value="Create"
+                        <h:commandButton styleClass="btn btn-primary" value="#{messages.create}"
                                          action="#{warehouseCreate.saveAction()}"/>
                     </div>
                     <div class="col-2 p-2 text-center">
-                        <h:commandButton styleClass="btn btn-secondary" value="Cancel"
-                                         action="#{warehouseCreate.cancelAction()}"/>
+                        <h:commandButton styleClass="btn btn-secondary" value="#{messages.cancel}"
+                                         action="#{warehouseCreate.cancelAction()}" immediate="true"/>
                     </div>
                 </div>
             </h:form>

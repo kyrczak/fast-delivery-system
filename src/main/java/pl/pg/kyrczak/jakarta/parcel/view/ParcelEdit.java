@@ -11,12 +11,14 @@ import lombok.Getter;
 import lombok.Setter;
 import pl.pg.kyrczak.jakarta.component.ModelFunctionFactory;
 import pl.pg.kyrczak.jakarta.parcel.entity.Parcel;
+import pl.pg.kyrczak.jakarta.parcel.entity.ParcelStatus;
 import pl.pg.kyrczak.jakarta.parcel.model.ParcelEditModel;
 import pl.pg.kyrczak.jakarta.parcel.service.ParcelService;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Serializable;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -42,7 +44,9 @@ public class ParcelEdit implements Serializable {
     public void setService(ParcelService service) {
         this.service = service;
     }
-
+    public List<ParcelStatus> getStatusOptions() {
+        return List.of(ParcelStatus.values());
+    }
     public void init() throws IOException {
         Optional<Parcel> parcel = service.findForCallerPrincipal(uuid);
         System.out.println("Initializing ParcelEdit with UUID: " + uuid);

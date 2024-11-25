@@ -5,15 +5,15 @@
 
     <ui:define name="content">
         <article>
-            <header><h2>Create parcel - Image upload</h2></header>
+            <header><h2>#{messages['create.parcel']} - #{messages['create.image']}</h2></header>
             <h:form styleClass="container" onreset="onReset()" enctype="multipart/form-data">
                 <div class="row">
                     <div class="col-2 p-2 text-center">
-                        <h:commandButton styleClass="btn" value="Previous" immediate="true"
+                        <h:commandButton styleClass="btn" value="#{messages.previous}" immediate="true"
                                          action="#{parcelCreate.goToBasicAction()}"/>
                     </div>
                     <div class="col-2 p-2 text-center">
-                        <h:commandButton styleClass="btn" value="Next"
+                        <h:commandButton styleClass="btn" value="#{messages.next}"
                                          action="#{parcelCreate.goToConfirmAction()}"/>
                     </div>
                 </div>
@@ -21,25 +21,25 @@
                 <div class="row mb-3">
                     <div class="col-6">
                         <h:panelGroup rendered="#{parcelCreate.parcel.image == null}">
-                            <h:outputLabel for="image" value="Upload Image:" styleClass="form-label"/>
+                            <h:outputLabel for="image" value="#{messages['image.upload']}" styleClass="form-label"/>
                             <h:inputFile id="image" value="#{parcelCreate.parcel.image}" styleClass="form-control"/>
                         </h:panelGroup>
 
                         <h:panelGroup rendered="#{parcelCreate.parcel.image != null}">
-                            <h:outputLabel for="imageFile" value="Uploaded Image:" styleClass="form-label"/>
+                            <h:outputLabel for="imageFile" value="#{messages['image.uploaded']}" styleClass="form-label"/>
                             <h:inputText id="imageFile" value="#{parcelCreate.parcel.image.name}"
                                          readonly="true" styleClass="form-control"/>
-                            <h:commandButton value="Reset Image" action="#{parcelCreate.resetImageAction()}" />
+                            <h:commandButton value="#{messages.reset}" action="#{parcelCreate.resetImageAction()}" />
                         </h:panelGroup>
                     </div>
                 </div>
 
                 <div class="row">
                     <div class="col-2 p-2 text-center">
-                        <h:button styleClass="btn btn-primary" value="Create" disabled="true"/>
+                        <h:button styleClass="btn btn-primary" value="#{messages.create}" disabled="true"/>
                     </div>
                     <div class="col-2 p-2 text-center">
-                        <h:commandButton styleClass="btn btn-secondary" value="Cancel"
+                        <h:commandButton styleClass="btn btn-secondary" value="#{messages.cancel}"
                                          action="#{parcelCreate.cancelAction()}" immediate="true"/>
                     </div>
                 </div>

@@ -27,7 +27,7 @@
 
                         <div class="row mb-2">
                             <div class="col-6">
-                                Established date
+                                #{messages['warehouse.establishedDate']}
                             </div>
                             <div class="col-6">
                                 <h:outputText value="#{warehouseView.warehouse.establishedDate}"/>
@@ -36,7 +36,7 @@
 
                         <div class="row mb-2">
                             <div class="col-6">
-                                Location
+                                #{messages['warehouse.location']}
                             </div>
                             <div class="col-6">
                                 <h:outputText value="#{warehouseView.warehouse.location}"/>
@@ -53,30 +53,30 @@
                         </h:column>
 
                         <h:column>
-                            <f:facet name="header">View</f:facet>
-                            <h:link outcome="/parcel/parcel_view.xhtml" value="View">
+                            <f:facet name="header">#{messages.view}</f:facet>
+                            <h:link outcome="/parcel/parcel_view.xhtml" value="#{messages.view}">
                                 <f:param name="uuid" value="#{parcel.uuid}"/>
                             </h:link>
                         </h:column>
 
                         <h:column>
-                            <f:facet name="header">Edit</f:facet>
-                            <h:link outcome="/parcel/parcel_edit.xhtml" value="Edit">
+                            <f:facet name="header">#{messages.edit}</f:facet>
+                            <h:link outcome="/parcel/parcel_edit.xhtml" value="#{messages.edit}">
                                 <f:param name="uuid" value="#{parcel.uuid}"/>
                             </h:link>
                         </h:column>
 
                         <h:column>
-                            <f:facet name="header">Delete</f:facet>
+                            <f:facet name="header">#{messages.delete}</f:facet>
                             <h:form>
-                                <h:commandButton styleClass="btn" value="Delete"
+                                <h:commandButton styleClass="btn" value="#{messages.delete}"
                                                  action="#{warehouseView.deleteParcelAction(parcel)}"/>
                             </h:form>
                         </h:column>
 
                         <f:facet name="footer">
                             <h:button styleClass="btn" outcome="/parcel/parcel_create__basic.xhtml"
-                                      value="Create new parcel"/>
+                                      value="#{messages['create.parcel']}"/>
                         </f:facet>
                     </h:dataTable>
                 </div>

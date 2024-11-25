@@ -9,15 +9,15 @@
         <h:outputStylesheet library="parcel" name="css/parcel_list.css"/><!-- Automatically relocated to head. -->
 
         <article class="text--justified">
-            <header><h2>Parcels</h2></header>
+            <header><h2>#{messages['nav.parcels']}</h2></header>
 
             <h:dataTable value="#{parcelList.parcels.parcels}" var="parcel"
                          styleClass="table align-middle mb-0 bg-white" headerClass="bg-light">
-                <h:column>
-                    <f:facet name="header">Image</f:facet>
-                    <h:graphicImage styleClass="portrait rounded-circle" alt="Parcel's image"
-                                    value="/api/parcels/#{parcel.uuid}/image"/>
-                </h:column>
+<!--                <h:column>-->
+<!--                    <f:facet name="header">#{messages.image}</f:facet>-->
+<!--                    <h:graphicImage styleClass="portrait rounded-circle" alt="Parcel's image"-->
+<!--                                    value="/api/parcels/#{parcel.uuid}/image"/>-->
+<!--                </h:column>-->
 
 
                 <h:column>
@@ -26,30 +26,30 @@
                 </h:column>
 
                 <h:column>
-                    <f:facet name="header">View</f:facet>
-                    <h:link outcome="/parcel/parcel_view.xhtml" value="View">
+                    <f:facet name="header">#{messages.view}</f:facet>
+                    <h:link outcome="/parcel/parcel_view.xhtml" value="#{messages.view}">
                         <f:param name="uuid" value="#{parcel.uuid}"/>
                     </h:link>
                 </h:column>
 
                 <h:column>
-                    <f:facet name="header">Edit</f:facet>
-                    <h:link outcome="/parcel/parcel_edit.xhtml" value="Edit">
+                    <f:facet name="header">#{messages.edit}</f:facet>
+                    <h:link outcome="/parcel/parcel_edit.xhtml" value="#{messages.edit}">
                         <f:param name="uuid" value="#{parcel.uuid}"/>
                     </h:link>
                 </h:column>
 
                 <h:column>
-                    <f:facet name="header">Delete</f:facet>
+                    <f:facet name="header">#{messages.delete}</f:facet>
                     <h:form>
-                        <h:commandButton styleClass="btn" value="Delete"
+                        <h:commandButton styleClass="btn" value="#{messages.delete}"
                                          action="#{parcelList.deleteAction(parcel)}"/>
                     </h:form>
                 </h:column>
 
                 <f:facet name="footer">
                     <h:button styleClass="btn" outcome="/parcel/parcel_create__basic.xhtml"
-                              value="Create new parcel"/>
+                              value="#{messages['create.parcel']}"/>
                 </f:facet>
             </h:dataTable>
         </article>

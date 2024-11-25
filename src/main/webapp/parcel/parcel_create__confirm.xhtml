@@ -11,15 +11,15 @@
 
     <ui:define name="content">
         <article>
-            <header><h2>Create parcel - basic information</h2></header>
+            <header><h2>#{messages['create.parcel']} - #{messages['create.confirmation']}</h2></header>
             <h:form styleClass="container" onreset="onReset()" enctype="multipart/form-data">
                 <div class="row">
                     <div class="col-2 p-2 text-center">
-                        <h:commandButton styleClass="btn" value="Previous" immediate="true"
+                        <h:commandButton styleClass="btn" value="#{messages.previous}" immediate="true"
                                          action="#{parcelCreate.goToImageAction()}"/>
                     </div>
                     <div class="col-2 p-2 text-center">
-                        <h:button styleClass="btn" value="Next" disabled="true"/>
+                        <h:button styleClass="btn" value="#{messages.next}" disabled="true"/>
                     </div>
                 </div>
 
@@ -27,7 +27,7 @@
                     <div class="col-4">
                         <div class="row mb-2">
                             <div class="col-6">
-                                Warehouse
+                                #{messages.warehouse}
                             </div>
                             <div class="col-6">
                                 <h:outputText value="#{parcelCreate.parcel.warehouse.name}"/>
@@ -36,7 +36,7 @@
 
                         <div class="row mb-2">
                             <div class="col-6">
-                                Status
+                                #{messages.status}
                             </div>
                             <div class="col-6">
                                 <h:outputText value="#{parcelCreate.parcel.status}"/>
@@ -45,7 +45,7 @@
 
                         <div class="row mb-2">
                             <div class="col-6">
-                                Delivery date
+                                #{messages.deliveryDate}
                             </div>
                             <div class="col-6">
                                 <h:outputText value="#{parcelCreate.parcel.deliveryDate}"/>
@@ -54,18 +54,10 @@
 
                         <div class="row mb-2">
                             <div class="col-6">
-                                Weight
+                                #{messages.weight}
                             </div>
                             <div class="col-6">
                                 <h:outputText value="#{parcelCreate.parcel.weight}"/>
-                            </div>
-                        </div>
-                        <div class="row mb-2">
-                            <div class="col-6">
-                                Image path
-                            </div>
-                            <div class="col-6">
-                                <h:outputText value="#{parcelCreate.parcel.image.name}"/>
                             </div>
                         </div>
                     </div>
@@ -73,11 +65,11 @@
 
                 <div class="row">
                     <div class="col-2 p-2 text-center">
-                        <h:commandButton styleClass="btn btn-primary" value="Create"
+                        <h:commandButton styleClass="btn btn-primary" value="#{messages.create}"
                                          action="#{parcelCreate.saveAction()}"/>
                     </div>
                     <div class="col-2 p-2 text-center">
-                        <h:commandButton styleClass="btn btn-secondary" value="Cancel"
+                        <h:commandButton styleClass="btn btn-secondary" value="#{messages.cancel}"
                                          action="#{parcelCreate.cancelAction()}"/>
                     </div>
                 </div>

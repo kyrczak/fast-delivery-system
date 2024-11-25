@@ -11,14 +11,14 @@
 
     <ui:define name="content">
         <article>
-            <header><h2>Create parcel - basic information</h2></header>
+            <header><h2>#{messages['create.parcel']} - #{messages['create.basic']}</h2></header>
             <h:form styleClass="container" onreset="onReset()" enctype="multipart/form-data">
                 <div class="row">
                     <div class="col-2 p-2 text-center">
-                        <h:button styleClass="btn" value="Previous" disabled="true"/>
+                        <h:button styleClass="btn" value="#{messages.previous}" disabled="true"/>
                     </div>
                     <div class="col-2 p-2 text-center">
-                        <h:commandButton styleClass="btn" value="Next"
+                        <h:commandButton styleClass="btn" value="#{messages.next}"
                                          action="#{parcelCreate.goToWarehouseAction()}"/>
                     </div>
                 </div>
@@ -26,7 +26,7 @@
                 <div class="row">
                     <div class="col-4 p-2">
                         <div class="form-outline">
-                            <label for="status" class="form-label">Status:</label>
+                            <label for="status" class="form-label">#{messages.status}:</label>
                             <h:selectOneMenu id="status" value="#{parcelCreate.parcel.status}"
                                              styleClass="form-select" required="true">
                                 <f:selectItems value="#{parcelCreate.statusOptions}" var="status"
@@ -42,7 +42,7 @@
 
                             <h:inputText id="weight" value="#{parcelCreate.parcel.weight}"
                                          styleClass="form-control"/>
-                            <h:outputLabel for="weight" value="Weight:" styleClass="form-label"/>
+                            <h:outputLabel for="weight" value="#{messages.weight}:" styleClass="form-label"/>
                         </div>
                     </div>
                 </div>
@@ -54,17 +54,17 @@
                                          value="#{parcelCreate.parcel.deliveryDate}"
                                          converter="localDateConverter" required="true"
                                          styleClass="form-control"/>
-                            <h:outputLabel for="deliveryDate" value="Delivery date:" styleClass="form-label"/>
+                            <h:outputLabel for="deliveryDate" value="#{messages.deliveryDate}:" styleClass="form-label"/>
                         </div>
                     </div>
                 </div>
 
                 <div class="row">
                     <div class="col-2 p-2 text-center">
-                        <h:button styleClass="btn btn-primary" value="Create" disabled="true"/>
+                        <h:button styleClass="btn btn-primary" value="#{messages.create}" disabled="true"/>
                     </div>
                     <div class="col-2 p-2 text-center">
-                        <h:commandButton styleClass="btn btn-secondary" value="Cancel"
+                        <h:commandButton styleClass="btn btn-secondary" value="#{messages.cancel}"
                                          action="#{parcelCreate.cancelAction()}"  immediate="true"/>
                     </div>
                 </div>
