@@ -9,6 +9,7 @@ import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
 import lombok.NoArgsConstructor;
 import lombok.extern.java.Log;
+import pl.pg.kyrczak.jakarta.authorization.interceptor.binding.AllowRoles;
 import pl.pg.kyrczak.jakarta.client.entity.ClientRoles;
 import pl.pg.kyrczak.jakarta.warehouse.entity.Warehouse;
 import pl.pg.kyrczak.jakarta.warehouse.repository.api.WarehouseRepository;
@@ -39,17 +40,17 @@ public class WarehouseService {
         return warehouseRepository.findAll();
     }
 
-    @RolesAllowed(ClientRoles.ADMIN)
+    @AllowRoles(ClientRoles.ADMIN)
     public void create(Warehouse warehouse) {
         warehouseRepository.create(warehouse);
     }
 
-    @RolesAllowed(ClientRoles.ADMIN)
+    @AllowRoles(ClientRoles.ADMIN)
     public void update(Warehouse warehouse) {
         warehouseRepository.update(warehouse);
     }
 
-    @RolesAllowed(ClientRoles.ADMIN)
+    @AllowRoles(ClientRoles.ADMIN)
     public void delete(UUID uuid) {
         warehouseRepository.delete(warehouseRepository.find(uuid).orElseThrow());
     }

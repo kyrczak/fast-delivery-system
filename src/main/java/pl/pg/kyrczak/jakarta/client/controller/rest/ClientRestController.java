@@ -6,13 +6,14 @@ import jakarta.enterprise.context.RequestScoped;
 import jakarta.inject.Inject;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.transaction.TransactionalException;
-import jakarta.ws.rs.Path;
-import jakarta.ws.rs.WebApplicationException;
+import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.UriInfo;
 import lombok.SneakyThrows;
 import lombok.extern.java.Log;
+import pl.pg.kyrczak.jakarta.authorization.exception.NoPrincipalException;
+import pl.pg.kyrczak.jakarta.authorization.exception.NoRolesException;
 import pl.pg.kyrczak.jakarta.client.controller.api.ClientController;
 import pl.pg.kyrczak.jakarta.client.dto.GetClientResponse;
 import pl.pg.kyrczak.jakarta.client.dto.GetClientsResponse;
@@ -20,8 +21,6 @@ import pl.pg.kyrczak.jakarta.client.dto.PatchClientRequest;
 import pl.pg.kyrczak.jakarta.client.dto.PutClientRequest;
 import pl.pg.kyrczak.jakarta.client.service.ClientService;
 import pl.pg.kyrczak.jakarta.component.DtoFunctionFactory;
-import jakarta.ws.rs.BadRequestException;
-import jakarta.ws.rs.NotFoundException;
 
 import java.util.UUID;
 import java.util.logging.Level;
@@ -56,14 +55,26 @@ public class ClientRestController implements ClientController {
 
     @Override
     public GetClientsResponse getClients() {
-        return factory.clientsToResponseFunction().apply(service.findAll());
+        try {
+            return factory.clientsToResponseFunction().apply(service.findAll());
+        } catch (NoRolesException ex) {
+            throw new ForbiddenException();
+        } catch (NoPrincipalException ex) {
+            throw new NotAuthorizedException("");
+        }
     }
 
     @Override
     public GetClientResponse getClient(UUID uuid) {
-        return service.find(uuid)
-                .map(factory.clientToResponseFunction())
-                .orElseThrow(NotFoundException::new);
+        try {
+            return service.find(uuid)
+                    .map(factory.clientToResponseFunction())
+                    .orElseThrow(NotFoundException::new);
+        } catch (NoRolesException ex) {
+            throw new ForbiddenException();
+        } catch (NoPrincipalException ex) {
+            throw new NotAuthorizedException("");
+        }
     }
 
     @Override
@@ -82,27 +93,43 @@ public class ClientRestController implements ClientController {
                 throw new BadRequestException(ex);
             }
             throw ex;
+        } catch (NoRolesException ex) {
+            throw new ForbiddenException();
+        } catch (NoPrincipalException ex) {
+            throw new NotAuthorizedException("");
         }
 
     }
 
     @Override
     public void patchClient(UUID uuid, PatchClientRequest request) {
-        service.find(uuid).ifPresentOrElse(
-                entity -> service.update(factory.updateClientWithRequestFucntion().apply(entity,request)),
-                () -> {
-                    throw new NotFoundException();
-                }
-        );
+        try {
+            service.find(uuid).ifPresentOrElse(
+                    entity -> service.update(factory.updateClientWithRequestFucntion().apply(entity, request)),
+                    () -> {
+                        throw new NotFoundException();
+                    }
+            );
+        } catch (NoRolesException ex) {
+            throw new ForbiddenException();
+        } catch (NoPrincipalException ex) {
+            throw new NotAuthorizedException("");
+        }
     }
 
     @Override
     public void deleteClient(UUID uuid) {
-        service.find(uuid).ifPresentOrElse(
-                entity -> service.delete(uuid),
-                () -> {
-                    throw new NotFoundException();
-                }
-        );
+        try {
+            service.find(uuid).ifPresentOrElse(
+                    entity -> service.delete(uuid),
+                    () -> {
+                        throw new NotFoundException();
+                    }
+            );
+        } catch (NoRolesException ex) {
+            throw new ForbiddenException();
+        } catch (NoPrincipalException ex) {
+            throw new NotAuthorizedException("");
+        }
     }
 }

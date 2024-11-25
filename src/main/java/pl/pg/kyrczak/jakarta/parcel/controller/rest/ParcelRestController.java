@@ -13,6 +13,8 @@ import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.UriInfo;
 import lombok.SneakyThrows;
 import lombok.extern.java.Log;
+import pl.pg.kyrczak.jakarta.authorization.exception.NoPrincipalException;
+import pl.pg.kyrczak.jakarta.authorization.exception.NoRolesException;
 import pl.pg.kyrczak.jakarta.client.entity.ClientRoles;
 import pl.pg.kyrczak.jakarta.component.DtoFunctionFactory;
 import pl.pg.kyrczak.jakarta.parcel.controller.api.ParcelController;
@@ -31,7 +33,6 @@ import java.util.logging.Level;
 
 @Path("")
 @Log
-@RolesAllowed(ClientRoles.USER)
 public class ParcelRestController implements ParcelController {
 
     private ParcelService service;
@@ -66,26 +67,51 @@ public class ParcelRestController implements ParcelController {
 
     @Override
     public GetParcelsResponse getParcels() {
-        return factory.parcelsToResponseFunction().apply(service.findAllForCallerPrincipal());
+        try {
+            return factory.parcelsToResponseFunction().apply(service.findAllForCallerPrincipal());
+        } catch (NoRolesException ex) {
+            throw new ForbiddenException();
+        } catch (NoPrincipalException ex) {
+            throw new NotAuthorizedException("");
+        }
+
     }
 
     @Override
     public GetParcelsResponse getWarehouseParcels(UUID uuid) {
-        return factory.parcelsToResponseFunction().apply(service.findAllForCallerPrincipalAndRepository(uuid));
+        try {
+            return factory.parcelsToResponseFunction().apply(service.findAllForCallerPrincipalAndRepository(uuid));
+        } catch (NoRolesException ex) {
+            throw new ForbiddenException();
+        } catch (NoPrincipalException ex) {
+            throw new NotAuthorizedException("");
+        }
     }
 
     @Override
     public GetParcelsResponse getClientParcels(UUID uuid) {
-        return service.findAllByClient(uuid)
-                .map(factory.parcelsToResponseFunction())
-                .orElseThrow(NotFoundException::new);
+        try {
+            return service.findAllByClient(uuid)
+                    .map(factory.parcelsToResponseFunction())
+                    .orElseThrow(NotFoundException::new);
+        } catch (NoRolesException ex) {
+            throw new ForbiddenException();
+        } catch (NoPrincipalException ex) {
+            throw new NotAuthorizedException("");
+        }
     }
 
     @Override
     public GetParcelResponse getParcel(UUID uuid, UUID warehouse_uuid) {
-        return warehouseService.find(warehouse_uuid)
-                .flatMap(warehouse -> service.findForCallerPrincipal(uuid).map(factory.parcelToResponseFunction()))
-                .orElseThrow(NotFoundException::new);
+        try {
+            return warehouseService.find(warehouse_uuid)
+                    .flatMap(warehouse -> service.findForCallerPrincipal(uuid).map(factory.parcelToResponseFunction()))
+                    .orElseThrow(NotFoundException::new);
+        } catch (NoRolesException ex) {
+            throw new ForbiddenException();
+        } catch (NoPrincipalException ex) {
+            throw new NotAuthorizedException("");
+        }
     }
 
     @Override
@@ -106,41 +132,57 @@ public class ParcelRestController implements ParcelController {
                 throw new BadRequestException(ex);
             }
             throw ex;
+        } catch (NoRolesException ex) {
+            throw new ForbiddenException();
+        } catch (NoPrincipalException ex) {
+            throw new NotAuthorizedException("");
         }
     }
 
     @Override
     public void patchParcel(UUID uuid, UUID warehouse_uuid, PatchParcelRequest request) {
-        service.find(uuid).ifPresentOrElse(
-                entity -> {
-                    try {
-                        service.update(factory.updateParcelWithRequestFunction().apply(entity,request));
-                    } catch (EJBAccessException ex) {
-                        log.log(Level.WARNING, ex.getMessage(),ex);
-                        throw new ForbiddenException(ex.getMessage());
+        try {
+            service.find(uuid).ifPresentOrElse(
+                    entity -> {
+                        try {
+                            service.update(factory.updateParcelWithRequestFunction().apply(entity, request));
+                        } catch (EJBAccessException ex) {
+                            log.log(Level.WARNING, ex.getMessage(), ex);
+                            throw new ForbiddenException(ex.getMessage());
+                        }
+                    },
+                    () -> {
+                        throw new NotFoundException();
                     }
-                },
-                () -> {
-                    throw new NotFoundException();
-                }
-        );
+            );
+        } catch (NoRolesException ex) {
+            throw new ForbiddenException();
+        } catch (NoPrincipalException ex) {
+            throw new NotAuthorizedException("");
+        }
     }
 
     @Override
     public void deleteParcel(UUID uuid, UUID warehouse_uuid) {
-        service.find(uuid).ifPresentOrElse(
-                entity -> {
-                  try {
-                      service.delete(uuid);
-                  } catch (EJBAccessException ex) {
-                      log.log(Level.WARNING, ex.getMessage(),ex);
-                      throw new ForbiddenException(ex.getMessage());
-                  }
-                },
-                () -> {
-                    throw new NotFoundException();
-                }
-        );
+        try {
+            service.find(uuid).ifPresentOrElse(
+                    entity -> {
+                        try {
+                            service.delete(uuid);
+                        } catch (EJBAccessException ex) {
+                            log.log(Level.WARNING, ex.getMessage(), ex);
+                            throw new ForbiddenException(ex.getMessage());
+                        }
+                    },
+                    () -> {
+                        throw new NotFoundException();
+                    }
+            );
+        } catch (NoRolesException ex) {
+            throw new ForbiddenException();
+        } catch (NoPrincipalException ex) {
+            throw new NotAuthorizedException("");
+        }
     }
 
     @Override
@@ -150,31 +192,41 @@ public class ParcelRestController implements ParcelController {
         } catch (IOException ex) {
 
             throw new NotFoundException();
+        } catch (NoRolesException ex) {
+            throw new ForbiddenException();
+        } catch (NoPrincipalException ex) {
+            throw new NotAuthorizedException("");
         }
     }
 
     @Override
     public void putParcelImage(UUID uuid, UUID warehouse_uuid, InputStream image) {
-        service.find(uuid).ifPresentOrElse(
-                entity -> {
-                    try {
-                        service.uploadImage(uuid,image);
-                    } catch (EJBAccessException ex) {
-                        log.log(Level.WARNING, ex.getMessage(), ex);
-                        throw new ForbiddenException(ex.getMessage());
-                    } catch (IOException e) {
-                        throw new NotFoundException(e);
+        try {
+            service.find(uuid).ifPresentOrElse(
+                    entity -> {
+                        try {
+                            service.uploadImage(uuid, image);
+                        } catch (EJBAccessException ex) {
+                            log.log(Level.WARNING, ex.getMessage(), ex);
+                            throw new ForbiddenException(ex.getMessage());
+                        } catch (IOException e) {
+                            throw new NotFoundException(e);
+                        }
+                        response.setHeader("Location", uriInfo.getBaseUriBuilder()
+                                .path(ParcelController.class, "getParcelImage")
+                                .build(uuid)
+                                .toString());
+                        throw new WebApplicationException(Response.Status.CREATED);
+                    },
+                    () -> {
+                        throw new NotFoundException();
                     }
-                    response.setHeader("Location", uriInfo.getBaseUriBuilder()
-                            .path(ParcelController.class, "getParcelImage")
-                            .build(uuid)
-                            .toString());
-                    throw new WebApplicationException(Response.Status.CREATED);
-                },
-                () -> {
-                    throw new NotFoundException();
-                }
-        );
+            );
+        } catch (NoRolesException ex) {
+            throw new ForbiddenException();
+        } catch (NoPrincipalException ex) {
+            throw new NotAuthorizedException("");
+        }
     }
 
     @Override
@@ -183,6 +235,10 @@ public class ParcelRestController implements ParcelController {
             service.deleteImage(uuid);
         } catch (IOException e) {
             throw new NotFoundException();
+        } catch (NoRolesException ex) {
+            throw new ForbiddenException();
+        } catch (NoPrincipalException ex) {
+            throw new NotAuthorizedException("");
         }
     }
 
@@ -192,6 +248,10 @@ public class ParcelRestController implements ParcelController {
             service.overwriteImage(uuid, image);
         } catch (IOException e) {
             throw new NotFoundException();
+        } catch (NoRolesException ex) {
+            throw new ForbiddenException();
+        } catch (NoPrincipalException ex) {
+            throw new NotAuthorizedException("");
         }
     }
 

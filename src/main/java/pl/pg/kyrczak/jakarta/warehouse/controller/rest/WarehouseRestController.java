@@ -5,7 +5,10 @@ import jakarta.ejb.EJB;
 import jakarta.enterprise.context.RequestScoped;
 import jakarta.inject.Inject;
 import jakarta.transaction.TransactionalException;
+import jakarta.ws.rs.*;
 import lombok.extern.java.Log;
+import pl.pg.kyrczak.jakarta.authorization.exception.NoPrincipalException;
+import pl.pg.kyrczak.jakarta.authorization.exception.NoRolesException;
 import pl.pg.kyrczak.jakarta.client.entity.ClientRoles;
 import pl.pg.kyrczak.jakarta.component.DtoFunctionFactory;
 import pl.pg.kyrczak.jakarta.parcel.service.ParcelService;
@@ -15,11 +18,7 @@ import pl.pg.kyrczak.jakarta.warehouse.dto.GetWarehousesResponse;
 import pl.pg.kyrczak.jakarta.warehouse.dto.PatchWarehouseRequest;
 import pl.pg.kyrczak.jakarta.warehouse.dto.PutWarehouseRequest;
 import pl.pg.kyrczak.jakarta.warehouse.service.WarehouseService;
-import jakarta.ws.rs.BadRequestException;
-import jakarta.ws.rs.NotFoundException;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.ws.rs.Path;
-import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.UriInfo;
@@ -74,7 +73,6 @@ public class WarehouseRestController implements WarehouseController {
                 .orElseThrow(NotFoundException::new);
     }
 
-    @RolesAllowed({ClientRoles.ADMIN})
     @Override
     @SneakyThrows
     public void putWarehouse(UUID uuid, PutWarehouseRequest request) {
@@ -87,34 +85,48 @@ public class WarehouseRestController implements WarehouseController {
             throw new WebApplicationException(Response.Status.CREATED);
         } catch (IllegalArgumentException ex) {
             throw new BadRequestException();
+        } catch (NoRolesException ex) {
+            throw new ForbiddenException();
+        } catch (NoPrincipalException ex) {
+            throw new NotAuthorizedException("");
         }
 
     }
 
-    @RolesAllowed({ClientRoles.ADMIN})
     @Override
     public void patchWarehouse(UUID uuid, PatchWarehouseRequest request) {
-        service.find(uuid).ifPresentOrElse(
-                entity -> service.update(factory.updateWarehouseWithRequestFunction().apply(entity,request)),
-                () -> {
-                    throw new NotFoundException();
-                }
-        );
+        try {
+            service.find(uuid).ifPresentOrElse(
+                    entity -> service.update(factory.updateWarehouseWithRequestFunction().apply(entity, request)),
+                    () -> {
+                        throw new NotFoundException();
+                    }
+            );
+        } catch (NoRolesException ex) {
+            throw new ForbiddenException();
+        } catch (NoPrincipalException ex) {
+            throw new NotAuthorizedException("");
+        }
     }
 
-    @RolesAllowed({ClientRoles.ADMIN})
     @Override
     public void deleteWarehouse(UUID uuid) {
-        service.find(uuid).ifPresentOrElse(
-                entity -> {
-                    parcelService.findAllByWarehouse(uuid).forEach(
-                            parcel -> parcelService.delete(parcel.getUuid())
-                    );
-                    service.delete(uuid);
-                },
-                () -> {
-                    throw new NotFoundException();
-                }
-        );
+        try {
+            service.find(uuid).ifPresentOrElse(
+                    entity -> {
+                        parcelService.findAllByWarehouse(uuid).forEach(
+                                parcel -> parcelService.delete(parcel.getUuid())
+                        );
+                        service.delete(uuid);
+                    },
+                    () -> {
+                        throw new NotFoundException();
+                    }
+            );
+        } catch (NoRolesException ex) {
+            throw new ForbiddenException();
+        } catch (NoPrincipalException ex) {
+            throw new NotAuthorizedException("");
+        }
     }
 }

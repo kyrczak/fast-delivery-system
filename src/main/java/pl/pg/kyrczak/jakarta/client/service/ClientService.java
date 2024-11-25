@@ -8,6 +8,7 @@ import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
 import lombok.NoArgsConstructor;
+import pl.pg.kyrczak.jakarta.authorization.interceptor.binding.AllowRoles;
 import pl.pg.kyrczak.jakarta.client.entity.Client;
 import pl.pg.kyrczak.jakarta.client.entity.ClientRoles;
 import pl.pg.kyrczak.jakarta.client.repository.api.ClientRepository;
@@ -31,17 +32,17 @@ public class ClientService {
         this.passwordHash = passwordHash;
     }
 
-    @RolesAllowed(ClientRoles.ADMIN)
+    @AllowRoles(ClientRoles.ADMIN)
     public List<Client> findAll() {
         return repository.findAll();
     }
 
-    @RolesAllowed(ClientRoles.ADMIN)
+    @AllowRoles(ClientRoles.ADMIN)
     public Optional<Client> find(UUID uuid) {
         return repository.find(uuid);
     }
 
-    @RolesAllowed(ClientRoles.ADMIN)
+    @AllowRoles(ClientRoles.ADMIN)
     public Optional<Client> find(String login) {
         return repository.findByLogin(login);
     }
@@ -62,12 +63,12 @@ public class ClientService {
                 .orElse(false);
     }
 
-    @RolesAllowed(ClientRoles.ADMIN)
+    @AllowRoles(ClientRoles.ADMIN)
     public void update(Client client) {
         repository.update(client);
     }
 
-    @RolesAllowed(ClientRoles.ADMIN)
+    @AllowRoles(ClientRoles.ADMIN)
     public void delete(UUID uuid) {
         repository.delete(repository.find(uuid).orElseThrow());
     }
