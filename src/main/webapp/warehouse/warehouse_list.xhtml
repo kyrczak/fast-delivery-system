@@ -8,7 +8,7 @@
     <ui:define name="content">
         <article class="text--justified">
             <header><h2>#{messages['nav.warehouses']}</h2></header>
-            <h:dataTable value="#{warehouseList.warehouses.warehouses}" var="warehouse"
+            <h:dataTable id="warehouseTable" value="#{warehouseList.warehouses.warehouses}" var="warehouse"
                          styleClass="table align-middle mb-0 bg-white" headerClass="bg-light">
 
                 <h:column>
@@ -34,7 +34,9 @@
                     <f:facet name="header">#{messages.delete}</f:facet>
                     <h:form>
                         <h:commandButton styleClass="btn" value="#{messages.delete}"
-                                         action="#{warehouseList.deleteAction(warehouse)}"/>
+                                         actionListener="#{warehouseList.deleteAction(warehouse)}">
+                            <f:ajax execute="@this" render=":warehouseTable"/>
+                        </h:commandButton>
                     </h:form>
                 </h:column>
 

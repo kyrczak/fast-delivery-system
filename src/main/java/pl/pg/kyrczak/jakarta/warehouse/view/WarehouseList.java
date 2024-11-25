@@ -41,7 +41,7 @@ public class WarehouseList {
         return warehouses;
     }
 
-    public String deleteAction(WarehousesModel.Warehouse warehouse) {
+    public void deleteAction(WarehousesModel.Warehouse warehouse) {
         service.find(warehouse.getUuid()).ifPresentOrElse(
                 entity -> parcelService.findAllByWarehouse(entity.getUuid()).forEach(
                         parcel -> parcelService.delete(parcel.getUuid())
@@ -51,6 +51,6 @@ public class WarehouseList {
                 }
         );
         service.delete(warehouse.getUuid());
-        return "warehouse_list?faces-redirect=true";
+        warehouses = null;
     }
 }

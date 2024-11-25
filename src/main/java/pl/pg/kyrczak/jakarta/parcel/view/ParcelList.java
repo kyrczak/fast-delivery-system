@@ -8,9 +8,11 @@ import pl.pg.kyrczak.jakarta.component.ModelFunctionFactory;
 import pl.pg.kyrczak.jakarta.parcel.model.ParcelsModel;
 import pl.pg.kyrczak.jakarta.parcel.service.ParcelService;
 
+import java.io.Serializable;
+
 @RequestScoped
 @Named
-public class ParcelList {
+public class ParcelList implements Serializable {
     private ParcelService service;
     private ParcelsModel parcels;
     private final ModelFunctionFactory factory;
@@ -32,8 +34,8 @@ public class ParcelList {
         return parcels;
     }
 
-    public String deleteAction(ParcelsModel.Parcel parcel) {
+    public void deleteAction(ParcelsModel.Parcel parcel) {
         service.delete(parcel.getUuid());
-        return "parcel_list?faces-redirect=true";
+        parcels = null;
     }
 }
