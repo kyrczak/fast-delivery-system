@@ -12,6 +12,7 @@ import pl.pg.kyrczak.jakarta.authorization.interceptor.binding.AllowRoles;
 import pl.pg.kyrczak.jakarta.client.entity.Client;
 import pl.pg.kyrczak.jakarta.client.entity.ClientRoles;
 import pl.pg.kyrczak.jakarta.client.repository.api.ClientRepository;
+import pl.pg.kyrczak.jakarta.interceptor.binding.OperationLog;
 import pl.pg.kyrczak.jakarta.parcel.entity.Parcel;
 import pl.pg.kyrczak.jakarta.parcel.entity.ParcelStatus;
 import pl.pg.kyrczak.jakarta.parcel.repository.api.ParcelRepository;
@@ -123,6 +124,7 @@ public class ParcelService {
                 .ifPresent(warehouse -> warehouse.getParcels().add(parcel));
     }
 
+    @OperationLog
     @AllowRoles(ClientRoles.USER)
     public void createForCallerPrincipal(Parcel parcel) {
         Client client = clientRepository.findByLogin(securityContext.getCallerPrincipal().getName())
@@ -133,12 +135,14 @@ public class ParcelService {
     }
 
 
+    @OperationLog
     @AllowRoles(ClientRoles.USER)
     public void update(Parcel parcel) {
         checkAdminRoleOrOwner(parcelRepository.find(parcel.getUuid()));
         parcelRepository.update(parcel);
     }
 
+    @OperationLog
     @AllowRoles(ClientRoles.USER)
     public void delete(UUID uuid) {
         checkAdminRoleOrOwner(parcelRepository.find(uuid));
