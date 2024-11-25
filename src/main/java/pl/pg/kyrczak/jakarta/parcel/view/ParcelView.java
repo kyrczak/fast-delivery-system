@@ -42,7 +42,7 @@ public class ParcelView implements Serializable {
     }
 
     public void init() throws IOException {
-        Optional<Parcel> parcel = service.find(uuid);
+        Optional<Parcel> parcel = service.findForCallerPrincipal(uuid);
         if (parcel.isPresent()) {
             this.parcel = factory.parcelToModelFunction().apply(parcel.get());
         } else {

@@ -71,9 +71,7 @@ public class ParcelRestController implements ParcelController {
 
     @Override
     public GetParcelsResponse getWarehouseParcels(UUID uuid) {
-        return service.findAllByWarehouse(uuid)
-                .map(factory.parcelsToResponseFunction())
-                .orElseThrow(NotFoundException::new);
+        return factory.parcelsToResponseFunction().apply(service.findAllForCallerPrincipalAndRepository(uuid));
     }
 
     @Override

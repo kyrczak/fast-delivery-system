@@ -22,7 +22,6 @@ public class ClientLogout {
     @SneakyThrows
     public String logoutAction() {
         request.logout();
-        String viewId = FacesContext.getCurrentInstance().getViewRoot().getViewId();
-        return viewId + "?faces-redirect=true&includeViewParams=true";
+        return "/index.xhtml?faces-redirect=true&includeViewParams=true";
     }
 }

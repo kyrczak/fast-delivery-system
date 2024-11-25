@@ -107,11 +107,8 @@ public class WarehouseRestController implements WarehouseController {
     public void deleteWarehouse(UUID uuid) {
         service.find(uuid).ifPresentOrElse(
                 entity -> {
-                    parcelService.findAllByWarehouse(uuid).ifPresentOrElse(
-                            parcels -> parcels.forEach(parcel -> parcelService.delete(parcel.getUuid())),
-                            () -> {
-                                throw new NotFoundException();
-                            }
+                    parcelService.findAllByWarehouse(uuid).forEach(
+                            parcel -> parcelService.delete(parcel.getUuid())
                     );
                     service.delete(uuid);
                 },

@@ -30,7 +30,8 @@ public class WarehouseService {
     }
 
     public Optional<Warehouse> find(UUID uuid) {
-        return warehouseRepository.find(uuid);
+        Optional<Warehouse> warehouse = warehouseRepository.find(uuid);
+        return warehouse;
     }
 
     @PermitAll

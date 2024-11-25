@@ -8,6 +8,7 @@
     <ui:define name="content">
         <article class="text--justified">
             <header><h2>Warehouses</h2></header>
+            <h:outputText value="User in 'admin' role: #{facesContext.externalContext.isUserInRole('admin')}"/>
 
             <h:dataTable value="#{warehouseList.warehouses.warehouses}" var="warehouse"
                          styleClass="table align-middle mb-0 bg-white" headerClass="bg-light">
@@ -31,14 +32,13 @@
                     </h:link>
                 </h:column>
 
-                <h:column>
+                <h:column rendered="#{facesContext.externalContext.isUserInRole('admin')}">
                     <f:facet name="header">Delete</f:facet>
                     <h:form>
                         <h:commandButton styleClass="btn" value="Delete"
                                          action="#{warehouseList.deleteAction(warehouse)}"/>
                     </h:form>
                 </h:column>
-
 
                 <f:facet name="footer">
                     <h:button styleClass="btn" outcome="/warehouse/warehouse_create.xhtml"

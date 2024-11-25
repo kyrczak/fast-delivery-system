@@ -43,11 +43,8 @@ public class WarehouseList {
 
     public String deleteAction(WarehousesModel.Warehouse warehouse) {
         service.find(warehouse.getUuid()).ifPresentOrElse(
-                entity -> parcelService.findAllByWarehouse(entity.getUuid()).ifPresentOrElse(
-                        parcels -> parcels.forEach(parcel -> parcelService.delete(parcel.getUuid())),
-                        () -> {
-                            throw new NotFoundException();
-                        }
+                entity -> parcelService.findAllByWarehouse(entity.getUuid()).forEach(
+                        parcel -> parcelService.delete(parcel.getUuid())
                 ),
                 () -> {
                     throw new NotFoundException();

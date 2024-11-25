@@ -53,14 +53,22 @@ public class ParcelPersistenceRepository implements ParcelRepository {
     }
 
     @Override
-    public List<Parcel> findAllByWarehouse(Warehouse warehouse) {
-        return em.find(Warehouse.class,warehouse.getUuid()).getParcels();
+    public List<Parcel> findAllByWarehouse(UUID warehouse) {
+        return em.find(Warehouse.class,warehouse).getParcels();
     }
 
     @Override
     public List<Parcel> findAllByClient(Client client) {
         return em.createQuery("select c from Parcel c where c.client = :client",Parcel.class)
                 .setParameter("client",client)
+                .getResultList();
+    }
+
+    @Override
+    public List<Parcel> findAllByWarehouseAndClient(Warehouse warehouse, Client client) {
+        return em.createQuery("select c from Parcel c where c.client = :client and c.warehouse = :warehouse",Parcel.class)
+                .setParameter("client",client)
+                .setParameter("warehouse", warehouse)
                 .getResultList();
     }
 

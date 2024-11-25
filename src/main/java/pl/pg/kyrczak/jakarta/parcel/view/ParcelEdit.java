@@ -57,7 +57,7 @@ public class ParcelEdit implements Serializable {
     }
 
     public String saveAction() {
-        service.update(factory.updateParcel().apply(service.find(uuid).orElseThrow(), parcel));
+        service.update(factory.updateParcel().apply(service.findForCallerPrincipal(uuid).orElseThrow(), parcel));
         Part image = parcel.getImage();
         if (image != null) {
             try (InputStream inputStream = image.getInputStream()) {

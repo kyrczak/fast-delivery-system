@@ -14,6 +14,7 @@ import pl.pg.kyrczak.jakarta.client.repository.api.ClientRepository;
 import pl.pg.kyrczak.jakarta.parcel.entity.Parcel;
 import pl.pg.kyrczak.jakarta.parcel.entity.ParcelStatus;
 import pl.pg.kyrczak.jakarta.parcel.repository.api.ParcelRepository;
+import pl.pg.kyrczak.jakarta.warehouse.entity.Warehouse;
 import pl.pg.kyrczak.jakarta.warehouse.repository.api.WarehouseRepository;
 
 import java.io.File;
@@ -97,6 +98,16 @@ public class ParcelService {
         return findAll(client);
     }
 
+    @RolesAllowed(ClientRoles.USER)
+    public List<Parcel> findAllForCallerPrincipalAndRepository(UUID warehouseUuid) {
+        if (securityContext.isCallerInRole(ClientRoles.ADMIN)) {
+            return findAllByWarehouse(warehouseUuid);
+        }
+        Client client = clientRepository.findByLogin(securityContext.getCallerPrincipal().getName())
+                .orElseThrow(IllegalStateException::new);
+        Warehouse warehouse = warehouseRepository.find(warehouseUuid).orElseThrow(IllegalStateException::new);
+        return findAllByWarehouse(client, warehouse);
+    }
 
     @RolesAllowed(ClientRoles.ADMIN)
     public void create(Parcel parcel) {
@@ -138,11 +149,14 @@ public class ParcelService {
     }
 
     @RolesAllowed(ClientRoles.USER)
-    public Optional<List<Parcel>> findAllByWarehouse(UUID uuid) {
-        return warehouseRepository.find(uuid)
-                .map(parcelRepository::findAllByWarehouse);
+    public List<Parcel> findAllByWarehouse(UUID uuid) {
+        return parcelRepository.findAllByWarehouse(uuid);
     }
 
+    @RolesAllowed(ClientRoles.USER)
+    public List<Parcel> findAllByWarehouse(Client client, Warehouse warehouse) {
+        return parcelRepository.findAllByWarehouseAndClient(warehouse,client);
+    }
     @RolesAllowed(ClientRoles.USER)
     public Optional<List<Parcel>> findAllByClient(UUID uuid) {
         return clientRepository.find(uuid)

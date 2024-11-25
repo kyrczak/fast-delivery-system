@@ -22,13 +22,13 @@ import jakarta.security.enterprise.identitystore.Pbkdf2PasswordHash;
  * Both form based methods required {@link LoginToContinue} configuration.
  */
 @ApplicationScoped
-@BasicAuthenticationMechanismDefinition(realmName = "FastDelivery")
-//@FormAuthenticationMechanismDefinition(
-//        loginToContinue = @LoginToContinue(
-//                loginPage = "/authentication/form/login.xhtml",
-//                errorPage = "/authentication/form/login_error.xhtml"
-//        )
-//)
+//@BasicAuthenticationMechanismDefinition(realmName = "FastDelivery")
+@FormAuthenticationMechanismDefinition(
+        loginToContinue = @LoginToContinue(
+                loginPage = "/authentication/form/login.xhtml",
+                errorPage = "/authentication/form/login_error.xhtml"
+        )
+)
 //@CustomFormAuthenticationMechanismDefinition(
 //        loginToContinue = @LoginToContinue(
 //                loginPage = "/authentication/custom/login.xhtml",

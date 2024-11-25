@@ -17,6 +17,7 @@ import pl.pg.kyrczak.jakarta.warehouse.service.WarehouseService;
 
 import java.io.IOException;
 import java.io.Serializable;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -54,6 +55,15 @@ public class WarehouseView implements Serializable {
         Optional<Warehouse> warehouse = service.find(uuid);
         if (warehouse.isPresent()) {
             this.warehouse = factory.warehouseToModelFunction().apply(warehouse.get());
+
+            List<WarehouseModel.Parcel> parcelModels = parcelService.findAllForCallerPrincipalAndRepository(uuid)
+                    .stream()
+                    .map(parcel -> WarehouseModel.Parcel.builder()
+                            .uuid(parcel.getUuid())
+                            .deliveryDate(parcel.getDeliveryDate())
+                            .build())
+                    .toList();
+            this.warehouse.setParcels(parcelModels);
         } else {
             FacesContext.getCurrentInstance().getExternalContext().responseSendError(
                     HttpServletResponse.SC_NOT_FOUND,

@@ -17,7 +17,9 @@ public interface ParcelRepository extends Repository<Parcel, UUID> {
     List<Parcel> findAllByDeliveryDate(LocalDate deliveryDate);
     List<Parcel> findAllByStatus(ParcelStatus status);
 
-    List<Parcel> findAllByWarehouse(Warehouse warehouse);
+    List<Parcel> findAllByWarehouse(UUID warehouse);
     List<Parcel> findAllByClient(Client client);
+
+    List<Parcel> findAllByWarehouseAndClient(Warehouse warehouse, Client client);
 
 }
