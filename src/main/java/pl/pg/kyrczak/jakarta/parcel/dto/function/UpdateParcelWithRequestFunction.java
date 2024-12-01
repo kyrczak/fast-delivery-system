@@ -16,6 +16,8 @@ public class UpdateParcelWithRequestFunction implements BiFunction<Parcel, Patch
                 .client(parcel.getClient())
                 .status(ParcelStatus.valueOf(request.getStatus()))
                 .deliveryDate(request.getDeliveryDate())
+                .version(request.getVersion())
+                .creationDateTime(parcel.getCreationDateTime())
                 .build();
     }
 }

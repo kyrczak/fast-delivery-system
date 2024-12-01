@@ -21,6 +21,7 @@ public class ParcelToEditModelFunction implements Function<Parcel, ParcelEditMod
                 .status(String.valueOf(entity.getStatus()))
                 .deliveryDate(entity.getDeliveryDate())
                 .client(clientToModelFunction.apply(entity.getClient()))
+                .version(entity.getVersion())
                 .build();
 
     }

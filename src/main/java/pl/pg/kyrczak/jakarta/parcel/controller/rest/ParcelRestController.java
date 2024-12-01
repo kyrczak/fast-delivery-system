@@ -11,11 +11,11 @@ import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.UriInfo;
+import jakarta.persistence.OptimisticLockException;
 import lombok.SneakyThrows;
 import lombok.extern.java.Log;
 import pl.pg.kyrczak.jakarta.authorization.exception.NoPrincipalException;
 import pl.pg.kyrczak.jakarta.authorization.exception.NoRolesException;
-import pl.pg.kyrczak.jakarta.client.entity.ClientRoles;
 import pl.pg.kyrczak.jakarta.component.DtoFunctionFactory;
 import pl.pg.kyrczak.jakarta.parcel.controller.api.ParcelController;
 import pl.pg.kyrczak.jakarta.parcel.dto.GetParcelResponse;
@@ -159,8 +159,13 @@ public class ParcelRestController implements ParcelController {
             throw new ForbiddenException();
         } catch (NoPrincipalException ex) {
             throw new NotAuthorizedException("");
+        } catch (TransactionalException ex) {
+        if (ex.getCause() instanceof OptimisticLockException) {
+            throw new BadRequestException(ex.getCause());
         }
     }
+
+}
 
     @Override
     public void deleteParcel(UUID uuid, UUID warehouse_uuid) {

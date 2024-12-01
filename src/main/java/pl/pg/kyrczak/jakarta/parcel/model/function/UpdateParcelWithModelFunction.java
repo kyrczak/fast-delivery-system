@@ -19,10 +19,12 @@ public class UpdateParcelWithModelFunction implements BiFunction<Parcel, ParcelE
                 .status(ParcelStatus.valueOf(parcelEditModel.getStatus()))
                 .deliveryDate(parcelEditModel.getDeliveryDate())
                 .warehouse(parcel.getWarehouse())
+                .image(parcel.getImage())
                 .client(Client.builder()
                         .uuid(parcelEditModel.getClient().getUuid())
                         .build())
-                .image(parcel.getImage())
+                .version(parcelEditModel.getVersion())
+                .creationDateTime(parcel.getCreationDateTime())
                 .build();
 
     }

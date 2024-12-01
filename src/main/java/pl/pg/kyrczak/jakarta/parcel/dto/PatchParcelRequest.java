@@ -16,4 +16,5 @@ public class PatchParcelRequest {
     private String status;
     private Float weight;
     private LocalDate deliveryDate;
+    private Long version;
 }

@@ -1,12 +1,15 @@
 package pl.pg.kyrczak.jakarta.parcel.view;
 
 import jakarta.ejb.EJB;
+import jakarta.faces.application.FacesMessage;
 import jakarta.faces.context.FacesContext;
 import jakarta.faces.view.ViewScoped;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
+import jakarta.persistence.OptimisticLockException;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.Part;
+import jakarta.transaction.TransactionalException;
 import lombok.Getter;
 import lombok.Setter;
 import pl.pg.kyrczak.jakarta.component.ModelFunctionFactory;
@@ -35,9 +38,12 @@ public class ParcelEdit implements Serializable {
     @Getter
     private ParcelEditModel parcel;
 
+    private final FacesContext facesContext;
+
     @Inject
-    public ParcelEdit(ModelFunctionFactory factory) {
+    public ParcelEdit(ModelFunctionFactory factory, FacesContext facesContext) {
         this.factory = factory;
+        this.facesContext = facesContext;
     }
 
     @EJB
@@ -60,17 +66,25 @@ public class ParcelEdit implements Serializable {
         }
     }
 
-    public String saveAction() {
-        service.update(factory.updateParcel().apply(service.findForCallerPrincipal(uuid).orElseThrow(), parcel));
-        Part image = parcel.getImage();
-        if (image != null) {
-            try (InputStream inputStream = image.getInputStream()) {
-                service.uploadImage(uuid, inputStream);
-            } catch (IOException e) {
-                return null; // Stay on the page if there's an error
+    public String saveAction() throws IOException {
+        try {
+            service.update(factory.updateParcel().apply(service.findForCallerPrincipal(uuid).orElseThrow(), parcel));
+            Part image = parcel.getImage();
+            if (image != null) {
+                try (InputStream inputStream = image.getInputStream()) {
+                    service.uploadImage(uuid, inputStream);
+                } catch (IOException e) {
+                    return null; // Stay on the page if there's an error
+                }
             }
+            String viewId = FacesContext.getCurrentInstance().getViewRoot().getViewId();
+            return viewId + "?faces-redirect=true&includeViewParams=true";
+        } catch (TransactionalException ex) {
+            if (ex.getCause() instanceof OptimisticLockException) {
+                init();
+                facesContext.addMessage(null, new FacesMessage("Version collision."));
+            }
+            return null;
         }
-        String viewId = FacesContext.getCurrentInstance().getViewRoot().getViewId();
-        return viewId + "?faces-redirect=true&includeViewParams=true";
     }
 }

@@ -14,6 +14,9 @@ public class ParcelsToModelFunction implements Function<List<Parcel>, ParcelsMod
                         .map(parcel -> ParcelsModel.Parcel.builder()
                                 .uuid(parcel.getUuid())
                                 .status(String.valueOf(parcel.getStatus()))
+                                .version(parcel.getVersion())
+                                .creationDateTime(parcel.getCreationDateTime())
+                                .updateDateTime(parcel.getUpdateDateTime())
                                 .build())
                         .toList())
                 .build();

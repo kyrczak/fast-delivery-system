@@ -5,6 +5,7 @@ import lombok.*;
 import java.io.Serializable;
 import java.util.List;
 import java.util.UUID;
+import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -25,6 +26,9 @@ public class ParcelsModel implements Serializable {
     public static class Parcel {
         private UUID uuid;
         private String status;
+        private Long version;
+        private LocalDateTime creationDateTime;
+        private LocalDateTime updateDateTime;
     }
 
     @Singular

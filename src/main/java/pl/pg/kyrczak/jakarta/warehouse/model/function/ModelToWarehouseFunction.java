@@ -5,6 +5,7 @@ import pl.pg.kyrczak.jakarta.warehouse.entity.Warehouse;
 import pl.pg.kyrczak.jakarta.warehouse.model.WarehouseCreateModel;
 
 import java.io.Serializable;
+import java.util.List;
 import java.util.function.Function;
 
 public class ModelToWarehouseFunction implements Function <WarehouseCreateModel, Warehouse>, Serializable {
@@ -15,7 +16,7 @@ public class ModelToWarehouseFunction implements Function <WarehouseCreateModel,
                 .name(warehouseCreateModel.getName())
                 .location(warehouseCreateModel.getLocation())
                 .establishedDate(warehouseCreateModel.getEstablishedDate())
-                .parcels(warehouseCreateModel.getParcels().stream()
+                .parcels((List<Parcel>) warehouseCreateModel.getParcels().stream()
                         .map(parcel -> Parcel.builder()
                                 .uuid(parcel.getUuid())
                                 .build())

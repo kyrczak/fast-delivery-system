@@ -2,7 +2,9 @@ package pl.pg.kyrczak.jakarta.parcel.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 import pl.pg.kyrczak.jakarta.client.entity.Client;
+import pl.pg.kyrczak.jakarta.entity.VersionAndCreationDateAuditable;
 import pl.pg.kyrczak.jakarta.warehouse.entity.Warehouse;
 
 import java.io.Serializable;
@@ -11,14 +13,14 @@ import java.util.UUID;
 
 @Getter
 @Setter
-@Builder
+@SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-@ToString
-@EqualsAndHashCode
+@ToString(callSuper = true)
+@EqualsAndHashCode(callSuper = true)
 @Entity
 @Table(name="parcels")
-public class Parcel implements Serializable {
+public class Parcel extends VersionAndCreationDateAuditable implements Serializable {
     @Id
     private UUID uuid;
     private Float weight;
@@ -33,4 +35,10 @@ public class Parcel implements Serializable {
     @ManyToOne
     @JoinColumn(name = "client")
     private Client client;
+
+    @PrePersist
+    @Override
+    public void updateCreationDateTime() {
+        super.updateCreationDateTime();
+    }
 }

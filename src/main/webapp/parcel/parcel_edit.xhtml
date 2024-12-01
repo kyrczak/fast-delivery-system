@@ -16,6 +16,12 @@
             <h:form styleClass="container" onreset="onReset()" enctype="multipart/form-data">
                 <div class="row">
                     <div class="col-4 p-2">
+                        <h:messages/>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-4 p-2">
                         <div class="form-outline">
                             <label for="status" class="form-label">#{messages.status}:</label>
                             <h:selectOneMenu id="status" value="#{parcelEdit.parcel.status}"

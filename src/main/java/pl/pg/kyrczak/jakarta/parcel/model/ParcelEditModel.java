@@ -19,4 +19,5 @@ public class ParcelEditModel {
     private LocalDate deliveryDate;
     private Part image;
     private ClientModel client;
+    private Long version;
 }
