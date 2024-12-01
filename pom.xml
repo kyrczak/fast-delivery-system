@@ -32,6 +32,13 @@
         </dependency>
 
         <dependency>
+            <groupId>org.hibernate.orm</groupId>
+            <artifactId>hibernate-jpamodelgen</artifactId>
+            <version>6.3.1.Final</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
             <groupId>org.webjars.npm</groupId>
             <artifactId>mdb-ui-kit</artifactId>
             <version>6.4.0</version>

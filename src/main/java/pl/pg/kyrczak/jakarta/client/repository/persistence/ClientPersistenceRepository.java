@@ -5,8 +5,14 @@ import jakarta.enterprise.context.RequestScoped;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.NoResultException;
 import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Root;
 import pl.pg.kyrczak.jakarta.client.entity.Client;
+import pl.pg.kyrczak.jakarta.client.entity.Client_;
 import pl.pg.kyrczak.jakarta.client.repository.api.ClientRepository;
+import pl.pg.kyrczak.jakarta.parcel.entity.Parcel;
+import pl.pg.kyrczak.jakarta.parcel.entity.Parcel_;
 
 import java.util.List;
 import java.util.Optional;
@@ -23,9 +29,12 @@ public class ClientPersistenceRepository implements ClientRepository {
     @Override
     public Optional<Client> findByLogin(String login) {
         try {
-            return Optional.of(em.createQuery("select u from Client u where u.login = :login", Client.class)
-                    .setParameter("login", login)
-                    .getSingleResult());
+            CriteriaBuilder cb = em.getCriteriaBuilder();
+            CriteriaQuery<Client> query = cb.createQuery(Client.class);
+            Root<Client> root = query.from(Client.class);
+            query.select(root)
+                    .where(cb.equal(root.get(Client_.login),login));
+            return Optional.of(em.createQuery(query).getSingleResult());
         } catch (NoResultException ex) {
             return Optional.empty();
         }
@@ -39,21 +48,34 @@ public class ClientPersistenceRepository implements ClientRepository {
 
     @Override
     public List<Client> findAll() {
-        return em.createQuery("select u from Client u", Client.class).getResultList();
+        CriteriaBuilder cb = em.getCriteriaBuilder();
+        CriteriaQuery<Client> query = cb.createQuery(Client.class);
+        Root<Client> root = query.from(Client.class);
+        query.select(root);
+        return em.createQuery(query).getResultList();
     }
 
     @Override
     public void create(Client entity) {
+        if (!em.isJoinedToTransaction()) {
+            em.joinTransaction();
+        }
         em.persist(entity);
     }
 
     @Override
     public void delete(Client entity) {
+        if (!em.isJoinedToTransaction()) {
+            em.joinTransaction();
+        }
         em.remove(em.find(Client.class, entity.getUuid()));
     }
 
     @Override
     public void update(Client entity) {
+        if (!em.isJoinedToTransaction()) {
+            em.joinTransaction();
+        }
         em.merge(entity);
     }
 }

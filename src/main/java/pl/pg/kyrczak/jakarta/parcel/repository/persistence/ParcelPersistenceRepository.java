@@ -5,12 +5,17 @@ import jakarta.enterprise.context.RequestScoped;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.NoResultException;
 import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Root;
 import pl.pg.kyrczak.jakarta.client.entity.Client;
 import pl.pg.kyrczak.jakarta.parcel.entity.Parcel;
+import pl.pg.kyrczak.jakarta.parcel.entity.Parcel_;
 import pl.pg.kyrczak.jakarta.parcel.entity.ParcelStatus;
 import pl.pg.kyrczak.jakarta.parcel.repository.api.ParcelRepository;
 import pl.pg.kyrczak.jakarta.warehouse.entity.Warehouse;
 
+import javax.swing.text.html.Option;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
@@ -28,11 +33,15 @@ public class ParcelPersistenceRepository implements ParcelRepository {
     @Override
     public Optional<Parcel> findByUuidAndClient(UUID uuid, Client client) {
         try {
-            return Optional.of(em.createQuery("select c from Parcel c where c.uuid = :uuid and c.client = :client",
-                    Parcel.class)
-                    .setParameter("client",client)
-                    .setParameter("uuid",uuid)
-                    .getSingleResult());
+            CriteriaBuilder cb = em.getCriteriaBuilder();
+            CriteriaQuery<Parcel> query = cb.createQuery(Parcel.class);
+            Root<Parcel> root = query.from(Parcel.class);
+            query.select(root)
+                    .where(cb.and(
+                            cb.equal(root.get(Parcel_.client),client),
+                            cb.equal(root.get(Parcel_.uuid),uuid)
+                    ));
+            return Optional.of(em.createQuery(query).getSingleResult());
         } catch (NoResultException ex) {
             return Optional.empty();
         }
@@ -40,36 +49,55 @@ public class ParcelPersistenceRepository implements ParcelRepository {
 
     @Override
     public List<Parcel> findAllByDeliveryDate(LocalDate deliveryDate) {
-        return em.createQuery("select c from Parcel c where c.deliveryDate = :deliveryDate",Parcel.class)
-                .setParameter("deliveryDate",deliveryDate)
-                .getResultList();
+        CriteriaBuilder cb = em.getCriteriaBuilder();
+        CriteriaQuery<Parcel> query = cb.createQuery(Parcel.class);
+        Root<Parcel> root = query.from(Parcel.class);
+        query.select(root)
+                .where(cb.equal(root.get(Parcel_.deliveryDate),deliveryDate));
+        return em.createQuery(query).getResultList();
     }
 
     @Override
     public List<Parcel> findAllByStatus(ParcelStatus status) {
-        return em.createQuery("select c from Parcel c where c.status = :status",Parcel.class)
-                .setParameter("status",status)
-                .getResultList();
+        CriteriaBuilder cb = em.getCriteriaBuilder();
+        CriteriaQuery<Parcel> query = cb.createQuery(Parcel.class);
+        Root<Parcel> root = query.from(Parcel.class);
+        query.select(root)
+                .where(cb.equal(root.get(Parcel_.status),status));
+        return em.createQuery(query).getResultList();
     }
 
     @Override
     public List<Parcel> findAllByWarehouse(UUID warehouse) {
-        return em.find(Warehouse.class,warehouse).getParcels();
+        CriteriaBuilder cb = em.getCriteriaBuilder();
+        CriteriaQuery<Parcel> query = cb.createQuery(Parcel.class);
+        Root<Parcel> root = query.from(Parcel.class);
+        query.select(root)
+                .where(cb.equal(root.get(Parcel_.warehouse),warehouse));
+        return em.createQuery(query).getResultList();
     }
 
     @Override
     public List<Parcel> findAllByClient(Client client) {
-        return em.createQuery("select c from Parcel c where c.client = :client",Parcel.class)
-                .setParameter("client",client)
-                .getResultList();
+        CriteriaBuilder cb = em.getCriteriaBuilder();
+        CriteriaQuery<Parcel> query = cb.createQuery(Parcel.class);
+        Root<Parcel> root = query.from(Parcel.class);
+        query.select(root)
+                .where(cb.equal(root.get(Parcel_.client),client));
+        return em.createQuery(query).getResultList();
     }
 
     @Override
     public List<Parcel> findAllByWarehouseAndClient(Warehouse warehouse, Client client) {
-        return em.createQuery("select c from Parcel c where c.client = :client and c.warehouse = :warehouse",Parcel.class)
-                .setParameter("client",client)
-                .setParameter("warehouse", warehouse)
-                .getResultList();
+        CriteriaBuilder cb = em.getCriteriaBuilder();
+        CriteriaQuery<Parcel> query = cb.createQuery(Parcel.class);
+        Root<Parcel> root = query.from(Parcel.class);
+        query.select(root)
+                .where(cb.and(
+                        cb.equal(root.get(Parcel_.client),client),
+                        cb.equal(root.get(Parcel_.warehouse),warehouse)
+                ));
+        return em.createQuery(query).getResultList();
     }
 
     @Override
@@ -79,22 +107,35 @@ public class ParcelPersistenceRepository implements ParcelRepository {
 
     @Override
     public List<Parcel> findAll() {
-        return em.createQuery("select c from Parcel c", Parcel.class).getResultList();
+        CriteriaBuilder cb = em.getCriteriaBuilder();
+        CriteriaQuery<Parcel> query = cb.createQuery(Parcel.class);
+        Root<Parcel> root = query.from(Parcel.class);
+        query.select(root);
+        return em.createQuery(query).getResultList();
     }
 
     @Override
     public void create(Parcel entity) {
+        if (!em.isJoinedToTransaction()) {
+            em.joinTransaction();
+        }
         em.persist(entity);
         em.refresh(em.find(Warehouse.class, entity.getWarehouse().getUuid()));
     }
 
     @Override
     public void delete(Parcel entity) {
+        if (!em.isJoinedToTransaction()) {
+            em.joinTransaction();
+        }
         em.remove(em.find(Parcel.class, entity.getUuid()));
     }
 
     @Override
     public void update(Parcel entity) {
+        if (!em.isJoinedToTransaction()) {
+            em.joinTransaction();
+        }
         em.merge(entity);
     }
 }
