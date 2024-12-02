@@ -11,6 +11,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import pl.pg.kyrczak.jakarta.parcel.entity.ParcelStatus;
+import pl.pg.kyrczak.jakarta.parcel.validation.ValidDeliveryDate;
 import pl.pg.kyrczak.jakarta.warehouse.model.WarehouseModel;
 
 import java.time.LocalDate;
@@ -28,6 +29,8 @@ public class ParcelCreateModel {
     private ParcelStatus status;
 
     //custom validation
+    @NotNull
+    @ValidDeliveryDate
     private LocalDate deliveryDate;
 
     @NotNull
