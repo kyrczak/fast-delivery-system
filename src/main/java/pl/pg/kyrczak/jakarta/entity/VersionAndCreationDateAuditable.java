@@ -28,13 +28,19 @@ public class VersionAndCreationDateAuditable {
      */
     @PrePersist
     public void updateCreationDateTime() {
-        creationDateTime = LocalDateTime.now();
-        updateDateTime = LocalDateTime.now();
+        if (creationDateTime == null) {
+            creationDateTime = LocalDateTime.now();
+        }
+        if (updateDateTime == null) {
+            updateDateTime = creationDateTime;
+        }
     }
+
 
     @PreUpdate
     public void updateUpdateDateTime() {
         updateDateTime = LocalDateTime.now();
     }
+
 
 }

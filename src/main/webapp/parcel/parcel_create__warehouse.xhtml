@@ -12,7 +12,8 @@
     <ui:define name="content">
         <article>
             <header><h2>#{messages['create.parcel']} - #{messages.warehouse}</h2></header>
-            <h:form styleClass="container" onreset="onReset()" enctype="multipart/form-data">
+            <h:form styleClass="container" onreset="onReset()" enctype="multipart/form-data" id="form">
+                <h:messages/>
                 <div class="row">
                     <div class="col-2 p-2 text-center">
                         <h:commandButton styleClass="btn" value="#{messages.previous}" immediate="true"
@@ -30,17 +31,19 @@
                             <legend class="form-label fs-6">#{messages.warehouse}:</legend>
                             <!-- Instead of ui:repeat the h:selectOneRadio with f:selectItems can be used but then
                             Faces renders table or list and custom styling with CSS libraties can be troublesome. -->
-                            <ui:repeat value="#{parcelCreate.warehouses}" var="warehouse">
-                                <div class="form-check">
-                                    <h:selectOneRadio id="radioId" group="warehouse"
-                                                      value="#{parcelCreate.parcel.warehouse}"
-                                                      converter="warehouseModelConverter"
-                                                      styleClass="form-check-input"
-                                                      enabledClass="form-check-label">
-                                        <f:selectItem itemValue="#{warehouse}" itemLabel="#{warehouse.name}"/>
-                                    </h:selectOneRadio>
-                                </div>
-                            </ui:repeat>
+                            <h:selectOneRadio id="warehouse"
+                                              layout="pageDirection"
+                                              value="#{parcelCreate.parcel.warehouse}"
+                                              converter="warehouseModelConverter"
+                                              binding="#{warehouseInput}"
+                                              styleClass="#{warehouseInput.valid ? 'form-control' : 'is-invalid form-control'}"
+                                              enabledClass="form-check-label">
+                                <f:selectItems value="#{parcelCreate.warehouses}"
+                                               var="warehouse"
+                                               itemValue="#{warehouse}"
+                                               itemLabel="#{warehouse.name}"/>
+                            </h:selectOneRadio>
+                            <h:message for="warehouse" styleClass="invalid-feedback"/>
                         </fieldset>
                     </div>
                 </div>

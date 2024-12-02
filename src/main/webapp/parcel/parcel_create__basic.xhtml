@@ -12,7 +12,8 @@
     <ui:define name="content">
         <article>
             <header><h2>#{messages['create.parcel']} - #{messages['create.basic']}</h2></header>
-            <h:form styleClass="container" onreset="onReset()" enctype="multipart/form-data">
+            <h:form styleClass="container" onreset="onReset()" enctype="multipart/form-data" id="form">
+                <h:messages/>
                 <div class="row">
                     <div class="col-2 p-2 text-center">
                         <h:button styleClass="btn" value="#{messages.previous}" disabled="true"/>
@@ -39,10 +40,11 @@
                 <div class="row">
                     <div class="col-4 p-2">
                         <div class="form-outline">
-
-                            <h:inputText id="weight" value="#{parcelCreate.parcel.weight}"
-                                         styleClass="form-control"/>
+                            <h:inputText id="weight" value="#{parcelCreate.parcel.weight}" required="true"
+                                         binding="#{weightInput}"
+                                         styleClass="#{weightInput.valid ? 'form-control' : 'is-invalid form-control'}"/>
                             <h:outputLabel for="weight" value="#{messages.weight}:" styleClass="form-label"/>
+                            <h:message for="weight" styleClass="invalid-feedback"/>
                         </div>
                     </div>
                 </div>
@@ -50,6 +52,7 @@
                 <div class="row">
                     <div class="col-4 p-2">
                         <div class="form-outline">
+<!--                            Add custom validation-->
                             <h:inputText id="deliveryDate"
                                          value="#{parcelCreate.parcel.deliveryDate}"
                                          converter="localDateConverter" required="true"

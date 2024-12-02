@@ -31,7 +31,7 @@ public class OperationLogInterceptor {
         Object[] parameters = context.getParameters();
         String user = securityContext.getCallerPrincipal().getName();
         String uuid = Arrays.stream(parameters).filter(param -> param instanceof UUID).findFirst().map(Object::toString).orElse(null);
-        log.info(() -> String.format(
+        log.warning(() -> String.format(
                 "User: %s, Operation: %s, Resource UUID: %s, Class: %s",
                 user, methodName, uuid != null ? uuid : "N/A", className));
 

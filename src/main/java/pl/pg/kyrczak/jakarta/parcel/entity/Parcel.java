@@ -36,7 +36,7 @@ public class Parcel extends VersionAndCreationDateAuditable implements Serializa
     @JoinColumn(name = "client")
     private Client client;
 
-    @PrePersist
+
     @Override
     public void updateCreationDateTime() {
         super.updateCreationDateTime();

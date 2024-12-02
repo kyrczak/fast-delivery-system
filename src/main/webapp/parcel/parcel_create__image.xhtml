@@ -6,7 +6,8 @@
     <ui:define name="content">
         <article>
             <header><h2>#{messages['create.parcel']} - #{messages['create.image']}</h2></header>
-            <h:form styleClass="container" onreset="onReset()" enctype="multipart/form-data">
+            <h:form styleClass="container" onreset="onReset()" enctype="multipart/form-data" id="form">
+                <h:messages/>
                 <div class="row">
                     <div class="col-2 p-2 text-center">
                         <h:commandButton styleClass="btn" value="#{messages.previous}" immediate="true"
@@ -22,7 +23,10 @@
                     <div class="col-6">
                         <h:panelGroup rendered="#{parcelCreate.parcel.image == null}">
                             <h:outputLabel for="image" value="#{messages['image.upload']}" styleClass="form-label"/>
-                            <h:inputFile id="image" value="#{parcelCreate.parcel.image}" styleClass="form-control"/>
+                            <h:inputFile id="image" value="#{parcelCreate.parcel.image}" required="true"
+                                         binding="#{imageInput}"
+                                         styleClass="#{imageInput.valid ? 'form-control' : 'is-invalid form-control'}"/>
+                            <h:message for="image" styleClass="invalid-feedback"/>
                         </h:panelGroup>
 
                         <h:panelGroup rendered="#{parcelCreate.parcel.image != null}">

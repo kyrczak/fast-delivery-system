@@ -1,6 +1,7 @@
 package pl.pg.kyrczak.jakarta.parcel.model;
 
 import jakarta.servlet.http.Part;
+import jakarta.validation.constraints.*;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -25,9 +26,19 @@ import java.util.UUID;
 public class ParcelCreateModel {
     private UUID uuid;
     private ParcelStatus status;
+
+    //custom validation
     private LocalDate deliveryDate;
+
+    @NotNull
+    @DecimalMin("0.1")
+    @DecimalMax("100.5")
     private Float weight;
+
+    @NotNull
     private Part image;
     private String imagePath;
+
+    @NotNull
     private WarehouseModel warehouse;
 }

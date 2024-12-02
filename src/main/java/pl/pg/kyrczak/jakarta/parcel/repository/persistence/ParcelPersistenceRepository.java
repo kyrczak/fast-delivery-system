@@ -116,11 +116,11 @@ public class ParcelPersistenceRepository implements ParcelRepository {
 
     @Override
     public void create(Parcel entity) {
-        if (!em.isJoinedToTransaction()) {
-            em.joinTransaction();
-        }
+//        if (!em.isJoinedToTransaction()) {
+//            em.joinTransaction();
+//        }
         em.persist(entity);
-        em.refresh(em.find(Warehouse.class, entity.getWarehouse().getUuid()));
+//        em.refresh(em.find(Warehouse.class, entity.getWarehouse().getUuid()));
     }
 
     @Override
