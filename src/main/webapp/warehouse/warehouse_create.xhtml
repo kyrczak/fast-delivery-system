@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="jakarta.faces.html"
+                xmlns:ui="jakarta.faces.facelets"
+                xmlns:f="jakarta.faces.core"
+                template="/WEB-INF/template/main.xhtml">
+
+    <f:metadata>
+        <f:viewAction action="#{warehouseCreate.init()}"/>
+    </f:metadata>
+
+    <ui:define name="content">
+        <article>
+            <header><h2>#{messages['create.warehouse']} - #{messages['create.basic']}</h2></header>
+            <h:form styleClass="container" onreset="onReset()" enctype="multipart/form-data">
+                <div class="row">
+                    <div class="col-4 p-2">
+                        <div class="form-outline">
+
+                            <h:inputText id="name" value="#{warehouseCreate.warehouse.name}"
+                                         styleClass="form-control"/>
+                            <h:outputLabel for="name" value="#{messages['warehouse.name']}:" styleClass="form-label"/>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-4 p-2">
+                        <div class="form-outline">
+
+                            <h:inputText id="location" value="#{warehouseCreate.warehouse.location}"
+                                         styleClass="form-control"/>
+                            <h:outputLabel for="location" value="#{messages['warehouse.location']}:" styleClass="form-label"/>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-4 p-2">
+                        <div class="form-outline">
+                            <h:inputText id="establishedDate"
+                                         value="#{warehouseCreate.warehouse.establishedDate}"
+                                         converter="localDateConverter" required="true"
+                                         styleClass="form-control"/>
+                            <h:outputLabel for="establishedDate" value="#{messages['warehouse.establishedDate']}:" styleClass="form-label"/>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-2 p-2 text-center">
+                        <h:commandButton styleClass="btn btn-primary" value="#{messages.create}"
+                                         action="#{warehouseCreate.saveAction()}"/>
+                    </div>
+                    <div class="col-2 p-2 text-center">
+                        <h:commandButton styleClass="btn btn-secondary" value="#{messages.cancel}"
+                                         action="#{warehouseCreate.cancelAction()}" immediate="true"/>
+                    </div>
+                </div>
+            </h:form>
+        </article>
+    </ui:define>
+
+</ui:composition>

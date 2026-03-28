@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="jakarta.faces.html"
+                xmlns:ui="jakarta.faces.facelets"
+                xmlns:f="jakarta.faces.core"
+                template="/WEB-INF/template/main.xhtml">
+
+    <ui:define name="content">
+        <h:outputStylesheet library="parcel" name="css/parcel_list.css"/><!-- Automatically relocated to head. -->
+
+        <article class="text--justified">
+            <header><h2>#{messages['nav.parcels']}</h2></header>
+            <h:dataTable id="parcelTable" value="#{parcelList.parcels.parcels}" var="parcel"
+                         styleClass="table align-middle mb-0 bg-white" headerClass="bg-light">
+<!--                <h:column>-->
+<!--                    <f:facet name="header">#{messages.image}</f:facet>-->
+<!--                    <h:graphicImage styleClass="portrait rounded-circle" alt="Parcel's image"-->
+<!--                                    value="/api/parcels/#{parcel.uuid}/image"/>-->
+<!--                </h:column>-->
+
+
+                <h:column>
+                    <f:facet name="header">UUID</f:facet>
+                    <h:outputText value="#{parcel.uuid}"/>
+                </h:column>
+
+                <h:column>
+                    <f:facet name="header">Version</f:facet>
+                    <h:outputText value="#{parcel.version}"/>
+                </h:column>
+
+                <h:column>
+                    <f:facet name="header">Created</f:facet>
+                    <h:outputText value="#{parcel.creationDateTime}">
+                        <f:convertDateTime type="localDateTime" pattern="yyyy-MM-dd HH:mm"/>
+                    </h:outputText>
+                </h:column>
+
+                <h:column>
+                    <f:facet name="header">Updated</f:facet>
+                    <h:outputText value="#{parcel.updateDateTime}">
+                        <f:convertDateTime type="localDateTime" pattern="yyyy-MM-dd HH:mm"/>
+                    </h:outputText>
+                </h:column>
+                <h:column>
+                    <f:facet name="header">#{messages.view}</f:facet>
+                    <h:link outcome="/parcel/parcel_view.xhtml" value="#{messages.view}">
+                        <f:param name="uuid" value="#{parcel.uuid}"/>
+                    </h:link>
+                </h:column>
+
+                <h:column>
+                    <f:facet name="header">#{messages.edit}</f:facet>
+                    <h:link outcome="/parcel/parcel_edit.xhtml" value="#{messages.edit}">
+                        <f:param name="uuid" value="#{parcel.uuid}"/>
+                    </h:link>
+                </h:column>
+
+                <h:column>
+                    <f:facet name="header">#{messages.delete}</f:facet>
+                    <h:form>
+                        <h:commandButton styleClass="btn" value="#{messages.delete}"
+                                         actionListener="#{parcelList.deleteAction(parcel)}">
+                            <f:ajax execute="@this" render=":parcelTable"/>
+                        </h:commandButton>
+                    </h:form>
+                </h:column>
+
+                <f:facet name="footer">
+                    <h:button styleClass="btn" outcome="/parcel/parcel_create__basic.xhtml"
+                              value="#{messages['create.parcel']}"/>
+                </f:facet>
+            </h:dataTable>
+        </article>
+    </ui:define>
+
+</ui:composition>

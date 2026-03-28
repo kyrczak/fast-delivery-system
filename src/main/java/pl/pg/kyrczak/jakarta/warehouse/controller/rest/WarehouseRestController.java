@@ -1,0 +1,132 @@
+package pl.pg.kyrczak.jakarta.warehouse.controller.rest;
+
+import jakarta.annotation.security.RolesAllowed;
+import jakarta.ejb.EJB;
+import jakarta.enterprise.context.RequestScoped;
+import jakarta.inject.Inject;
+import jakarta.transaction.TransactionalException;
+import jakarta.ws.rs.*;
+import lombok.extern.java.Log;
+import pl.pg.kyrczak.jakarta.authorization.exception.NoPrincipalException;
+import pl.pg.kyrczak.jakarta.authorization.exception.NoRolesException;
+import pl.pg.kyrczak.jakarta.client.entity.ClientRoles;
+import pl.pg.kyrczak.jakarta.component.DtoFunctionFactory;
+import pl.pg.kyrczak.jakarta.parcel.service.ParcelService;
+import pl.pg.kyrczak.jakarta.warehouse.controller.api.WarehouseController;
+import pl.pg.kyrczak.jakarta.warehouse.dto.GetWarehouseResponse;
+import pl.pg.kyrczak.jakarta.warehouse.dto.GetWarehousesResponse;
+import pl.pg.kyrczak.jakarta.warehouse.dto.PatchWarehouseRequest;
+import pl.pg.kyrczak.jakarta.warehouse.dto.PutWarehouseRequest;
+import pl.pg.kyrczak.jakarta.warehouse.service.WarehouseService;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.ws.rs.core.Context;
+import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.core.UriInfo;
+import lombok.SneakyThrows;
+
+import java.util.UUID;
+import java.util.logging.Level;
+
+@Path("")
+@Log
+public class WarehouseRestController implements WarehouseController {
+    private WarehouseService service;
+    private final DtoFunctionFactory factory;
+    private ParcelService parcelService;
+
+    private final UriInfo uriInfo;
+
+    private HttpServletResponse response;
+
+    @Context
+    public void setResponse(HttpServletResponse response) {
+        this.response = response;
+    }
+    @Inject
+    public WarehouseRestController(
+            DtoFunctionFactory factory,
+            @SuppressWarnings("CdiInjectionPointsInspection") UriInfo uriInfo
+    ) {
+        this.factory = factory;
+        this.uriInfo = uriInfo;
+    }
+
+    @EJB
+    public void setService(WarehouseService service) {
+        this.service = service;
+    }
+
+    @EJB
+    public void setParcelService(ParcelService parcelService) {
+        this.parcelService = parcelService;
+    }
+
+    @Override
+    public GetWarehousesResponse getWarehouses() {
+        return factory.warehousesToResponseFunction().apply(service.findAll());
+    }
+
+    @Override
+    public GetWarehouseResponse getWarehouse(UUID uuid) {
+        return service.find(uuid)
+                .map(factory.warehouseToResponseFunction())
+                .orElseThrow(NotFoundException::new);
+    }
+
+    @Override
+    @SneakyThrows
+    public void putWarehouse(UUID uuid, PutWarehouseRequest request) {
+        try {
+            service.create(factory.requestToWarehouseFunction().apply(uuid,request));
+            response.setHeader("Location", uriInfo.getBaseUriBuilder()
+                    .path(WarehouseController.class, "getWarehouse")
+                    .build(uuid)
+                    .toString());
+            throw new WebApplicationException(Response.Status.CREATED);
+        } catch (IllegalArgumentException ex) {
+            throw new BadRequestException();
+        } catch (NoRolesException ex) {
+            throw new ForbiddenException();
+        } catch (NoPrincipalException ex) {
+            throw new NotAuthorizedException("");
+        }
+
+    }
+
+    @Override
+    public void patchWarehouse(UUID uuid, PatchWarehouseRequest request) {
+        try {
+            service.find(uuid).ifPresentOrElse(
+                    entity -> service.update(factory.updateWarehouseWithRequestFunction().apply(entity, request)),
+                    () -> {
+                        throw new NotFoundException();
+                    }
+            );
+        } catch (NoRolesException ex) {
+            throw new ForbiddenException();
+        } catch (NoPrincipalException ex) {
+            throw new NotAuthorizedException("");
+        }
+    }
+
+    @Override
+    public void deleteWarehouse(UUID uuid) {
+        try {
+            service.find(uuid).ifPresentOrElse(
+                    entity -> {
+                        parcelService.findAllByWarehouse(uuid).forEach(
+                                parcel -> parcelService.delete(parcel.getUuid())
+                        );
+                        service.delete(uuid);
+                    },
+                    () -> {
+                        throw new NotFoundException();
+                    }
+            );
+        } catch (NoRolesException ex) {
+            throw new ForbiddenException();
+        } catch (NoPrincipalException ex) {
+            throw new NotAuthorizedException("");
+        }
+    }
+}

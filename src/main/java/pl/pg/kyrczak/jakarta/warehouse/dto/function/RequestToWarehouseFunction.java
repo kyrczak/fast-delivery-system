@@ -4,6 +4,7 @@ import pl.pg.kyrczak.jakarta.parcel.entity.Parcel;
 import pl.pg.kyrczak.jakarta.warehouse.dto.PutWarehouseRequest;
 import pl.pg.kyrczak.jakarta.warehouse.entity.Warehouse;
 
+import java.util.List;
 import java.util.UUID;
 import java.util.function.BiFunction;
 
@@ -15,7 +16,7 @@ public class RequestToWarehouseFunction implements BiFunction <UUID, PutWarehous
                 .name(request.getName())
                 .location(request.getLocation())
                 .establishedDate(request.getEstablishedDate())
-                .parcels(request.getParcels().stream()
+                .parcels((List<Parcel>) request.getParcels().stream()
                         .map(parcel -> Parcel.builder()
                                 .uuid(parcel.getUuid())
                                 .build())

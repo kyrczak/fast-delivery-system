@@ -14,5 +14,7 @@ import java.util.UUID;
 @EqualsAndHashCode
 public class PatchParcelRequest {
     private String status;
+    private Float weight;
     private LocalDate deliveryDate;
+    private Long version;
 }

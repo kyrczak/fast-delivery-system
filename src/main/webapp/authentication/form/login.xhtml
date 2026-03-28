@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:h="jakarta.faces.html"
+                xmlns:f="jakarta.faces.core"
+                template="/WEB-INF/template/main.xhtml">
+
+    <ui:define name="content">
+        <f:loadBundle var="msg" basename="pl.pg.kyrczak.jakarta.authentication.view.i18n.messages"/>
+        <article class="text--justified">
+            <header><h2>Login</h2></header>
+            <section>
+                <form class="container" action="j_security_check" onreset="onReset()" method="post">
+                    <div class="row">
+                        <div class="col-4 p-2">
+                            <div class="form-outline">
+                                <input id="username" name="j_username" type="text" class="form-control"/>
+                                <label for="username" class="form-label">#{msg.name}:</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-4 p-2">
+                            <div class="form-outline">
+                                <input id="password" name="j_password" type="password" class="form-control"/>
+                                <label for="password" class="form-label">#{msg.password}:</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-2 p-2 text-center">
+                            <button class="btn btn-primary" type="submit">#{msg.login}</button>
+                        </div>
+                        <div class="col-2 p-2 text-center">
+                            <button class="btn btn-secondary" type="reset">#{msg.reset}</button>
+                        </div>
+                    </div>
+                </form>
+            </section>
+        </article>
+    </ui:define>
+
+</ui:composition>

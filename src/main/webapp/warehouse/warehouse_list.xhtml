@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="jakarta.faces.html"
+                xmlns:ui="jakarta.faces.facelets"
+                xmlns:f="jakarta.faces.core"
+                template="/WEB-INF/template/main.xhtml">
+
+    <ui:define name="content">
+        <article class="text--justified">
+            <header><h2>#{messages['nav.warehouses']}</h2></header>
+            <h:dataTable id="warehouseTable" value="#{warehouseList.warehouses.warehouses}" var="warehouse"
+                         styleClass="table align-middle mb-0 bg-white" headerClass="bg-light">
+
+                <h:column>
+                    <f:facet name="header">#{messages['warehouse.name']}</f:facet>
+                    <h:outputText value="#{warehouse.name}"/>
+                </h:column>
+
+                <h:column>
+                    <f:facet name="header">#{messages.view}</f:facet>
+                    <h:link outcome="/warehouse/warehouse_view.xhtml" value="#{messages.view}">
+                        <f:param name="uuid" value="#{warehouse.uuid}"/>
+                    </h:link>
+                </h:column>
+
+                <h:column>
+                    <f:facet name="header">#{messages.edit}</f:facet>
+                    <h:link outcome="/warehouse/warehouse_edit.xhtml" value="#{messages.edit}">
+                        <f:param name="uuid" value="#{warehouse.uuid}"/>
+                    </h:link>
+                </h:column>
+
+                <h:column rendered="#{facesContext.externalContext.isUserInRole('admin')}">
+                    <f:facet name="header">#{messages.delete}</f:facet>
+                    <h:form>
+                        <h:commandButton styleClass="btn" value="#{messages.delete}"
+                                         actionListener="#{warehouseList.deleteAction(warehouse)}">
+                            <f:ajax execute="@this" render=":warehouseTable"/>
+                        </h:commandButton>
+                    </h:form>
+                </h:column>
+
+                <f:facet name="footer">
+                    <h:button styleClass="btn" outcome="/warehouse/warehouse_create.xhtml"
+                              value="#{messages['create.warehouse']}"/>
+                </f:facet>
+            </h:dataTable>
+        </article>
+    </ui:define>
+
+</ui:composition>

@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="jakarta.faces.html"
+                xmlns:ui="jakarta.faces.facelets"
+                xmlns:f="jakarta.faces.core"
+                template="/WEB-INF/template/main.xhtml">
+
+    <f:metadata>
+        <f:viewParam name="uuid" value="#{parcelEdit.uuid}" required="true"/>
+        <f:viewAction action="#{parcelEdit.init()}"/>
+    </f:metadata>
+
+    <ui:define name="content">
+        <article>
+            <header><h2>#{messages['edit.info']}</h2></header>
+            <h:form styleClass="container" onreset="onReset()" enctype="multipart/form-data">
+                <div class="row">
+                    <div class="col-4 p-2">
+                        <h:messages/>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-4 p-2">
+                        <div class="form-outline">
+                            <label for="status" class="form-label">#{messages.status}:</label>
+                            <h:selectOneMenu id="status" value="#{parcelEdit.parcel.status}"
+                                             styleClass="form-select" required="true">
+                                <f:selectItems value="#{parcelEdit.statusOptions}" var="status"
+                                               itemValue="#{status}" itemLabel="#{status}"/>
+                            </h:selectOneMenu>
+
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-4 p-2">
+                        <div class="form-outline">
+                            <h:inputText id="deliveryDate" value="#{parcelEdit.parcel.deliveryDate}" converter="localDateConverter" styleClass="form-control"/>
+                            <h:outputLabel for="deliveryDate" value="#{messages.deliveryDate}:" styleClass="form-label"/>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-4 p-2">
+                        <div class="form-outline">
+                            <h:inputFile id="image" value="#{parcelEdit.parcel.image}"
+                                         styleClass="form-control active"/>
+                            <h:outputLabel for="image" value="#{messages.image}:" styleClass="form-label"/>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-2 p-2 text-center">
+                        <h:commandButton styleClass="btn btn-primary" value="#{messages.update}"
+                                         action="#{parcelEdit.saveAction()}"/>
+                    </div>
+                    <div class="col-2 p-2 text-center">
+                        <h:commandButton styleClass="btn btn-secondary" type="reset" value="#{messages.reset}"/>
+                    </div>
+                </div>
+            </h:form>
+        </article>
+    </ui:define>
+
+</ui:composition>

@@ -1,0 +1,39 @@
+.bg-prussian-blue {
+    background-color: #0077d2 !important; /* Prussian Blue */
+}
+
+.bg-dark-prussian {
+    background-color: #004b87 !important; /* Darker shade of Prussian Blue */
+}
+
+.bg-light-prussian {
+    background-color: #005f99 !important; /* Lighter shade of Prussian Blue */
+}
+
+.text-prussian {
+    color: #003153 !important; /* Prussian Blue text */
+}
+
+.text-white {
+    color: #ffffff !important; /* White text */
+}
+
+.border-prussian {
+    border: 2px solid #003153; /* Prussian Blue border */
+}
+
+.border-dark-prussian {
+    border: 2px solid #004b87; /* Darker shade of Prussian Blue */
+}
+
+.m-prussian {
+    margin: 20px !important; /* Prussian Blue themed margin */
+}
+
+.p-prussian {
+    padding: 20px !important; /* Prussian Blue themed padding */
+}
+
+.shadow-prussian {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); /* Soft shadow for elements */
+}

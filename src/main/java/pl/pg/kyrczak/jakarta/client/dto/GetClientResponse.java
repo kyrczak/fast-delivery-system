@@ -31,4 +31,5 @@ public class GetClientResponse {
     private LocalDate registrationDate;
     private String email;
     private List<Parcel> parcels;
+    private List<String> roles;
 }

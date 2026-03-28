@@ -1,108 +1,176 @@
-# Get all parcels.
+# Get all warehouses
 
+// @no-cookie-jar
+GET http://localhost:9080/fast-delivery/api/warehouses/
+
+###
+
+# Get all warehouse USER CREDENTIALS
+// @no-cookie-jar
+GET http://localhost:9080/fast-delivery/api/warehouses/
+Authorization: Basic cGF0cnlrazp1c2VydXNlcg==
+
+###
+
+# Add warehouse AUTHORIZED / ADMIN CREDENTIALS
+// @no-cookie-jar
+PUT http://localhost:9080/fast-delivery/api/warehouses/3bd328e1-cb1b-4bc1-a10d-d734791d65b9
+Content-Type: application/json
+Authorization: Basic YWRtaW46YWRtaW5hZG1pbg==
+
+{
+  "name": "Lotnisko w Warszawie",
+  "location": "Warszawa",
+  "establishedDate": "1994-02-16",
+  "parcels": []
+}
+###
+
+# Delete warehoouse AUTHORIZED
+// @no-cookie-jar
+DELETE http://localhost:9080/fast-delivery/api/warehouses/3bd328e1-cb1b-4bc1-a10d-d734791d65b9
+Authorization: Basic YWRtaW46YWRtaW5hZG1pbg==
+
+###
+
+# Add warehouse WRONG/USER CREDENTIALS
+// @no-cookie-jar
+PUT http://localhost:9080/fast-delivery/api/warehouses/3bd328e1-cb1b-4bc1-a10d-d734791d65b9
+Content-Type: application/json
+Authorization: Basic cGF0cnlrazp1c2VydXNlcg==
+
+{
+  "name": "Lotnisko w Warszawie",
+  "location": "Warszawa",
+  "establishedDate": "1994-02-16",
+  "parcels": []
+}
+
+###
+
+# Delete warehoouse WRONG CREDENTIALS
+// @no-cookie-jar
+DELETE http://localhost:9080/fast-delivery/api/warehouses/3bd328e1-cb1b-4bc1-a10d-d734791d65b9
+Authorization: Basic cGF0cnlrazp1c2VydXNlcg==
+
+###
+
+# Get all parcels. NO CREDENTIALS
+
+// @no-cookie-jar
 GET http://localhost:9080/fast-delivery/api/parcels/
 
 ###
 
-# Get all warehouses.
-
-GET http://localhost:9080/fast-delivery/api/warehouses/
-
-###
-# Get parcel
-
-GET http://localhost:9080/fast-delivery/api/parcels/1c023543-5bd1-4b02-9941-27aab5b2ecdb
-
-###
-# Get non-existent parcel
-
-GET http://localhost:9080/fast-delivery/api/parcels/1c023543-5bd2-4b02-9941-27aab5b2ecdb
-
+# Get all parcels. ADMIN CREDENTIALS
+// @no-cookie-jar
+GET http://localhost:9080/fast-delivery/api/parcels/
+Authorization: Basic YWRtaW46YWRtaW5hZG1pbg==
 ###
 
-# Get parcel image
-
-GET http://localhost:9080/fast-delivery/api/parcels/1c023543-5bd1-4b02-9941-27aab5b2ecdb/image
-
+# Get all parcels. USER CREDENTIAL
+// @no-cookie-jar
+GET http://localhost:9080/fast-delivery/api/parcels/
+Authorization: Basic cGF0cnlrazp1c2VydXNlcg==
 ###
 
-# Insert parcel image when exists
+# Register new client
+// @no-cookie-jar
+PUT http://localhost:9080/fast-delivery/api/clients/61a947c9-21a1-4e03-b04f-8c0fdfe78b31
+Content-Type: application/json
 
-PUT http://localhost:9080/fast-delivery/api/parcels/1c023543-5bd1-4b02-9941-27aab5b2ecdb/image
-Content-Type: multipart/form-data; boundary=boundary
-
---boundary
-Content-Disposition: form-data; name="image"; filename="delikatne.png"
-
-< src/main/resources/images/delikatne.png
---boundary--
+{
+  "login": "marekk",
+  "name": "Marek",
+  "surname": "Kowalski",
+  "registrationDate": "2024-11-18",
+  "password": "pa$$w0rd",
+  "email": "marekk@student.pl",
+  "parcels": []
+}
 
 ###
 
-# Delete parcel image
-
-DELETE http://localhost:9080/fast-delivery/api/parcels/1c023543-5bd1-4b02-9941-27aab5b2ecdb/image
-
-###
-
-# Patch parcel image
-
-PATCH http://localhost:9080/fast-delivery/api/parcels/1c023543-5bd1-4b02-9941-27aab5b2ecdb/image
-Content-Type: multipart/form-data; boundary=boundary
-
---boundary
-Content-Disposition: form-data; name="image"; filename="delikatne.png"
-
-< src/main/resources/images/delikatne.png
---boundary--
-
-###
-
-# Patch parcel image nr. 2
-
-PATCH http://localhost:9080/fast-delivery/api/parcels/1c023543-5bd1-4b02-9941-27aab5b2ecdb/image
-Content-Type: multipart/form-data; boundary=boundary
-
---boundary
-Content-Disposition: form-data; name="image"; filename="paczka5.png"
-
-< src/main/resources/images/paczka5.png
---boundary--
-
-###
-
-# Patch non-existent parcel image 
-
-PATCH http://localhost:9080/fast-delivery/api/parcels/1c013543-5bd1-4b02-9941-27aab5b2ecdb/image
-Content-Type: multipart/form-data; boundary=boundary
-
---boundary
-Content-Disposition: form-data; name="image"; filename="paczka5.png"
-
-< src/main/resources/images/paczka5.png
---boundary--
-
-###
-
-# Get non-existent parcel's image
-
-GET http://localhost:9080/fast-delivery/api/parcels/1c023543-5bd2-4b02-9941-27aab5b2ecdb/image
-
-###
-
-# Get user
-
-GET http://localhost:9080/fast-delivery/api/clients/12f2776c-f823-4aab-8eb3-0e4fd5ae32f9
-
-###
-
-# Get nonexistent user
-
-GET http://localhost:9080/fast-delivery/api/clients/12f2776c-f823-4aab-8eb3-0e4fd5ae32f8
-
-###
-# Get users
-
+# Get all users ADMIN CREDENTIALS
+// @no-cookie-jar
 GET http://localhost:9080/fast-delivery/api/clients
+Authorization: Basic YWRtaW46YWRtaW5hZG1pbg==
+###
+
+# Get all users USER CREDENTIALS
+// @no-cookie-jar
+GET http://localhost:9080/fast-delivery/api/clients
+Authorization: Basic bWFyZWtrOnBhNDR3MHJk
+###
+
+
+# Add parcel ADMIN CREDENTIALS
+
+// @no-cookie-jar
+PUT http://localhost:9080/fast-delivery/api/warehouses/32faaa8e-dde2-4355-8b8c-9dd252fbc3b2/parcels/cd6f75b2-f4d8-4595-801a-e1ba5a67539b
+Content-Type: application/json
+Authorization: Basic YWRtaW46YWRtaW5hZG1pbg==
+
+{
+  "status": "DELIVERED",
+  "weight": 7.13,
+  "deliveryDate": "2023-11-12"
+}
+
+###
+
+# Get parcel ADMIN CREDENTIALS
+// @no-cookie-jar
+GET http://localhost:9080/fast-delivery/api/warehouses/32faaa8e-dde2-4355-8b8c-9dd252fbc3b2/parcels/cd6f75b2-f4d8-4595-801a-e1ba5a67539b
+Authorization: Basic YWRtaW46YWRtaW5hZG1pbg==
+
+###
+
+# Patch parcel ADMIN CREDENTIALS
+// @no-cookie-jar
+PATCH http://localhost:9080/fast-delivery/api/warehouses/32faaa8e-dde2-4355-8b8c-9dd252fbc3b2/parcels/cd6f75b2-f4d8-4595-801a-e1ba5a67539b
+Content-Type: application/json
+Authorization: Basic YWRtaW46YWRtaW5hZG1pbg==
+
+{
+  "status": "IN_WAREHOUSE",
+  "weight": 10.9,
+  "deliveryDate": "2025-01-28"
+}
+
+###
+
+# Get parcel ADMIN CREDENTIALS
+// @no-cookie-jar
+GET http://localhost:9080/fast-delivery/api/warehouses/32faaa8e-dde2-4355-8b8c-9dd252fbc3b2/parcels/cd6f75b2-f4d8-4595-801a-e1ba5a67539b
+Authorization: Basic YWRtaW46YWRtaW5hZG1pbg==
+
+###
+
+# Put parcel USER CREDENTIALS
+// @no-cookie-jar
+PUT http://localhost:9080/fast-delivery/api/warehouses/32faaa8e-dde2-4355-8b8c-9dd252fbc3b2/parcels/86db45e1-defa-40a1-9925-6c5b12ad2546
+Content-Type: application/json
+Authorization: Basic cGF0cnlrazp1c2VydXNlcg==
+
+{
+  "status": "IN_WAREHOUSE",
+  "weight": 4.2,
+  "deliveryDate": "2024-04-15"
+}
+
+###
+
+# Get user's parcel USER CREDENTIALS
+// @no-cookie-jar
+GET http://localhost:9080/fast-delivery/api/warehouses/32faaa8e-dde2-4355-8b8c-9dd252fbc3b2/parcels/86db45e1-defa-40a1-9925-6c5b12ad2546
+Authorization: Basic cGF0cnlrazp1c2VydXNlcg==
+
+###
+
+# Get another user's parcel USER CREDENTIALS
+// @no-cookie-jar
+GET http://localhost:9080/fast-delivery/api/warehouses/32faaa8e-dde2-4355-8b8c-9dd252fbc3b2/parcels/cd6f75b2-f4d8-4595-801a-e1ba5a67539b
+Authorization: Basic bWFyZWtrOnBhNDR3MHJk
 
 ###

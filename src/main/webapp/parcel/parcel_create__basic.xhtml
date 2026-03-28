@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="jakarta.faces.html"
+                xmlns:ui="jakarta.faces.facelets"
+                xmlns:f="jakarta.faces.core"
+                template="/WEB-INF/template/main.xhtml">
+
+    <f:metadata>
+        <f:viewAction action="#{parcelCreate.init()}"/>
+    </f:metadata>
+
+    <ui:define name="content">
+        <article>
+            <header><h2>#{messages['create.parcel']} - #{messages['create.basic']}</h2></header>
+            <h:form styleClass="container" onreset="onReset()" enctype="multipart/form-data" id="form">
+                <h:messages/>
+                <div class="row">
+                    <div class="col-2 p-2 text-center">
+                        <h:button styleClass="btn" value="#{messages.previous}" disabled="true"/>
+                    </div>
+                    <div class="col-2 p-2 text-center">
+                        <h:commandButton styleClass="btn" value="#{messages.next}"
+                                         action="#{parcelCreate.goToWarehouseAction()}"/>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-4 p-2">
+                        <div class="form-outline">
+                            <label for="status" class="form-label">#{messages.status}:</label>
+                            <h:selectOneMenu id="status" value="#{parcelCreate.parcel.status}"
+                                             styleClass="form-select" required="true">
+                                <f:selectItems value="#{parcelCreate.statusOptions}" var="status"
+                                               itemValue="#{status}" itemLabel="#{status}"/>
+                            </h:selectOneMenu>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-4 p-2">
+                        <div class="form-outline">
+                            <h:inputText id="weight" value="#{parcelCreate.parcel.weight}" required="true"
+                                         binding="#{weightInput}"
+                                         styleClass="#{weightInput.valid ? 'form-control' : 'is-invalid form-control'}"/>
+                            <h:outputLabel for="weight" value="#{messages.weight}:" styleClass="form-label"/>
+                            <h:message for="weight" styleClass="invalid-feedback"/>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-4 p-2">
+                        <div class="form-outline">
+                            <h:inputText id="deliveryDate"
+                                         value="#{parcelCreate.parcel.deliveryDate}"
+                                         converter="localDateConverter"
+                                         required="true"
+                                         styleClass="form-control">
+                                <f:validateRequired/>
+                            </h:inputText>
+                            <h:outputLabel for="deliveryDate" value="#{messages.deliveryDate}:" styleClass="form-label"/>
+                            <h:message for="deliveryDate" styleClass="invalid-feedback"/>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="row">
+                    <div class="col-2 p-2 text-center">
+                        <h:button styleClass="btn btn-primary" value="#{messages.create}" disabled="true"/>
+                    </div>
+                    <div class="col-2 p-2 text-center">
+                        <h:commandButton styleClass="btn btn-secondary" value="#{messages.cancel}"
+                                         action="#{parcelCreate.cancelAction()}"  immediate="true"/>
+                    </div>
+                </div>
+            </h:form>
+        </article>
+    </ui:define>
+
+</ui:composition>

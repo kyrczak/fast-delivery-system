@@ -30,4 +30,5 @@ public class GetParcelResponse {
     private Float weight;
     private Warehouse warehouse;
     private LocalDate deliveryDate;
+    private Long version;
 }
