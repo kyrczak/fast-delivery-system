@@ -1,204 +1,106 @@
 # Fast Delivery System
 
-A Java-based delivery management system designed to streamline and optimize delivery operations.
+A Java-based enterprise logistics and delivery management system designed to streamline and optimize delivery operations, track parcels, and manage warehouses.
 
 ## Project Overview
 
-This project is built with:
-- **Java** (75.6%) - Core backend application
-- **HTML** (23.4%) - Frontend components
-- **Other** (1%)
+This project is built utilizing a modern Enterprise Java stack:
+* **Java 21 LTS** - Core backend application language
+* **Jakarta EE 10** - Enterprise specifications (CDI, EJB, JAX-RS, JPA)
+* **Jakarta Faces (JSF) 4.0** - Server-side rendering and UI views
+* **Open Liberty** - Micro-container and application server
+* **H2 Database** - In-memory relational database
+* **Material Design for Bootstrap (MDB)** - Frontend styling
 
 ## Prerequisites
 
-Before you begin, ensure you have the following installed:
+Before you begin, ensure you have the following installed on your system (Windows, Linux, or macOS):
 
-### General Requirements
-- **Java Development Kit (JDK)** 11 or higher
-- **Git** (for cloning the repository)
+* **Java Development Kit (JDK) 21 LTS** (Strict requirement for Lombok and compiler compatibility)
+* **Apache Maven 3.8.x** or higher
+* **Git** (for cloning the repository)
 
-### Windows-Specific Requirements
-- Windows 10 or higher
-- Maven 3.6.0 or higher (or use the Maven wrapper included in the project)
-
-### Linux-Specific Requirements
-- Ubuntu 18.04 LTS or higher (or equivalent Linux distribution)
-- Maven 3.6.0 or higher (or use the Maven wrapper included in the project)
-
-## Installation
-
-### Windows
+## Installation & Setup
 
 1. **Clone the repository:**
    ```bash
-   git clone https://github.com/kyrczak/fast-delivery-system.git
+   git clone [https://github.com/kyrczak/fast-delivery-system.git](https://github.com/kyrczak/fast-delivery-system.git)
    cd fast-delivery-system
    ```
 
 2. **Verify Java Installation:**
+   Ensure your active environment is using Java 21:
    ```bash
    java -version
    javac -version
    ```
 
-3. **Install Dependencies:**
+3. **Build the Project:**
+   Compile the source code, generate JPA metamodels, and process Lombok annotations:
    ```bash
-   mvn clean install
-   ```
-   Or if using the Maven wrapper:
-   ```bash
-   .\mvnw.cmd clean install
-   ```
-
-4. **Build the Project:**
-   ```bash
-   mvn clean package
-   ```
-   Or with Maven wrapper:
-   ```bash
-   .\mvnw.cmd clean package
-   ```
-
-### Linux
-
-1. **Clone the repository:**
-   ```bash
-   git clone https://github.com/kyrczak/fast-delivery-system.git
-   cd fast-delivery-system
-   ```
-
-2. **Verify Java Installation:**
-   ```bash
-   java -version
-   javac -version
-   ```
-   
-   If Java is not installed, install it using:
-   ```bash
-   # Ubuntu/Debian
-   sudo apt-get update
-   sudo apt-get install default-jdk
-   
-   # RHEL/CentOS/Fedora
-   sudo yum install java-11-openjdk-devel
-   ```
-
-3. **Install Dependencies:**
-   ```bash
-   mvn clean install
-   ```
-   Or if using the Maven wrapper:
-   ```bash
-   chmod +x mvnw
-   ./mvnw clean install
-   ```
-
-4. **Build the Project:**
-   ```bash
-   mvn clean package
-   ```
-   Or with Maven wrapper:
-   ```bash
-   ./mvnw clean package
+   mvn clean compile
    ```
 
 ## Running the Application
 
-### Windows
+Unlike standalone Spring Boot `.jar` applications, this project is deployed as a `.war` archive into an Open Liberty container.
 
-1. **Using Maven:**
-   ```bash
-   mvn spring-boot:run
-   ```
-   Or with Maven wrapper:
-   ```bash
-   .\mvnw.cmd spring-boot:run
-   ```
+**Start the server in Development Mode (Hot-Reloading):**
+```bash
+mvn liberty:dev
+```
 
-2. **Using the JAR file:**
-   ```bash
-   java -jar target/fast-delivery-system-*.jar
-   ```
+Once the console outputs `CWWKF0011I: The defaultServer server is ready to run a smarter planet`, the application is live.
 
-### Linux
+**Access Points:**
+* **Web Interface (JSF):** http://localhost:9080/fast-delivery/
+* **REST API Base:** http://localhost:9080/fast-delivery/api/
+* **Remote Debugging:** Port `7777`
 
-1. **Using Maven:**
-   ```bash
-   mvn spring-boot:run
-   ```
-   Or with Maven wrapper:
-   ```bash
-   ./mvnw spring-boot:run
-   ```
-
-2. **Using the JAR file:**
-   ```bash
-   java -jar target/fast-delivery-system-*.jar
-   ```
-
-3. **Running as a Background Service (Optional):**
-   ```bash
-   nohup java -jar target/fast-delivery-system-*.jar > delivery-system.log 2>&1 &
-   ```
+*To stop the server, type `q` and press Enter in the terminal running Liberty, or press `Ctrl+C`.*
 
 ## Configuration
 
-The application can be configured through the `application.properties` or `application.yml` file located in the `src/main/resources/` directory. Modify settings such as:
-- Server port
-- Database connection
-- Logging levels
-- Custom application properties
+Application configuration is handled via standard Jakarta EE and Open Liberty XML files, rather than `.properties` or `.yml` files:
 
-Example configuration:
-```properties
-server.port=8080
-spring.application.name=fast-delivery-system
-```
+1. **Server Configuration (`src/main/liberty/config/server.xml`):**
+   * Manages server features (servlet, faces, cdi, restfulWS).
+   * Defines the `basicRegistry` for user authentication and roles (e.g., `admin-service`, `testuser`).
+   * Configures the H2 Database connection pool.
+   * Maps the external cross-platform file server for image uploads (`/uploads`).
+
+2. **Database Persistence (`src/main/resources/META-INF/persistence.xml`):**
+   * Manages Hibernate ORM settings, entity scanning, and database generation strategies.
 
 ## Project Structure
 
-```
+```text
 fast-delivery-system/
 ├── src/
 │   ├── main/
-│   │   ├── java/          # Java source code
-│   │   └── resources/     # Configuration files and templates
-│   └── test/              # Test files
-├── pom.xml                # Maven configuration
-├── README.md              # This file
-└── target/                # Build artifacts (generated)
+│   │   ├── java/pl/pg/kyrczak/jakarta/ # Java source code (Controllers, EJBs, Entities)
+│   │   ├── liberty/config/             # Open Liberty server configuration (server.xml)
+│   │   ├── resources/                  # I18n bundles and persistence.xml
+│   │   └── webapp/                     # JSF Facelets (.xhtml), CSS, JS, and web.xml
+│   └── test/                           # Test suites
+├── pom.xml                             # Maven configuration and dependencies
+└── README.md                           # This file
 ```
 
-## Building and Testing
+## Cross-Platform File Storage
 
-### Run Unit Tests
-```bash
-# Windows
-mvn test
+The system handles binary file uploads (e.g., parcel images) using an OS-agnostic approach. Files are not saved directly into the application's source code. Instead, they are routed to the host machine's user home directory:
+* **Windows:** `C:\Users\<Username>\fast-delivery-system\uploads\images\`
+* **Linux/macOS:** `/home/<Username>/fast-delivery-system/uploads/images/`
 
-# Linux
-mvn test
-```
-
-### Run Integration Tests
-```bash
-# Windows and Linux
-mvn verify
-```
+Open Liberty safely exposes this directory to the web layer via the `/uploads/` URL path.
 
 ## Troubleshooting
 
-### Windows
-
-- **Maven not recognized:** Ensure Maven is added to your system PATH environment variable
-- **Java version mismatch:** Check that JAVA_HOME environment variable points to the correct JDK installation
-- **Permission denied on mvnw.cmd:** Run Command Prompt as Administrator
-
-### Linux
-
-- **Java not found:** Install JDK using the commands provided in the Installation section
-- **mvnw: Permission denied:** Run `chmod +x mvnw` to make the wrapper executable
-- **Maven cache issues:** Clear the Maven cache with `rm -rf ~/.m2/repository` and retry
+* **`TypeTag :: UNKNOWN` Compilation Error:** This occurs if you are compiling the project with a JDK version newer than 21 (e.g., JDK 26) which conflicts with Lombok. Downgrade your `JAVA_HOME` to JDK 21.
+* **Port 9080 is already in use:** Another application (or a zombie Liberty process) is using the port. Kill the process or change the `httpPort` in `server.xml`.
+* **`SESN0008E` Unauthorized Session Error:** Clear your browser cookies for `localhost`. This happens when transitioning from an anonymous session to an authenticated session during development.
+* **Missing Images:** Ensure the directory mapped in `server.xml` matches your actual OS user directory path.
 
 ## Contributing
 
@@ -207,11 +109,3 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 ## License
 
 This project is licensed under the MIT License - see the LICENSE file for details (if available).
-
-## Support
-
-For issues, questions, or suggestions, please open an issue on the [GitHub repository](https://github.com/kyrczak/fast-delivery-system/issues).
-
----
-
-**Last Updated:** 2026-05-14
